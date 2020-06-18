@@ -9,12 +9,13 @@ const logger = winston.createLogger({
     ),
     transports : [
         new winston.transports.File({
-            filename: path.resolve(__dirname,'../../logs/error.log'),
+            filename: path.resolve(root_path,'./logs/error.log'),
             level: 'error'
         })
     ]
 })
 
+console.log(root_path)
 if(process.env.NODE_ENV !== 'production'){
     logger.add(
         new winston.transports.Console({

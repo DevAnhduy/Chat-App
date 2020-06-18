@@ -4,6 +4,7 @@ const body_parser = require('body-parser');
 const mongoose = require('mongoose');
 const port = process.env.port || 3001;
 const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 fs.readdir('./src/routes',(err,routes) => {
@@ -26,4 +27,8 @@ app.use(body_parser.json());
 app.use(body_parser.raw());
 
 mongoose.Promise = global.Promise;
+global.root_path = require.main.path;
+
+console.log(root_path)
+
 app.listen(port, () => console.log(`Server started on:  ${port}`));

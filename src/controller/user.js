@@ -26,6 +26,7 @@ exports.login = (req,res) => {
                 })
             }
             else{
+                logger.error('User not found!')
                 res.status(401).json({ message: 'Auth failed' });
             }   
         })
