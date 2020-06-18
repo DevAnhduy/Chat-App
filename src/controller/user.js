@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const logger = require('../utis/logger');
 
 const User_Model = require('../models/user');
 
@@ -19,13 +20,19 @@ exports.login = (req,res) => {
                         }, process.env.JWT_KEY )
                         return res.status(200).json({ message: 'Auth successful', token: token });
                     }
-                    res.status(401).json({ message: 'Auth failed' });
+                    else {
+                        res.status(401).json({ message: 'Auth failed' });
+                    }
                 })
             }
-            else
-                res.status(401).json({ message: 'Auth failed' })
+            else{
+                res.status(401).json({ message: 'Auth failed' });
+            }   
         })
-        .catch(err => res.status(500).json({ error: err }))
+        .catch(err => {
+            logger.error(err);
+            res.status(500).json({ error: 'error' })
+        })
 }
 exports.get_all_users = (req,res) => {
     User_Model.find()
@@ -48,9 +55,8 @@ exports.get_all_users = (req,res) => {
             res.status(200).json(response);
         })
         .catch(err => {
-            res.status(500).json({
-                error: err
-            })
+            logger.error(err);
+            res.status(500).json({ error: err });
         })
 }
 exports.get_user = (req,res) => {
@@ -65,7 +71,10 @@ exports.get_user = (req,res) => {
                 res.status(404).json({ message: '404 not found' });
             }
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            logger.error(err);
+            res.status(500).json({ error: err });
+        })
 }
 exports.create_user = (req,res) => {
     User_Model.find({ username: req.body.username })
@@ -86,7 +95,10 @@ exports.create_user = (req,res) => {
                         });
                         user.save()
                             .then(result => res.status(201).json(result))
-                            .catch(err => res.status(500).json({ error: err }))
+                            .catch(err => {
+                                res.status(500).json({ error: err })
+                                logger.error(err);
+                            })
                     }
                 })
             }
