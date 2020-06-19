@@ -29,6 +29,4 @@ app.use(body_parser.raw());
 mongoose.Promise = global.Promise;
 global.root_path = require.main.path;
 
-console.log(root_path)
-
 app.listen(port, () => console.log(`Server started on:  ${port}`));
