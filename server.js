@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const body_parser = require('body-parser');
 const mongoose = require('mongoose');
+const mongodb = require('./config/mongodb');
 const port = process.env.port || 3001;
 const fs = require('fs');
 const path = require('path');
@@ -16,7 +17,7 @@ fs.readdir('./src/routes',(err,routes) => {
         })
     }
 })
-mongoose.connect(`mongodb+srv://sa:${process.env.MONGO_ATLAS_PASSWORD}@test1-evwhi.mongodb.net/${process.env.MONGO_ATLAS_DATABASE}?retryWrites=true&w=majority`,{
+mongoose.connect(mongodb.url,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
