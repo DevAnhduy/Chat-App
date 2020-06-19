@@ -1,0 +1,3 @@
+{"message":"Not found user","level":"\u001b[31merror\u001b[39m","service":"user-service"}
+{"message":"Not found user","level":"\u001b[31merror\u001b[39m"}
+{"message":"User not found!","level":"\u001b[31merror\u001b[39m"}
