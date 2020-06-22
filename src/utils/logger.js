@@ -1,5 +1,6 @@
 const path = require('path');
 const winston = require('winston');
+require('dotenv').config({ path: root_path + '/.env' });
 
 const logger = winston.createLogger({
     level : 'info',
