@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Log in</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+            integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous">
+        </script>
+        <style>
+            .main-login{
+                width: 25%;
+                margin: auto;
+                padding: 30px;
+                margin-top: 10%;
+                position: relative;
+                border: 2px solid tomato;
+                box-shadow: 0px 5px 10px tomato;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="main-login text-center">
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập</label>
+                    <input type="text" id="username" name="username" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password" class="form-control" required />
+                </div>
+                <div class="form-group" >
+                    <button class="form-control btn-info">Đăng nhập</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
