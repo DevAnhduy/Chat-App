@@ -1,0 +1,10 @@
+.main-login{
+    width: 25%;
+    margin: auto;
+    padding: 30px;
+    margin-top: 10%;
+    position: relative;
+    border: 2px solid tomato;
+    box-shadow: 0px 5px 10px tomato;
+    border-radius: 10px;
+}

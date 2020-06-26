@@ -5,6 +5,7 @@ const logger = require('../utils/logger');
 const path = require('path')
 
 const User_Model = require('../models/user');
+const { resolveSoa } = require('dns');
 
 exports.login = (req,res) => {
     User_Model.findOne({ username: req.body.username })
@@ -19,10 +20,20 @@ exports.login = (req,res) => {
                             username: user.username,
                             user_id: user._id
                         }, process.env.JWT_KEY )
+                        console.log('Check user successfully')
+                        console.log(res.cookies)
                         //return res.status(200).json({ message: 'Auth successful', token: token });
                         //return res.setHeader('Set-Cookie', [`token:${token}; HttpOnly`])
                         //return res.redirect('/')
-                        return res.sendFile(path.join(root_path, './public/index.html'))
+                        res.cookie(
+                            'JWT',token,
+                            {   
+                                maxAge: 99999999,
+                                httpOnly: true
+                            }
+                        )
+                        return res.status(200).json({message: 'Success'})
+                        
                     }
                     else {
                         res.status(401).json({ message: 'Auth failed' });
