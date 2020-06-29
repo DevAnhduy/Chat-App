@@ -5,7 +5,6 @@ const logger = require('../utils/logger');
 const path = require('path')
 
 const User_Model = require('../models/user');
-const { resolveSoa } = require('dns');
 
 exports.login = (req,res) => {
     User_Model.findOne({ username: req.body.username })
@@ -20,34 +19,30 @@ exports.login = (req,res) => {
                             username: user.username,
                             user_id: user._id
                         }, process.env.JWT_KEY )
-                        console.log('Check user successfully')
-                        console.log(res.cookies)
-                        //return res.status(200).json({ message: 'Auth successful', token: token });
-                        //return res.setHeader('Set-Cookie', [`token:${token}; HttpOnly`])
-                        //return res.redirect('/')
+                        console.log('Auth successfully')
                         res.cookie(
                             'JWT',token,
                             {   
-                                maxAge: 99999999,
+                                maxAge: 9999999,
                                 httpOnly: true
                             }
                         )
-                        return res.status(200).json({message: 'Success'})
+                        return res.status(200).json({ login_success : true })
                         
                     }
                     else {
-                        res.status(401).json({ message: 'Auth failed' });
+                        return res.status(401).json({ login_success: false })
                     }
                 })
             }
             else{
                 logger.error('User not found!')
-                res.status(401).json({ message: 'Auth failed' });
+                return res.status(200).json({ login_success: false })
             }   
         })
         .catch(err => {
             logger.error(err);
-            res.status(500).json({ error: 'error' })
+            res.status(500).json({ error: 'Something error. Please try again' })
         })
 }
 exports.get_all_users = (req,res) => {

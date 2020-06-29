@@ -3,21 +3,25 @@ import login_style from './login.module.css';
 import Axios from 'axios'
 
 export class  Login extends React.Component{
-    constructor(props){
-        super(props);
-    }
     submit_login = () => {
-        //if(this.username.value !== undefined && this.password.value !== value){
-        Axios.post('http://localhost:3001/login', {
+        if(this.username.value && this.password.value){
+            Axios.post('http://localhost:3001/login', {
                 username: this.username.value,
                 password: this.password.value},{
                     withCredentials: true
                 })
             .then((response) => {
-                console.log(response)
+                if(response.data.login_success){
+                    window.location = '/'
+                }
+                else
+                    alert('Sai tên tài khoản hoặc mật khẩu !')
             })
             .catch((error) => console.log(error))
-        //}
+        }
+        else {
+            alert('Username và Password không được để trống !')
+        }
     }
     render(){
         return(
@@ -44,7 +48,7 @@ export class  Login extends React.Component{
                                />
                     </div>
                     <div className="form-group" >
-                        <button onClick={this.submit_login} type="button" className="btn btn-info">
+                        <button onClick={this.submit_login} type="button" className={`btn ${login_style['btn-login']}`} >
                             Đăng nhập
                         </button>
                     </div>

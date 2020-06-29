@@ -21,11 +21,11 @@ app.use(function (req, res, next) {
 })
 //#endregion
 io.on('connection',(socket) => {
-    console.log('A user connected!')
+    console.log(socket);
+    console.log('A user connected!');
 })
 
-app.get('/',(req,res) => {
-   console.log(req.cookies.JWT)
+app.get('/',check_auth,(req,res) => {
    res.send('Check')
 })
 

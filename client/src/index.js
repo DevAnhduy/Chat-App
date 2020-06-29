@@ -7,4 +7,4 @@ import { Routes } from '../src/routes/index';
 
 ReactDOM.render(<Routes />,document.getElementById('root'));
 
-serviceWorker.register();
+serviceWorker.unregister();
