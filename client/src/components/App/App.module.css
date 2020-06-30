@@ -1,14 +1,14 @@
 .form-chat {
-  background: #000;
+  background:white;
   padding: 3px;
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 72%;
 }
 .form-chat input {
-  border: 0;
+  border: 1px solid #24292e;
   padding: 10px;
-  width: 65%;
+  width: 90%;
   margin-right: 0.5%;
 }  
 .form-chat button {
@@ -18,12 +18,17 @@
   padding: 10px;
   color: white
 }
+.form-chat button:focus{
+  outline: none;
+}
+.form-chat button:hover{
+  box-shadow: 0px 1px 10px #24292e;
+}
 #messages {
   list-style-type: none;
   margin: 0;
   padding: 0;
-}
-    
+} 
 #messages li {
   padding: 5px 10px;
 }
@@ -31,6 +36,23 @@
   background: #eee;
 }
 .chat-room {
-  border: 2px solid #24292e;
+  border: 1px solid #24292e;
   height: 100vh;
+}
+.btn-add-chat-room{
+  display: block;
+  margin: auto;
+  border: none;
+  font-weight: 600;
+  padding: 10px 30px;
+  border-radius: 10px;
+  background-color: #24292e;
+  color: white;
+  border: 1px solid #24292e;
+}
+.btn-add-chat-room:focus{
+  outline: none;
+}
+.btn-add-chat-room:hover{
+  box-shadow: 0px 1px 10px #24292e;
 }

@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-y: scroll ;
 }
 
 code {
@@ -14,3 +15,4 @@ code {
 .circle-loading circle{
   stroke: #24292e !important
 }
+

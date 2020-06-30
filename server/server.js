@@ -21,8 +21,10 @@ app.use(function (req, res, next) {
 })
 //#endregion
 io.on('connection',(socket) => {
-    console.log(socket);
     console.log('A user connected!');
+    socket.on('send_message',(data) => {
+        console.log(data)
+    })
 })
 
 app.get('/',check_auth,(req,res) => {

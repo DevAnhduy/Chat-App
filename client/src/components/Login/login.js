@@ -2,7 +2,7 @@ import React from 'react'
 import login_style from './login.module.css';
 import Axios from 'axios'
 
-export class  Login extends React.Component{
+export class  Login_Form extends React.Component{
     submit_login = () => {
         if(this.username.value && this.password.value){
             Axios.post('http://localhost:3001/login', {
@@ -17,11 +17,16 @@ export class  Login extends React.Component{
                 else
                     alert('Sai tên tài khoản hoặc mật khẩu !')
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {
+                alert('Sai tên tài khoản hoặc mật khẩu !')
+            })
         }
         else {
             alert('Username và Password không được để trống !')
         }
+    }
+    click_register = () => {
+        window.location = '/register'
     }
     render(){
         return(
@@ -50,6 +55,9 @@ export class  Login extends React.Component{
                     <div className="form-group" >
                         <button onClick={this.submit_login} type="button" className={`btn ${login_style['btn-login']}`} >
                             Đăng nhập
+                        </button>&emsp;
+                        <button onClick={this.click_register} type="button" className={`btn ${login_style['btn-login']}`} >
+                            Đăng ký
                         </button>
                     </div>
                 </form>
