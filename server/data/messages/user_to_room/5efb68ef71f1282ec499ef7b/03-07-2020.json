@@ -1,0 +1,26 @@
+[
+    {
+        "sender": "5eea1bc4c83863222c9d0e4f",
+        "room_id": "5efb68ef71f1282ec499ef7b",
+        "content": "Heelo",
+        "sent_date": "03-07-2020, 11:48:11"
+    },
+    {
+        "sender": "5eea1bc4c83863222c9d0e4f",
+        "room_id": "5efb68ef71f1282ec499ef7b",
+        "content": "1",
+        "sent_date": "03-07-2020, 11:48:12"
+    },
+    {
+        "sender": "5eea1bc4c83863222c9d0e4f",
+        "room_id": "5efb68ef71f1282ec499ef7b",
+        "content": "231",
+        "sent_date": "03-07-2020, 11:48:13"
+    },
+    {
+        "sender": "5eea1bc4c83863222c9d0e4f",
+        "room_id": "5efb68ef71f1282ec499ef7b",
+        "content": "asd",
+        "sent_date": "03-07-2020, 11:48:13"
+    }
+]

@@ -9,9 +9,10 @@ export class Routes extends React.Component{
         return(
             <Router>
                 <Switch>
-                    <Route exact path="/"><App /></Route>
-                    <Route path="/login"><Login_Form /></Route>
-                    <Route path="/register"> <Register_Form /> </Route>
+                    <Route exact path="/" component={App} />
+                    <Route path="/login" component={Login_Form} />
+                    <Route path="/register" component={Register_Form} />
+                    <Route path="/chat-rooms/:room_id" component={App} />
                 </Switch>
             </Router>
         )

@@ -56,6 +56,8 @@ exports.get_all_users = (req,res) => {
                         _id : user._id,
                         username: user.username,
                         password: user.password,
+                        socket_id: user.socket_id,
+                        name: user.name,
                         request: {
                             type: 'GET',
                             url: `http://localhost:3001/users/${user._id}`
@@ -75,7 +77,7 @@ exports.get_user = (req,res) => {
     User_Model.findById(user_id)
         .exec()
         .then(user => {
-            if (user && user.username === req.user.username) {
+            if (user) {
                 res.status(200).json(user);
             }
             else {
@@ -122,9 +124,15 @@ exports.delete_user = (req,res) => {
         .then(result => res.status(200).json(result))
         .catch(err => res.status({ error: err }))
 }
-exports.update_user = (req,res) => {
+exports.update_user_name = (req,res) => {
     const id = req.params.user_id;
-    User_Model.update({ _id: id }, { $set: { name: req.body.new_name } })
+    User_Model.updateOne({ _id: id }, { $set: { name: req.body.new_name } })
+        .exec()
+        .then(result => res.status(200).json(result))
+        .catch(err => res.status(500).json({ error: err }))
+}
+exports.update_socket_id = (req,res) => {
+    User_Model.updateOne({_id: req.params.user_id},{ $set: { socket_id: req.body.socket_id }})
         .exec()
         .then(result => res.status(200).json(result))
         .catch(err => res.status(500).json({ error: err }))

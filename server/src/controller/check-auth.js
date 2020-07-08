@@ -5,8 +5,11 @@ module.exports = (req, res) => {
         const token = req.cookies.JWT;
         const decoded = jwt.verify(token, process.env.JWT_KEY);
         req.user = decoded.username;
-        res.status(200).json({ is_auth: true })
+        res.status(200).json({ 
+            username : decoded.username,
+            user_id : decoded.user_id
+        })
     } catch (error) {
-        res.status(200).json({ is_auth: false })
+        res.status(200).json(false)
     }
 }

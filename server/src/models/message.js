@@ -9,7 +9,8 @@ const message_schema = mongoose.Schema({
     } ,
     sender: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: 'User'
     },
     content: {
         type: String,
