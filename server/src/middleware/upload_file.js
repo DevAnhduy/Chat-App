@@ -1,5 +1,5 @@
 const multer = require('multer');
-const logger = require('../utils/logger');
+const logger = require('src/utils/logger');
 const moment = require('moment');
 const types_accepted = ["image/jpeg", "image/png","image/jpg","application/x-rar-compressed"];
 const fs = require('fs');

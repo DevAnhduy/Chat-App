@@ -1,11 +1,15 @@
-const body_parser_loader = require('./body_parser');
-const mongodb_loader = require('./mongodb');
-const routes_loader = require('./routes');
-const cookie_parser_loader = require('./cookie-parser')
+require('dotenv').config();
+require('app-module-path').addPath(require.main.path);
+const body_parser_loader = require('loaders/body_parser.js');
+const mongodb_loader = require('loaders/mongodb.js');
+const routes_loader = require('loaders/routes');
+const cookie_parser_loader = require('loaders/cookie-parser');
+const cors = require('loaders/cors');
 
 module.exports = async (app) => {
     await cookie_parser_loader(app);
     await body_parser_loader(app);
     await mongodb_loader();
     await routes_loader(app);
+    await cors(app);
 }

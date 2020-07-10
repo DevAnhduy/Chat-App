@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const logger = require('../utils/logger');
+const logger = require('src/utils/logger');
 const path = require('path')
 
-const User_Model = require('../models/user');
+const User_Model = require('src/models/user');
 
 exports.login = (req,res) => {
     User_Model.findOne({ username: req.body.username })
@@ -20,14 +20,14 @@ exports.login = (req,res) => {
                             user_id: user._id
                         }, process.env.JWT_KEY )
                         console.log('Auth successfully')
-                        res.cookie(
-                            'JWT',token,
-                            {   
-                                maxAge: 9999999,
-                                httpOnly: true
-                            }
-                        )
-                        return res.status(200).json({ login_success : true })
+                        // res.cookie(
+                        //     'JWT',token,
+                        //     {   
+                        //         maxAge: 9999999,
+                        //         httpOnly: true
+                        //     }
+                        // )
+                        return res.status(200).json({ token : token })
                         
                     }
                     else {

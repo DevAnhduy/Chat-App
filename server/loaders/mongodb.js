@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const logger = require('../src/utils/logger');
+const logger = require('src/utils/logger');
 const mongodb_config = require(root_path + '/config/mongodb')
 
 module.exports = async () =>{

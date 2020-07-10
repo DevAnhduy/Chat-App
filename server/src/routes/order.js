@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const order_controller = require('../controller/orders');
-const check_auth = require('../middleware/check-auth');
+const order_controller = require('src/controller/orders');
+const check_auth = require('src/middleware/check-auth');
 
 router.get('/orders',check_auth,order_controller.get_all_orders);
 router.get('/orders/:order_id',check_auth,order_controller.get_order);

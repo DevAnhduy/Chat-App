@@ -1,7 +1,7 @@
-const upload_file = require(`${root_path}/src/middleware/upload_file.js`);
+const upload_file = require('src/middleware/upload_file');
 const router = require('express').Router();
-const chat_room_controller = require(`${root_path}/src/controller/chat_room.js`);
-const check_auth = require(`${root_path}/src/middleware/check-auth`);
+const chat_room_controller = require('src/controller/chat_room');
+const check_auth = require('src/middleware/check-auth');
 
 router.get('/chat/rooms',check_auth,chat_room_controller.get_all_rooms);
 router.get('/chat/rooms/:room_id', chat_room_controller.get_room);

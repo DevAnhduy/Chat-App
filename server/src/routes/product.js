@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const check_auth = require('../middleware/check-auth');
-const controller_product = require('../controller/product');
-const multer_storage = require('../../config/multer');
+const check_auth = require('src/middleware/check-auth');
+const controller_product = require('src/controller/product');
+const multer_storage = require('config/multer');
 
 router.get('/products',controller_product.get_all_products);
 router.get('/products/:product_id',controller_product.get_product);

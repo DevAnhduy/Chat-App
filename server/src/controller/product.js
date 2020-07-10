@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const google_storage = require('../../config/google_cloud_storage');
+const google_storage = require('config/google_cloud_storage');
 const moment = require('moment');
 
-const Product_Model = require('../models/product');
+const Product_Model = require('src/models/product');
 
 exports.get_all_products = (req,res) => {
     Product_Model.find()

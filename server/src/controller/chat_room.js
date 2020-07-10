@@ -3,11 +3,10 @@ const moment = require('moment');
 const date_now = moment().format('DD-MM-YYYY');
 const fs = require('fs');
 
-const Room_Model = require('../models/chat_room');
-const Message_Model = require('../models/message');
-const File_Model = require('../models/file');
-const logger = require('../utils/logger');
-const { ObjectID } = require('mongodb');
+const Room_Model = require('src/models/chat_room');
+const Message_Model = require('src/models/message');
+const File_Model = require('src/models/file');
+const logger = require('src/utils/logger');
 
 exports.get_recent_messages_in_room = (req,res) => {
     const room_id = req.params.room_id;

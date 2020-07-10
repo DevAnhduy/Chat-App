@@ -1,5 +1,5 @@
-const Order_Model = require('../models/order');
-const Product_Model = require('../models/product');
+const Order_Model = require('src/models/order');
+const Product_Model = require('src/models/product');
 const mongoose = require('mongoose');
 
 exports.get_all_orders = (req, res) => {
