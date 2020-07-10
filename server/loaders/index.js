@@ -1,3 +1,4 @@
+global.root_path = require.main.path;
 require('dotenv').config();
 require('app-module-path').addPath(require.main.path);
 const body_parser_loader = require('loaders/body_parser.js');

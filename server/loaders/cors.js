@@ -1,6 +1,6 @@
 const client = require('config/client.json');
 
-module.exports = (app) => {
+module.exports = async (app) => {
     app.use(function (req, res, next) {
         res.header('Access-Control-Allow-Origin', `${client.host}:${client.port}` );
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');

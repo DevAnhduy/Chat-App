@@ -1,5 +1,3 @@
-global.root_path = require.main.path;
-
 const app = require('express')();
 const loaders = require('./loaders/index');
 const port = process.env.port || 3001;
