@@ -1,5 +1,5 @@
-const app = require('express')();
 const loaders = require('./loaders/index');
+const app = require('express')();
 const port = process.env.port || 3001;
 const server = require('http').createServer(app);
 
