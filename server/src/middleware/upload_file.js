@@ -18,7 +18,7 @@ const file_filter = (req,file,cb) => {
 const storage_config = multer.diskStorage({
     destination: (req, file, cb) => {
         const receiver_type = req.params.room_id ? 'room' : 'user';
-        let path_storage_files_root = `${root_path}/data/files/user_to_${receiver_type}`;
+        let path_storage_files_root = `${__root}/data/files/user_to_${receiver_type}`;
 
         if(receiver_type === 'room'){
             const path_storage_files_room = path_storage_files_root + `/${req.params.room_id}`;

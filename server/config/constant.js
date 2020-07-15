@@ -1,5 +1,4 @@
 const { server } = require("../jsconfig.json");
-
 const path = require('path');
 
 global['__host'] = server.host;

@@ -10,7 +10,7 @@ const logger = require('src/utils/logger');
 
 exports.get_recent_messages_in_room = (req,res) => {
     const room_id = req.params.room_id;
-    const path_room_folder = `${root_path}/data/messages/user_to_room/${room_id}`;
+    const path_room_folder = `${__root}/data/messages/user_to_room/${room_id}`;
     fs.readdir(path_room_folder, (err, msg_files) => {
         if (err) {
             logger.error(err);
@@ -45,7 +45,7 @@ exports.get_recent_messages_in_room = (req,res) => {
 exports.get_messages_user_to_user = (req,res) => {
     const user_id = req.user_id;
     const receiver_id = req.params.receiver_id;
-    const path_user_folder = `${root_path}/data/messages/user_to_user`;
+    const path_user_folder = `${__root}/data/messages/user_to_user`;
     fs.readdir(path_user_folder,(err,date_folders) => {
         if(err) {
             logger.error(err);
@@ -82,8 +82,8 @@ exports.create_message_to_room = (req,res) => {
         content: req.body.content,
         sent_date: moment().format('DD-MM-YYYY, h:mm:ss')
     };
-    const path_room_folder = `${root_path}/data/messages/user_to_room/${room_id}`
-    const path_file_message_today = `${root_path}/data/messages/user_to_room/${room_id}/${date_now}.json`;
+    const path_room_folder = `${__root}/data/messages/user_to_room/${room_id}`
+    const path_file_message_today = `${__root}/data/messages/user_to_room/${room_id}/${date_now}.json`;
     let data_message_will_write;
     // Check folder & file exist
     const preparing_data_to_write = new Promise((resolve,rejects) => {
@@ -142,7 +142,7 @@ exports.create_message_to_user = (req,res) => {
         content: req.body.content,
         sent_date: moment().format('DD-MM-YYYY, h:mm:ss')
     }
-    const path_folder_today = `${root_path}/data/messages/user_to_user/${date_now}`;
+    const path_folder_today = `${__root}/data/messages/user_to_user/${date_now}`;
     let path_file_today = '';
     let data_message_will_write = '';
     
@@ -175,14 +175,14 @@ exports.create_message_to_user = (req,res) => {
                     file_user_to_user_today = msg_file;
             })
             if (file_user_to_user_today) {
-                path_file_today = `${root_path}/data/messages/user_to_user/${date_now}/${file_user_to_user_today}`;
+                path_file_today = `${__root}/data/messages/user_to_user/${date_now}/${file_user_to_user_today}`;
                 const data_file_msg_today = require(path_file_today);
                 data_file_msg_today.push(new_message);
                 data_message_will_write = JSON.stringify(data_file_msg_today, null, 4);
                 write_file();
             }
             else {
-                path_file_today = `${root_path}/data/messages/user_to_user/${date_now}/${sender}_${receiver}.json`;
+                path_file_today = `${__root}/data/messages/user_to_user/${date_now}/${sender}_${receiver}.json`;
                 data_message_will_write = JSON.stringify([new_message], null, 4);
                 write_file();
             }

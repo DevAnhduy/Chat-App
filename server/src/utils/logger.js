@@ -1,6 +1,6 @@
 const path = require('path');
 const winston = require('winston');
-require('dotenv').config({ path: root_path + '/.env' });
+require('dotenv').config({ path: __root + '/.env' });
 
 const logger = winston.createLogger({
     level : 'info',
@@ -10,7 +10,7 @@ const logger = winston.createLogger({
     ),
     transports : [
         new winston.transports.File({
-            filename: path.resolve(root_path,'./logs/error.log'),
+            filename: path.resolve(__root,'./logs/error.log'),
             level: 'error'
         })
     ]

@@ -1,4 +1,5 @@
 require('../config/constant');
+require('app-module-path').addPath(__root);
 require('dotenv').config();
 //
 const body_parser_loader = require('loaders/body_parser.js');
