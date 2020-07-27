@@ -1,5 +1,6 @@
 const path = require('path');
 const winston = require('winston');
+const moment = require('moment');
 require('dotenv').config({ path: __root + '/.env' });
 
 const logger = winston.createLogger({
@@ -10,7 +11,7 @@ const logger = winston.createLogger({
     ),
     transports : [
         new winston.transports.File({
-            filename: path.resolve(__root,'./logs/error.log'),
+            filename: path.resolve(__root, `./logs/${moment().format('DD-MM-YYYY')}.log`),
             level: 'error'
         })
     ]
