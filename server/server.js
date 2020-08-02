@@ -1,12 +1,8 @@
-const loaders = require('./loaders/index');
 const app = require('express')();
-const port = process.env.port || 3001;
+const loaders = require('./loaders/index');
 const server = require('http').createServer(app);
 
-(async () => { // Start server
+(async() => { // Start server
     await loaders(app);
-    server.listen(port, () => console.log(`Server started on:  ${port}`));
+    server.listen(__port, () => console.log(`Server started on:  ${__port}`));
 })();
-
-
-    

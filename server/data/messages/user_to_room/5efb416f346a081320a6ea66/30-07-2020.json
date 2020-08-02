@@ -2,13 +2,15 @@
     {
         "sender": "5eea1bc4c83863222c9d0e4f",
         "room_id": "5efb416f346a081320a6ea66",
-        "content": "abc",
-        "sent_date": "08-07-2020, 12:21:50"
+        "content": "ab123c",
+        "sent_date": "30-07-2020, 1:01:16",
+        "timestamp": 1596045676087
     },
     {
         "sender": "5eea1bc4c83863222c9d0e4f",
         "room_id": "5efb416f346a081320a6ea66",
         "content": "ab123c",
-        "sent_date": "08-07-2020, 12:22:03"
+        "sent_date": "30-07-2020, 1:01:28",
+        "timestamp": 1596045688434
     }
 ]

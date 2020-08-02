@@ -1,0 +1,16 @@
+[
+    {
+        "sender": "5eea1bc4c83863222c9d0e4f",
+        "receiver": "5ee8df57c8fd122728a6a045",
+        "content": "abc",
+        "sent_date": "30-07-2020, 12:18:20",
+        "timestamp": 1596043100468
+    },
+    {
+        "sender": "5eea1bc4c83863222c9d0e4f",
+        "receiver": "5ee8df57c8fd122728a6a045",
+        "content": "abc",
+        "sent_date": "30-07-2020, 12:22:52",
+        "timestamp": 1596043372144
+    }
+]
