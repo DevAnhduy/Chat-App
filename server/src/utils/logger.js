@@ -1,7 +1,14 @@
 const path = require('path');
 const winston = require('winston');
 const moment = require('moment');
+require('winston-daily-rotate-file');
 require('dotenv').config({ path: __root + '/.env' });
+
+const transport = new (winston.transports.DailyRotateFile)({
+    filename: path.join(__root,'/logs/%DATE%.log'),
+    datePattern: 'DD-MM-YYYY',
+    zippedArchive: true
+});
 
 const logger = winston.createLogger({
     level : 'info',
@@ -10,10 +17,7 @@ const logger = winston.createLogger({
         winston.format.json()
     ),
     transports : [
-        new winston.transports.File({
-            filename: path.resolve(__root, `./logs/${moment().format('DD-MM-YYYY')}.log`),
-            level: 'error'
-        })
+        transport
     ]
 })
 
@@ -27,7 +31,7 @@ if(process.env.NODE_ENV !== 'production'){
 
 logger.stream = {
     write(message){
-        logger.info(message)
+        logger.error(message)
     }
 }
 

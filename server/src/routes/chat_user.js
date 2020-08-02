@@ -8,5 +8,8 @@ router.get('/chat/users/:receiver_id/messages/most-recent', check_auth, chat_use
 router.get('/chat/users/:receiver_id/files', check_auth, chat_user_controller.get_all_file);
 router.post('/chat/users/:receiver_id/messages', check_auth, chat_user_controller.create_message);
 router.post('/chat/users/:receiver_id/files', check_auth, upload_file.single('upload_file'), chat_user_controller.upload_file);
+router.put('/chat/users/:receiver_id/messages',check_auth, chat_user_controller.edit_message);
+router.delete('/chat/users/:receiver_id/messages',check_auth, chat_user_controller.delete_message);
+router.delete('/chat/users/:receiver_id/messages',check_auth, chat_user_controller.delete_message);
 
 module.exports = router;

@@ -14,7 +14,8 @@ module.exports = (new_message = {content:{},store_path:'',file_names:[]},callbac
                     all_messages.push(new_message.content);
                     resolve(JSON.stringify(all_messages, null, 4));
                 }
-                if(path_file_write == '' && index == file_names.length){
+                if(path_file_write == '' && index == new_message.file_names.length - 1){
+                    path_file_write = path_file;
                     resolve(JSON.stringify([new_message.content], null, 4));
                 }
             });
@@ -46,6 +47,7 @@ module.exports = (new_message = {content:{},store_path:'',file_names:[]},callbac
         })
         .catch((err) => {
             logger.error(err);
+            console.log(err);
             callback(false);
         })
 }
