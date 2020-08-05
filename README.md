@@ -1,2 +1,2 @@
-# nodejs-api-with-mongo
+# Chat App
 Node js project
