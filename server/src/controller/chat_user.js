@@ -188,5 +188,36 @@ module.exports = {
     },
     write_excel : (req,res) => {
         const workbook = new excelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Test');
+
+        worksheet.columns = [
+            { header: 'Package', key: 'package_name' },
+            { header: 'Author', key: 'author_name' }
+        ];
+
+        worksheet.addRow(
+            { package_name: "ABC", author_name: "Author 1" },
+            { package_name: "XYZ", author_name: "Author 2" }
+        )
+
+        worksheet.addRow(["BCD", "Author Name 3"]);
+
+        const rows = [
+            ["FGH", "Author Name 4"],
+            { package_name: "PQR", author_name: "Author 5" }
+          ];
+          worksheet
+          .addRows(rows);
+        
+        // save workbook to disk
+        workbook
+          .xlsx
+          .writeFile('sample.xlsx')
+          .then(() => {
+            res.send('Saved')
+          })
+          .catch((err) => {
+            console.log("err", err);
+          });  
     }
 }
