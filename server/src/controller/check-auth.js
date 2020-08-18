@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = (req, res) => {
     try {
-        const token = req.cookies.JWT;
+        const token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, process.env.JWT_KEY);
         req.user = decoded.username;
         res.status(200).json({ 
@@ -10,6 +10,6 @@ module.exports = (req, res) => {
             user_id : decoded.user_id
         })
     } catch (error) {
-        res.status(200).json(false)
+        res.status(500).json(false)
     }
 }

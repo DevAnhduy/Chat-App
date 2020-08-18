@@ -1,6 +1,7 @@
 const app = require('express')();
 const loaders = require('./loaders/index');
 const server = require('http').createServer(app);
+require('tests/socketio')(server);
 
 (async() => { // Start server
     await loaders(app);

@@ -1,8 +1,14 @@
-import Axios from 'axios'
+import Axios from 'axios';
+const { __server } = require('config/constant.json');
 
 const check_auth = async (callback) => {
     try {
-        Axios.get('http://localhost:3001/check-auth', { withCredentials: true })
+        Axios.get(`${__server}/check-auth`,{
+            headers: {
+                authorization : window.localStorage.token
+            },
+            withCredentials: true
+        })
             .then(response => {
                 return callback(response.data);
             })

@@ -1,17 +1,20 @@
-import React from 'react'
+import React from 'react';
 import login_style from './login.module.css';
-import Axios from 'axios'
+import Axios from 'axios';
+const { __server } = require('config/constant.json');
 
 export class  Login_Form extends React.Component{
     submit_login = () => {
         if(this.username.value && this.password.value){
-            Axios.post('http://localhost:3001/login', {
+            Axios.post(`${__server}/login`, {
                 username: this.username.value,
                 password: this.password.value},{
                     withCredentials: true
                 })
             .then((response) => {
-                if(response.data.login_success){
+                //window.localStorage.setItem('user',JSON.stringify({}))
+                localStorage.setItem('token',`Bearer ${response.data.token}`) 
+                if(localStorage.getItem('token')){
                     window.location = '/'
                 }
                 else

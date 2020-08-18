@@ -4,9 +4,10 @@ import { CIRCLE_LOADING } from 'components/Utils/circle_loading';
 import { CHAT_ROOM } from './chat-room';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
-
+const { __server } = require('config/constant.json')
 const app_style = require('./App.module.css');
 const io = require('socket.io-client');
+const jwt_decode = require('jwt-decode');
 let socket;
 let arr_rooms_chat = [];
 
@@ -22,9 +23,16 @@ export class App extends React.Component{
   componentWillMount(){
     check_auth(is_auth => {
       if(is_auth){
-        socket = io('localhost:3001');
+        socket = io(__server,{
+          query: "authorization=" + window.localStorage.token
+        });
+        socket.on('connect',() => {
+          // const user = jwt_decode(localStorage.getItem('token').split(' ')[1]);
+          // socket.io.engine.id = user.user_id;
+          // socket.id = user.user_id;
+          console.log(socket)
+        })
         socket.on('/send-message',(msg) => {
-          console.log('Send');
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
@@ -32,12 +40,14 @@ export class App extends React.Component{
           main_message.appendChild(msg_element)
         })
         socket.on('/send-messages/users',(msg) => {
-          console.log('Send');
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
           msg_element.className = app_style.messages;
           main_message.appendChild(msg_element)
+        })
+        socket.on('test',(msg) =>{
+          alert(msg.data)
         })
         this.setState({ is_auth: true });
       }
@@ -46,8 +56,12 @@ export class App extends React.Component{
     })
   }
   componentDidMount(){
-    Axios.get('http://localhost:3001/chat/rooms',{withCredentials: true})
+    Axios.get('http://localhost:3001/chat/rooms',
+    { headers: {
+      authorization : window.localStorage.token
+    }})
       .then(response => {
+        console.log(response)
         arr_rooms_chat = response.data;
         this.setState({ load_chat_rooms_done: true })
       })

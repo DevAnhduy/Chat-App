@@ -1,5 +1,3 @@
-const { route } = require('./order');
-
 const router = require('express').Router();
 const check_auth_controller = require('src/controller/check-auth');
 
