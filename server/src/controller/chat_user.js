@@ -7,6 +7,7 @@ const logger = require('src/utils/logger');
 const write_message = require('src/utils/write_message');
 const edit_message = require('src/utils/edit_message');
 const delete_message = require('src/utils/delete_message');
+const excelJS = require('exceljs');
 
 module.exports = {
     get_recent_messages : (req, res) => {
@@ -184,5 +185,8 @@ module.exports = {
                 logger.error(err);
                 res.status(500).json({ error: err })
             })
+    },
+    write_excel : (req,res) => {
+        const workbook = new excelJS.Workbook();
     }
 }
