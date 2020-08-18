@@ -44,7 +44,6 @@ module.exports = {
                         res.status(404).json({ error: 'Not found ' });
                     }
                 } catch (err) {
-                    console.log(err)
                     res.status(404).json({ error: 'Not found' })
                 }
             }
@@ -191,8 +190,8 @@ module.exports = {
         const worksheet = workbook.addWorksheet('Test');
 
         worksheet.columns = [
-            { header: 'Package', key: 'package_name' },
-            { header: 'Author', key: 'author_name' }
+            { header: 'Package', key: 'package_name', width: 10 },
+            { header: 'Author', key: 'author_name', width: 30 }
         ];
 
         worksheet.addRow(
@@ -200,21 +199,23 @@ module.exports = {
             { package_name: "XYZ", author_name: "Author 2" }
         )
 
-        worksheet.addRow(["BCD", "Author Name 3"]);
-
+        const row = worksheet.addRow(["BCD", "Author Name 3"]);
+        row.height = 20
+        row.alignment = {horizontal: 'center',vertical: 'middle'}
         const rows = [
             ["FGH", "Author Name 4"],
             { package_name: "PQR", author_name: "Author 5" }
           ];
           worksheet
           .addRows(rows);
-        
+        worksheet.mergeCells('B1:C1')
         // save workbook to disk
         workbook
           .xlsx
           .writeFile('sample.xlsx')
           .then(() => {
-            res.send('Saved')
+              res.send('Saved')
+              //res.download('sample.xlsx')
           })
           .catch((err) => {
             console.log("err", err);

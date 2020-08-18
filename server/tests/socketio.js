@@ -3,7 +3,7 @@ const User_Model = require('src/models/user');
 const { ObjectID } = require('mongodb');
 const encode_jwt_token = require('src/utils/encode_jwt_token');
 module.exports = (server) => {
-    const io = require('socket. io')(server);
+    const io = require('socket.io')(server);
     const users_connected = [];
     io.on('connection', (socket) => {
         users_connected.push()
