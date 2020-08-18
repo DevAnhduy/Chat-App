@@ -5,13 +5,14 @@ import Axios from 'axios'
 export class  Login_Form extends React.Component{
     submit_login = () => {
         if(this.username.value && this.password.value){
-            Axios.post('http://localhost:3001/login', {
+            Axios.post(`${process.env.REACT_APP_API_URL}/login`, {
                 username: this.username.value,
                 password: this.password.value},{
                     withCredentials: true
                 })
             .then((response) => {
-                if(response.data.login_success){
+                if(response.data){
+                    window.localStorage.setItem('JWT',response.data)
                     window.location = '/'
                 }
                 else

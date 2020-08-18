@@ -151,15 +151,6 @@ module.exports = {
                 { members: req.user_id }
             ]
         })
-            .populate({
-                path: 'messages',
-                model: 'Message',
-                populate: {
-                    select: "_id username",
-                    path: "sender",
-                    model: "User"
-                }
-            })
             .exec()
             .then(rooms => {
                 res.status(200).json(rooms)

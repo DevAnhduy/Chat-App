@@ -1,7 +1,7 @@
 require('../config/constant');
 require('app-module-path').addPath(__root);
 require('dotenv').config();
-//
+
 const body_parser_loader = require('loaders/body_parser.js');
 const mongodb_loader = require('loaders/mongodb.js');
 const routes_loader = require('loaders/routes');

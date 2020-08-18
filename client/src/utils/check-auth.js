@@ -2,7 +2,13 @@ import Axios from 'axios'
 
 const check_auth = async (callback) => {
     try {
-        Axios.get('http://localhost:3001/check-auth', { withCredentials: true })
+        Axios.get(`${process.env.REACT_APP_API_URL}/check-auth`, 
+        {   withCredentials: true,
+            headers: {
+                authorization : window.localStorage.getItem('JWT')
+            } 
+        }
+            )
             .then(response => {
                 return callback(response.data);
             })

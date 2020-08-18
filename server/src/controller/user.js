@@ -19,7 +19,6 @@ exports.login = (req,res) => {
                             username: user.username,
                             user_id: user._id
                         }, process.env.JWT_KEY )
-                        console.log('Auth successfully')
                         // res.cookie(
                         //     'JWT',token,
                         //     {   
@@ -27,11 +26,11 @@ exports.login = (req,res) => {
                         //         httpOnly: true
                         //     }
                         // )
-                        return res.status(200).json({ token : token })
+                        return res.status(200).json(token)
                         
                     }
                     else {
-                        return res.status(401).json({ login_success: false })
+                        return res.status(401).json(false)
                     }
                 })
             }

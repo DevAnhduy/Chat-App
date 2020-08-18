@@ -46,9 +46,15 @@ export class App extends React.Component{
     })
   }
   componentDidMount(){
-    Axios.get('http://localhost:3001/chat/rooms',{withCredentials: true})
+    Axios.get('http://localhost:3001/chat/rooms',
+       { withCredentials: true,
+         headers : {
+           authorization : window.localStorage
+         } 
+      })
       .then(response => {
         arr_rooms_chat = response.data;
+        console.log(arr_rooms_chat)
         this.setState({ load_chat_rooms_done: true })
       })
       .catch(error => {
