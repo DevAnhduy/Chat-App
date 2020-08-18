@@ -1,11 +1,13 @@
 const moment = require('moment');
 const date_now = moment().format('DD-MM-YYYY');
 const fs = require('fs');
+const path = require('path')
 const File_Model = require('src/models/file');
 const logger = require('src/utils/logger');
 const write_message = require('src/utils/write_message');
 const edit_message = require('src/utils/edit_message');
 const delete_message = require('src/utils/delete_message');
+const excelJS = require('exceljs');
 
 module.exports = {
     get_recent_messages : (req, res) => {
@@ -21,20 +23,18 @@ module.exports = {
             }
             else {
                 try {
-                    const number_day_after_skip = folders_msg_users.length - number_of_day;
-                    if (number_day_after_skip > 0) {
+                    const number_day_after_skip = folders_msg_users.length - number_of_day ;
+                    if (number_day_after_skip >= 0) {
                         for (let i = number_day_after_skip; i >= 0; i--) {
                             const path_file_user_receiver = `${path_user_folder}/${folders_msg_users[i]}/${user_id}_${receiver_id}.json`;
                             const path_file_receiver_user = `${path_user_folder}/${folders_msg_users[i]}/${receiver_id}_${user_id}.json`;
-                            let path_file_exists = '';
-                            if (fs.existsSync(path_file_user_receiver)) {
+                            let path_file_exists = "";
+                            if (fs.existsSync(path_file_user_receiver)) 
                                 path_file_exists = path_file_user_receiver;
-                            }
                             if (fs.existsSync(path_file_receiver_user))
                                 path_file_exists = path_file_receiver_user;
                             if (path_file_exists) {
                                 const data_file_msg = require(path_file_exists);
-                                logger.error({ error: 'Test' })
                                 res.status(200).json(data_file_msg);
                                 return;
                             }
@@ -44,7 +44,7 @@ module.exports = {
                         res.status(404).json({ error: 'Not found ' });
                     }
                 } catch (err) {
-
+                    console.log(err)
                     res.status(404).json({ error: 'Not found' })
                 }
             }
@@ -185,5 +185,39 @@ module.exports = {
                 logger.error(err);
                 res.status(500).json({ error: err })
             })
+    },
+    write_excel : (req,res) => {
+        const workbook = new excelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Test');
+
+        worksheet.columns = [
+            { header: 'Package', key: 'package_name' },
+            { header: 'Author', key: 'author_name' }
+        ];
+
+        worksheet.addRow(
+            { package_name: "ABC", author_name: "Author 1" },
+            { package_name: "XYZ", author_name: "Author 2" }
+        )
+
+        worksheet.addRow(["BCD", "Author Name 3"]);
+
+        const rows = [
+            ["FGH", "Author Name 4"],
+            { package_name: "PQR", author_name: "Author 5" }
+          ];
+          worksheet
+          .addRows(rows);
+        
+        // save workbook to disk
+        workbook
+          .xlsx
+          .writeFile('sample.xlsx')
+          .then(() => {
+            res.send('Saved')
+          })
+          .catch((err) => {
+            console.log("err", err);
+          });  
     }
 }

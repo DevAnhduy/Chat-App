@@ -6,15 +6,15 @@ const { __server } = require('config/constant.json');
 export class  Login_Form extends React.Component{
     submit_login = () => {
         if(this.username.value && this.password.value){
-            Axios.post(`${__server}/login`, {
+            Axios.post(`${process.env.REACT_APP_API_URL}/login`, {
                 username: this.username.value,
                 password: this.password.value},{
                     withCredentials: true
                 })
             .then((response) => {
                 //window.localStorage.setItem('user',JSON.stringify({}))
-                localStorage.setItem('token',`Bearer ${response.data.token}`) 
-                if(localStorage.getItem('token')){
+                if(response.data){
+                    window.localStorage.setItem('token',`Bearer ${response.data.token}`)
                     window.location = '/'
                 }
                 else

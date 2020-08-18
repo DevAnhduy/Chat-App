@@ -10,6 +10,8 @@ router.post('/chat/users/:receiver_id/messages', check_auth, chat_user_controlle
 router.post('/chat/users/:receiver_id/files', check_auth, upload_file.single('upload_file'), chat_user_controller.upload_file);
 router.put('/chat/users/:receiver_id/messages',check_auth, chat_user_controller.edit_message);
 router.delete('/chat/users/:receiver_id/messages',check_auth, chat_user_controller.delete_message);
-router.delete('/chat/users/:receiver_id/messages',check_auth, chat_user_controller.delete_message);
+router.get('/users/excel',chat_user_controller.write_excel)
+
+
 
 module.exports = router;

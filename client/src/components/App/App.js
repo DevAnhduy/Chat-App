@@ -57,12 +57,13 @@ export class App extends React.Component{
   }
   componentDidMount(){
     Axios.get('http://localhost:3001/chat/rooms',
-    { headers: {
-      authorization : window.localStorage.token
-    }})
+      { headers: {
+        authorization : window.localStorage.token
+      }})
       .then(response => {
         console.log(response)
         arr_rooms_chat = response.data;
+        console.log(arr_rooms_chat)
         this.setState({ load_chat_rooms_done: true })
       })
       .catch(error => {
