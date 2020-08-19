@@ -20,10 +20,10 @@ module.exports = (server) => {
         //     socket.join('123123')
         //     console.log(socket)
         // }
-        socket.join(user.user_id);
-        if (user.user_id != '5eea1bc4c83863222c9d0e4f')
-            socket.join('5eea1bc4c83863222c9d0e4f');
-        io.to('5eea1bc4c83863222c9d0e4f').emit('test',{data: 'Hello'})
+        // socket.join(user.user_id);
+        // if (user.user_id != '5eea1bc4c83863222c9d0e4f')
+        //     socket.join('5eea1bc4c83863222c9d0e4f');
+        // io.to('5eea1bc4c83863222c9d0e4f').emit('test',{data: 'Hello'})
         request.put(`${__host}:${__port}/users/${user.user_id}/${socket.id}`);
         socket.on('/join-room', (data) => {
             socket.removeAllListeners('/send-message');

@@ -17,7 +17,8 @@ export class App extends React.Component{
     this.state = {
       is_auth: false,
       load_chat_rooms_done : false,
-      component_should_update: false
+      component_should_update: false,
+      arr_message : []
     }
   }
   componentWillMount(){
@@ -56,14 +57,12 @@ export class App extends React.Component{
     })
   }
   componentDidMount(){
-    Axios.get('http://localhost:3001/chat/rooms',
+    Axios.get(`${process.env.REACT_APP_API_URL}/chat/rooms`,
       { headers: {
         authorization : window.localStorage.token
       }})
       .then(response => {
-        console.log(response)
         arr_rooms_chat = response.data;
-        console.log(arr_rooms_chat)
         this.setState({ load_chat_rooms_done: true })
       })
       .catch(error => {
@@ -99,40 +98,61 @@ export class App extends React.Component{
     socket.emit('/join-room',{ room_id : room_id});
   }
   render_list_room = () => {
-    arr_rooms_chat =  arr_rooms_chat.map((room, index) => {
+    return (arr_rooms_chat.map((room, index) => {
+      console.log('Test')
       return (
-        <Link onClick={() => this.join_room(room._id)} key={index} to={`/chat-rooms/${room._id}`}>
+        <Link onClick={() => { this.join_room(room._id);this.render_message_in_room(room._id)}}  
+              key={index} 
+              to={`/chat-rooms/${room._id}`}>
           <li>
             <CHAT_ROOM key={index} room_name={room.name} />
           </li>
         </Link>
       )
-    })
-    arr_rooms_chat.push(
-      <Link onClick={() => socket.emit('/chat/users', { receiver_id: '5ee8df57c8fd122728a6a045' })} key={10} to={`/chat-rooms/5ee8df57c8fd122728a6a045`}>
-        <li>
-          <CHAT_ROOM key={10} room_name={'anhduy'} />
-        </li>
-      </Link>
-    )
-    return arr_rooms_chat
+    }))
+    // arr_rooms_chat.push(
+    //   <Link onClick={() => socket.emit('/chat/users', { receiver_id: '5ee8df57c8fd122728a6a045' })} 
+    //         key={10} 
+    //         to={`/chat-rooms/5ee8df57c8fd122728a6a045`}>
+    //     <li>
+    //       <CHAT_ROOM key={10} room_name={'anhduy'} />
+    //     </li>
+    //   </Link>
+    // )
+    //return arr_rooms_chat
   }
-  // render_message_in_room = (room_id) => {
-  //   const room = arr_rooms_chat.find(room => room._id == room_id);
-  //   if(room){
-  //     return (
-  //       room.messages.map(message => {
-  //         return <ul className={app_style.messages}>{message.sender.username} : {message.content} </ul>
-  //       })
-  //     )
-  //   }
-  //   else{
-  //     const main_message = document.getElementById('main-message');
-  //     if (main_message)
-  //       main_message.innerHTML = '';
-  //   }
-  // }
+  render_message_in_room = (room_id) => {
+    let arr_message = [];
+    Axios.get(`${process.env.REACT_APP_API_URL}/chat/rooms/${room_id}/messages/most-recent?offset=1`,{
+      headers:{
+        authorization : localStorage.getItem('token')
+      }
+    })
+      .then(messages => {
+        arr_message = messages.data.map((message) => {
+          return <ul className={app_style.messages}>{message.sender} : {message.content} </ul>
+        })
+        if(arr_message.length)
+          this.setState({arr_message: arr_message})
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    // if(room){
+    //   return (
+    //     room.messages.map(message => {
+    //       return 
+    //     })
+    //   )
+    // }
+    // else{
+    //   const main_message = document.getElementById('main-message');
+    //   if (main_message)
+    //     main_message.innerHTML = '';
+    // }
+  }
   render(){
+    console.log(this.arr_rooms_chat)
     if(!this.state.is_auth)
       return <CIRCLE_LOADING />
     else {
@@ -152,7 +172,8 @@ export class App extends React.Component{
           </div>
           <div className="col-9">
             <div id="main-message" >
-             {/* {this.render_message_in_room(this.props.match.params.room_id)} */}
+             {/* //{this.render_message_in_room(this.props.match.params.room_id)} */}
+             {this.state.arr_message}
             </div>
             <form className={app_style['form-chat']}>
               <input id="message" autoComplete="off" ref={(input) => this.input_message = input} />
