@@ -26,8 +26,7 @@ exports.login = (req,res) => {
                         //         httpOnly: true
                         //     }
                         // )
-                        return res.status(200).json(token)
-                        
+                        return res.status(200).json({token: token})
                     }
                     else {
                         return res.status(401).json(false)

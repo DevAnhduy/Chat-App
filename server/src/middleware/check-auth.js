@@ -8,7 +8,6 @@ module.exports = (req,res,next) => {
         req.user_id = decoded.user_id;  
         next();
     } catch (error) {
-        console.log(error)
         res.status(404).json({message : 'User not found !'})
     }
 }
