@@ -3,13 +3,13 @@ const User_Model = require('src/models/user');
 const { ObjectID } = require('mongodb');
 const encode_jwt_token = require('src/utils/encode_jwt_token');
 module.exports = (server) => {
+    let user_connected = {};
     const io = require('socket.io')(server);
-    const users_connected = [];
     io.on('connection', (socket) => {
-        users_connected.push()
         console.log('A user connected!');
         const jwt_token = socket.handshake.query.authorization;
         const user = encode_jwt_token(jwt_token);
+        user_connected[user.user_id] = socket.id;
         // socket.id = user.user_id;
         // socket.conn.transport.sid = user.user_id;
         // socket.conn = user.user_id;
@@ -24,18 +24,30 @@ module.exports = (server) => {
         // if (user.user_id != '5eea1bc4c83863222c9d0e4f')
         //     socket.join('5eea1bc4c83863222c9d0e4f');
         // io.to('5eea1bc4c83863222c9d0e4f').emit('test',{data: 'Hello'})
-        request.put(`${__host}:${__port}/users/${user.user_id}/${socket.id}`);
+        //request.put(`${__host}:${__port}/users/${user.user_id}/${socket.id}`);
         socket.on('/join-room', (data) => {
+            console.log(data)
             socket.removeAllListeners('/send-message');
-            socket.join(data.room_id);
-            socket.on('/send-message/room', (msg) => {
+            const token = socket.handshake.query.authorization;
+            if(data.type === 'rooms')
+                socket.join(data.room_id);
+
+            socket.on('/send-message', (msg) => {
                 if(user.username){
-                    io.to(data.room_id).emit('/send-message/room', { sender: user.username, content: msg.content });
-                    request.post(`http://localhost:3001/chat/rooms/${data.room_id}/messages`).form({sender_id: user.user_id,content: msg.content});
+                    if(data.type === 'rooms')
+                        io.to(data.room_id).emit('/send-message', { sender: user.username, content: msg.content });
+                    else 
+                        io.to(user_connected[data.room_id]).emit('/send-message', { sender: user.username, content: msg.content });
+                    request.post({
+                        url : `${__host}:${__port}/chat/${data.type}/${data.room_id}/messages`,
+                        headers: {
+                            authorization: token
+                        }
+                    }).form({content: msg.content});
                 }
             })
         })
-        socket.on('/chat/users', (body) => {
+        socket.on('/chat-with-user', (data) => {
             socket.removeAllListeners('/send-messages/users');
             socket.on('/send-messages/users', (msg) => {
                 if(user.username){
@@ -48,7 +60,7 @@ module.exports = (server) => {
                                     sender: user.username,
                                     content: msg.content
                                 })
-                                request.post(`http://localhost:3001/chat/users/${user.user_id}/messages`).form({
+                                request.post(`${_host}:${__port}/chat/users/${user.user_id}/messages`).form({
                                     receiver_id: body.receiver_id,
                                     content: msg.content
                                 })

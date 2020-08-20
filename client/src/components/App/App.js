@@ -27,12 +27,12 @@ export class App extends React.Component{
         socket = io(__server,{
           query: "authorization=" + window.localStorage.token
         });
-        socket.on('connect',() => {
-          // const user = jwt_decode(localStorage.getItem('token').split(' ')[1]);
-          // socket.io.engine.id = user.user_id;
-          // socket.id = user.user_id;
-          console.log(socket)
-        })
+        // socket.on('connect',() => {
+        //   // const user = jwt_decode(localStorage.getItem('token').split(' ')[1]);
+        //   // socket.io.engine.id = user.user_id;
+        //   // socket.id = user.user_id;
+        //   console.log(socket)
+        // })
         socket.on('/send-message',(msg) => {
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
@@ -40,7 +40,7 @@ export class App extends React.Component{
           msg_element.className = app_style.messages;
           main_message.appendChild(msg_element)
         })
-        socket.on('/send-messages/users',(msg) => {
+        socket.on('/send-message/room',(msg) => {
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
@@ -72,7 +72,7 @@ export class App extends React.Component{
   send_message = () => {
     if(this.input_message.value){
       //socket.emit('/send-message', { content: this.input_message.value });
-      socket.emit('/send-messages/users', { content: this.input_message.value });
+      socket.emit('/send-message', { content: this.input_message.value });
       document.getElementById('message').value = '';
     }
     else
@@ -94,32 +94,24 @@ export class App extends React.Component{
     }
 
   }
-  join_room = (room_id) => {
-    socket.emit('/join-room',{ room_id : room_id});
+  join_room = (room_id,type) => {
+    socket.emit('/join-room',{ room_id,type });
+  }
+  chat_with_user = (receiver_id) => {
+    socket.emit('/chat-with-user',{receiver_id})
   }
   render_list_room = () => {
     return (arr_rooms_chat.map((room, index) => {
-      console.log('Test')
       return (
-        <Link onClick={() => { this.join_room(room._id);this.render_message_in_room(room._id)}}  
+        <Link onClick={() => { this.join_room(room._id,'rooms');this.render_message_in_room(room._id)}}  
               key={index} 
-              to={`/chat-rooms/${room._id}`}>
+              to={`/chat/${room._id}`}>
           <li>
             <CHAT_ROOM key={index} room_name={room.name} />
           </li>
         </Link>
       )
     }))
-    // arr_rooms_chat.push(
-    //   <Link onClick={() => socket.emit('/chat/users', { receiver_id: '5ee8df57c8fd122728a6a045' })} 
-    //         key={10} 
-    //         to={`/chat-rooms/5ee8df57c8fd122728a6a045`}>
-    //     <li>
-    //       <CHAT_ROOM key={10} room_name={'anhduy'} />
-    //     </li>
-    //   </Link>
-    // )
-    //return arr_rooms_chat
   }
   render_message_in_room = (room_id) => {
     let arr_message = [];
@@ -130,29 +122,28 @@ export class App extends React.Component{
     })
       .then(messages => {
         arr_message = messages.data.map((message) => {
-          return <ul className={app_style.messages}>{message.sender} : {message.content} </ul>
+          return <ul className={app_style.messages}>{message.sender_name} : {message.content} </ul>
         })
-        if(arr_message.length)
+        if(arr_message.length){
           this.setState({arr_message: arr_message})
+        }
       })
       .catch(error => {
-        console.log(error)
+        this.setState({arr_message: []})
       })
-    // if(room){
-    //   return (
-    //     room.messages.map(message => {
-    //       return 
-    //     })
-    //   )
-    // }
-    // else{
-    //   const main_message = document.getElementById('main-message');
-    //   if (main_message)
-    //     main_message.innerHTML = '';
-    // }
+  }
+  render_chat_with_user = (receiver_id,type) => {
+    //;this.render_message_in_room(room._id)
+    return (
+      <Link onClick={() => { this.join_room(receiver_id,type)}}  
+            to={`/chat/${receiver_id}`}>
+              <li>
+                <CHAT_ROOM room_name='dev1' />
+              </li>
+      </Link>
+    )
   }
   render(){
-    console.log(this.arr_rooms_chat)
     if(!this.state.is_auth)
       return <CIRCLE_LOADING />
     else {
@@ -167,6 +158,8 @@ export class App extends React.Component{
             <div>
               <ul style={{listStyle:'none',padding:20}}>
                 {this.render_list_room()}
+                {this.render_chat_with_user('5f3b3f1c9e0428154021f25b','users')}
+                {this.render_chat_with_user('5f3b3f1c9e0428154021f25a','users')}
               </ul>
             </div>
           </div>

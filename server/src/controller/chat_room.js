@@ -37,6 +37,7 @@ module.exports = {
         const new_message = {
             content: {
                 sender: req.user_id,
+                sender_name: req.username,
                 room_id: room_id,
                 content: req.body.content,
                 sent_date: moment().format('DD-MM-YYYY, h:mm:ss'),

@@ -1,0 +1,37 @@
+[
+    {
+        "sender": "5f3b3f1c9e0428154021f25b",
+        "receiver": "5f3b3f1c9e0428154021f25a",
+        "content": "123123",
+        "sent_date": "20-08-2020, 2:24:02",
+        "timestamp": 1597908242249
+    },
+    {
+        "sender": "5f3b3f1c9e0428154021f25b",
+        "receiver": "5f3b3f1c9e0428154021f25a",
+        "content": "123123",
+        "sent_date": "20-08-2020, 2:24:08",
+        "timestamp": 1597908248337
+    },
+    {
+        "sender": "5f3b3f1c9e0428154021f25b",
+        "receiver": "5f3b3f1c9e0428154021f25a",
+        "content": "fasfasf",
+        "sent_date": "20-08-2020, 3:05:10",
+        "timestamp": 1597910710160
+    },
+    {
+        "sender": "5f3b3f1c9e0428154021f25b",
+        "receiver": "5f3b3f1c9e0428154021f25a",
+        "content": "123123123",
+        "sent_date": "20-08-2020, 3:05:19",
+        "timestamp": 1597910719057
+    },
+    {
+        "sender": "5f3b3f1c9e0428154021f25b",
+        "receiver": "5f3b3f1c9e0428154021f25a",
+        "content": "123123",
+        "sent_date": "20-08-2020, 3:06:49",
+        "timestamp": 1597910809471
+    }
+]
