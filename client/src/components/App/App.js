@@ -1,11 +1,13 @@
-import React, { createElement } from 'react';
+import React from 'react';
 import check_auth from 'utils/check-auth'
 import { CIRCLE_LOADING } from 'components/Utils/circle_loading';
 import { CHAT_ROOM } from './chat-room';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
+import './App.scss';
+
 const { __server } = require('config/constant.json')
-const app_style = require('./App.module.css');
+//const app_style = require('./App.module.css');
 const io = require('socket.io-client');
 const jwt_decode = require('jwt-decode');
 let socket;
@@ -37,14 +39,16 @@ export class App extends React.Component{
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
-          msg_element.className = app_style.messages;
+          // msg_element.className = app_style.messages;
+          msg_element.className = 'messages';
           main_message.appendChild(msg_element)
         })
         socket.on('/send-message/room',(msg) => {
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
-          msg_element.className = app_style.messages;
+          //msg_element.className = app_style.messages;
+          msg_element.className = 'messages';
           main_message.appendChild(msg_element)
         })
         socket.on('test',(msg) =>{
@@ -113,16 +117,17 @@ export class App extends React.Component{
       )
     }))
   }
-  render_message_in_room = (room_id) => {
+  render_message_in_room = (room_id,receiver_type) => {
     let arr_message = [];
-    Axios.get(`${process.env.REACT_APP_API_URL}/chat/rooms/${room_id}/messages/most-recent?offset=1`,{
+    Axios.get(`${process.env.REACT_APP_API_URL}/chat/${receiver_type}/${room_id}/messages/most-recent?offset=1`,{
       headers:{
         authorization : localStorage.getItem('token')
       }
     })
       .then(messages => {
+        // { app_style.messages }
         arr_message = messages.data.map((message) => {
-          return <ul className={app_style.messages}>{message.sender_name} : {message.content} </ul>
+          return <ul className="messages">{message.sender_name} : {message.content} </ul>
         })
         if(arr_message.length){
           this.setState({arr_message: arr_message})
@@ -135,7 +140,7 @@ export class App extends React.Component{
   render_chat_with_user = (receiver_id,type) => {
     //;this.render_message_in_room(room._id)
     return (
-      <Link onClick={() => { this.join_room(receiver_id,type)}}  
+      <Link onClick={() => { this.join_room(receiver_id,type) ; this.render_message_in_room(receiver_id,type) }}  
             to={`/chat/${receiver_id}`}>
               <li>
                 <CHAT_ROOM room_name='dev1' />
@@ -149,17 +154,19 @@ export class App extends React.Component{
     else {
      return (
         <div className="row">
-          <div className={`col-3 ${app_style['chat-room']}`}>
+         {/* ${app_style['chat-room']} */}
+          <div className={`col-3 chat-room `}>
             <div className="row">
               <div className="col mt-3">
-                <button onClick={this.create_room} className={app_style['btn-add-chat-room']}>Thêm phòng chat +</button>
+               {/* {app_style['btn-add-chat-room']} */}
+                <button onClick={this.create_room} className="btn-add-chat-room">Thêm phòng chat +</button>
               </div>
             </div>
             <div>
               <ul style={{listStyle:'none',padding:20}}>
                 {this.render_list_room()}
                 {this.render_chat_with_user('5f3b3f1c9e0428154021f25b','users')}
-                {this.render_chat_with_user('5f3b3f1c9e0428154021f25a','users')}
+                {this.render_chat_with_user('5f3b3e719e0428154021f25a','users')}
               </ul>
             </div>
           </div>
@@ -168,7 +175,8 @@ export class App extends React.Component{
              {/* //{this.render_message_in_room(this.props.match.params.room_id)} */}
              {this.state.arr_message}
             </div>
-            <form className={app_style['form-chat']}>
+           {/* {app_style['form-chat']} */}
+            <form className="form-chat">
               <input id="message" autoComplete="off" ref={(input) => this.input_message = input} />
               <button onClick={this.send_message} type="button">Send</button>
             </form>

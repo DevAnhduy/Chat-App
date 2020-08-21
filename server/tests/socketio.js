@@ -26,7 +26,6 @@ module.exports = (server) => {
         // io.to('5eea1bc4c83863222c9d0e4f').emit('test',{data: 'Hello'})
         //request.put(`${__host}:${__port}/users/${user.user_id}/${socket.id}`);
         socket.on('/join-room', (data) => {
-            console.log(data)
             socket.removeAllListeners('/send-message');
             const token = socket.handshake.query.authorization;
             if(data.type === 'rooms')
@@ -36,8 +35,11 @@ module.exports = (server) => {
                 if(user.username){
                     if(data.type === 'rooms')
                         io.to(data.room_id).emit('/send-message', { sender: user.username, content: msg.content });
-                    else 
+                    else {
                         io.to(user_connected[data.room_id]).emit('/send-message', { sender: user.username, content: msg.content });
+                        io.to(user_connected[user.user_id]).emit('/send-message', { sender: user.username, content: msg.content });
+                    }
+                        
                     request.post({
                         url : `${__host}:${__port}/chat/${data.type}/${data.room_id}/messages`,
                         headers: {

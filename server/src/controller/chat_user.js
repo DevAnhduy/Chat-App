@@ -3,6 +3,7 @@ const date_now = moment().format('DD-MM-YYYY');
 const fs = require('fs');
 const path = require('path')
 const File_Model = require('src/models/file');
+const User_Model = require('src/models/user');
 const logger = require('src/utils/logger');
 const write_message = require('src/utils/write_message');
 const edit_message = require('src/utils/edit_message');
@@ -82,28 +83,36 @@ module.exports = {
         })
     },
     create_message : (req, res) => {
-        const sender = req.user_id;
-        const receiver = req.params.receiver_id;
-        const new_message = {
-            content: {
-                sender: sender,
-                receiver: receiver,
-                content: req.body.content,
-                sent_date: moment().format('DD-MM-YYYY, h:mm:ss'),
-                timestamp: Date.now()
-            },
-            store_path: `${__root}/data/messages/user_to_user/${date_now}`,
-            file_names: [
-                `${sender}_${receiver}.json`,
-                `${receiver}_${sender}.json`
-            ]
-        }
-        write_message(new_message, (response) => {
-            if (response)
-                res.status(201).json({ send_message_success: true })
-            else
-                res.status(500).json({ send_message_success: false })
-        })
+        User_Model.findById(req.params.receiver_id)
+            .select('username')
+            .exec()
+            .then(receiver => {
+                console.log(receiver)
+                const sender = req.user_id;
+                const receiver_id = req.params.receiver_id;
+                const new_message = {
+                    content: {
+                        sender: sender,
+                        sender_name: req.username,
+                        receiver_id,
+                        receiver_name: receiver.username,
+                        content: req.body.content,
+                        sent_date: moment().format('DD-MM-YYYY, h:mm:ss'),
+                        timestamp: Date.now()
+                    },
+                    store_path: `${__root}/data/messages/user_to_user/${date_now}`,
+                    file_names: [
+                        `${sender}_${receiver_id}.json`,
+                        `${receiver_id}_${sender}.json`
+                    ]
+                }
+                write_message(new_message, (response) => {
+                    if (response)
+                        res.status(201).json({ send_message_success: true })
+                    else
+                        res.status(500).json({ send_message_success: false })
+                })
+            })
     },
     edit_message : (req, res) => {
         const sender = req.user_id;
