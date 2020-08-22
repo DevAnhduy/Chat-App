@@ -87,7 +87,6 @@ module.exports = {
             .select('username')
             .exec()
             .then(receiver => {
-                console.log(receiver)
                 const sender = req.user_id;
                 const receiver_id = req.params.receiver_id;
                 const new_message = {
@@ -163,6 +162,7 @@ module.exports = {
         })
     },
     upload_file : (req, res) => {
+        console.log(req.file)
         const new_file_uploaded = new File_Model({
             _id: req.file.file_id,
             name: req.file.originalname,

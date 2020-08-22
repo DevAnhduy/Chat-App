@@ -3,7 +3,7 @@ const path = require('path');
 const routes = require('src/routes/index')
 
 module.exports = async (app) => {
-    routes();
+    routes(app);
     // fs.readdir(path.resolve(__root,'./src/routes'), (err, routes) => {
     //     if (err) console.log(err);
     //     else {
