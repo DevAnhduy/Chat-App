@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import './App.scss';
 
 const { __server } = require('config/constant.json')
-//const app_style = require('./App.module.css');
 const io = require('socket.io-client');
 const jwt_decode = require('jwt-decode');
 let socket;
@@ -39,7 +38,6 @@ export class App extends React.Component{
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
-          // msg_element.className = app_style.messages;
           msg_element.className = 'messages';
           main_message.appendChild(msg_element)
         })
@@ -47,7 +45,6 @@ export class App extends React.Component{
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
-          //msg_element.className = app_style.messages;
           msg_element.className = 'messages';
           main_message.appendChild(msg_element)
         })
@@ -125,7 +122,6 @@ export class App extends React.Component{
       }
     })
       .then(messages => {
-        // { app_style.messages }
         arr_message = messages.data.map((message) => {
           return <ul className="messages">{message.sender_name} : {message.content} </ul>
         })
@@ -138,7 +134,6 @@ export class App extends React.Component{
       })
   }
   render_chat_with_user = (receiver_id,type) => {
-    //;this.render_message_in_room(room._id)
     return (
       <Link onClick={() => { this.join_room(receiver_id,type) ; this.render_message_in_room(receiver_id,type) }}  
             to={`/chat/${receiver_id}`}>
@@ -153,12 +148,10 @@ export class App extends React.Component{
       return <CIRCLE_LOADING />
     else {
      return (
-        <div className="row">
-         {/* ${app_style['chat-room']} */}
+        <div className="row chat-container">
           <div className={`col-3 chat-room `}>
             <div className="row">
               <div className="col mt-3">
-               {/* {app_style['btn-add-chat-room']} */}
                 <button onClick={this.create_room} className="btn-add-chat-room">Thêm phòng chat +</button>
               </div>
             </div>
@@ -172,10 +165,8 @@ export class App extends React.Component{
           </div>
           <div className="col-9">
             <div id="main-message" >
-             {/* //{this.render_message_in_room(this.props.match.params.room_id)} */}
              {this.state.arr_message}
             </div>
-           {/* {app_style['form-chat']} */}
             <form className="form-chat">
               <input id="message" autoComplete="off" ref={(input) => this.input_message = input} />
               <button onClick={this.send_message} type="button">Send</button>
