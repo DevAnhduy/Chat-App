@@ -1,0 +1,11 @@
+[
+    {
+        "sender": "5f3b3e719e0428154021f25a",
+        "sender_name": "dev",
+        "receiver_id": "5f3b3f1c9e0428154021f25b",
+        "receiver_name": "dev1",
+        "content": "abc",
+        "sent_date": "24-08-2020, 1:25:24",
+        "timestamp": 1598207124231
+    }
+]

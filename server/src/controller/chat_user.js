@@ -8,6 +8,7 @@ const logger = require('src/utils/logger');
 const write_message = require('src/utils/write_message');
 const edit_message = require('src/utils/edit_message');
 const delete_message = require('src/utils/delete_message');
+const Message_Service = require('src/utils/message_service');
 const excelJS = require('exceljs');
 
 module.exports = {
@@ -91,7 +92,7 @@ module.exports = {
                 const receiver_id = req.params.receiver_id;
                 const new_message = {
                     content: {
-                        sender: sender,
+                        sender,
                         sender_name: req.username,
                         receiver_id,
                         receiver_name: receiver.username,
@@ -105,12 +106,20 @@ module.exports = {
                         `${receiver_id}_${sender}.json`
                     ]
                 }
-                write_message(new_message, (response) => {
-                    if (response)
-                        res.status(201).json({ send_message_success: true })
-                    else
-                        res.status(500).json({ send_message_success: false })
-                })
+                const message_service = new Message_Service(new_message);
+                message_service
+                    .write_message(response => {
+                        if(response)
+                            res.status(201).json({ send_message_success: true })
+                        else
+                            res.status(500).json({ send_message_success: false })
+                    })
+                // write_message(new_message, (response) => {
+                //     if (response)
+                //         res.status(201).json({ send_message_success: true })
+                //     else
+                //         res.status(500).json({ send_message_success: false })
+                // })
             })
     },
     edit_message : (req, res) => {
