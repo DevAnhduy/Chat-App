@@ -1,13 +1,9 @@
 const moment = require('moment');
 const date_now = moment().format('DD-MM-YYYY');
 const fs = require('fs');
-const path = require('path')
 const File_Model = require('src/models/file');
 const User_Model = require('src/models/user');
 const logger = require('src/utils/logger');
-const write_message = require('src/utils/write_message');
-const edit_message = require('src/utils/edit_message');
-const delete_message = require('src/utils/delete_message');
 const Message_Service = require('src/utils/message_service');
 const excelJS = require('exceljs');
 
@@ -139,9 +135,10 @@ module.exports = {
                 `${receiver}_${sender}.json`
             ]
         }
-        edit_message(message_updated, (response) => {
-            if (response)
-                res.status(200).json({ edit_message_success: true })
+        const message_service = new Message_Service(message_updated);
+        message_service.edit_message(response => {
+            if(response)
+                res.status(200).json({edit_message_success: true})
             else
                 res.status(500).json({ edit_message_success: false })
         })
@@ -163,8 +160,9 @@ module.exports = {
                 `${receiver}_${sender}.json`
             ]
         }
-        delete_message(message_deleted, (response) => {
-            if (response)
+        const message_service = new Message_Service(message_deleted)
+        message_service.delete_message(response => {
+            if(response)
                 res.status(200).json({ edit_message_success: true })
             else
                 res.status(500).json({ edit_message_success: false })

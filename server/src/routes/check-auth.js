@@ -3,6 +3,6 @@ const check_auth_controller = require('src/controller/check-auth');
 
 // router.get('/check-auth',check_auth_controller);
 router.route('/')
-    .get(check_auth_controller)
+    .get(check_auth_controller.check_auth)
 
 module.exports = router;

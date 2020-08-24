@@ -1,7 +1,8 @@
 const logger = require('src/utils/logger');
 const fs = require('fs');
 const path = require('path');
-class Message_Service{
+
+class Message_Service {
     constructor(message = { content: {}, store_path: '', file_names: [] }){
         this.message = message
     }
@@ -59,7 +60,7 @@ class Message_Service{
     edit_message(callback){
         let path_file_write = '';
         const preparing_to_update = new Promise((resolve, rejects) => {
-            if (fs.existsSync(this.store_path)) {    //Exist folder store message
+            if (fs.existsSync(this.message.store_path)) {    //Exist folder store message
                 this.message.file_names.forEach((file_name, index) => {
                     const path_file = path.join(this.message.store_path, file_name);
                     if (fs.existsSync(path_file)) {    //Exist file message
@@ -111,6 +112,8 @@ class Message_Service{
                     if (fs.existsSync(path_file)) {    //Exist file message
                         path_file_delete = path_file;
                         const all_messages = require(path_file_delete);
+                        if(!all_messages.length)
+                            rejects('Not found message')
                         for (let i = 0; i < all_messages.length; i++) { //Loop all message in file
                             if (this.message.content.timestamp === all_messages[i].timestamp) { //Check exist message by timestamp
                                 //all_messages[i] = message.content;

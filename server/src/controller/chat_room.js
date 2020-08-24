@@ -2,12 +2,10 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const date_now = moment().format('DD-MM-YYYY');
 const fs = require('fs');
-const write_message = require('src/utils/write_message');
-const edit_message = require('src/utils/edit_message');
-const delete_message = require('src/utils/delete_message');
 const Room_Model = require('src/models/chat_room');
 const File_Model = require('src/models/file');
 const logger = require('src/utils/logger');
+const Message_Service = require('src/utils/message_service');
 
 module.exports = {
     get_recent_messages : (req, res) => {
@@ -46,12 +44,19 @@ module.exports = {
             store_path: path_room_folder,
             file_names: [`${date_now}.json`],
         };
-        write_message(new_message, (response) => {
-            if (response)
+        const message_service = new Message_Service(new_message);
+        message_service.write_message(response => {
+            if(response)
                 res.status(201).json({ send_message_success: true })
             else
                 res.status(500).json({ send_message_success: false })
         })
+        // write_message(new_message, (response) => {
+        //     if (response)
+        //         res.status(201).json({ send_message_success: true })
+        //     else
+        //         res.status(500).json({ send_message_success: false })
+        // })
     },
     edit_message : (req, res) => {
         const sender = req.user_id;
@@ -67,8 +72,9 @@ module.exports = {
             store_path: `${__root}/data/messages/user_to_room/${room_id}`,
             file_names: [`${sent_day}.json`]
         }
-        edit_message(message_updated, (response) => {
-            if (response)
+        const message_service = new Message_Service(message_updated)
+        message_service.edit_message(response => {
+            if(response)
                 res.status(200).json({ edit_message_success: true })
             else
                 res.status(500).json({ edit_message_success: false })
@@ -88,11 +94,12 @@ module.exports = {
             store_path: `${__root}/data/messages/user_to_room/${room_id}`,
             file_names: [`${sent_day}.json`]
         }
-        delete_message(message_deleted, (response) => {
-            if (response)
-                res.status(200).json({ edit_message_success: true })
+        const message_service = new Message_Service(message_deleted);
+        message_service.delete_message(response => {
+            if(response)
+                res.status(200).json({edit_message_success: true})
             else
-                res.status(500).json({ edit_message_success: false })
+                res.status(500).json({edit_message_success: false})
         })
     },
     upload_file : (req, res) => {

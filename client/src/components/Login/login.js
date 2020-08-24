@@ -6,7 +6,7 @@ const { __server } = require('config/constant.json');
 export class  Login_Form extends React.Component{
     submit_login = () => {
         if(this.username.value && this.password.value){
-            Axios.post(`${process.env.REACT_APP_API_URL}/login`, {
+            Axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
                 username: this.username.value,
                 password: this.password.value},{
                     withCredentials: true
