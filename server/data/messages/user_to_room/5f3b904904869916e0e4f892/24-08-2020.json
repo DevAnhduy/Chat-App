@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "sender": "5f3b3e719e0428154021f25a",
+        "sender_name": "dev",
+        "room_id": "5f3b904904869916e0e4f892",
+        "content": "123",
+        "sent_date": "24-08-2020, 3:25:53",
+        "timestamp": 1598257553634
+    },
+    {
+        "sender": "5f3b3e719e0428154021f25a",
+        "sender_name": "dev",
+        "room_id": "5f3b904904869916e0e4f892",
+        "content": "123",
+        "sent_date": "24-08-2020, 3:28:00",
+        "timestamp": 1598257680558
+    }
+]

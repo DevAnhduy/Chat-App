@@ -51,12 +51,6 @@ module.exports = {
             else
                 res.status(500).json({ send_message_success: false })
         })
-        // write_message(new_message, (response) => {
-        //     if (response)
-        //         res.status(201).json({ send_message_success: true })
-        //     else
-        //         res.status(500).json({ send_message_success: false })
-        // })
     },
     edit_message : (req, res) => {
         const sender = req.user_id;
