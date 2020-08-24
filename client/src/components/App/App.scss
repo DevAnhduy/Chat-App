@@ -27,8 +27,18 @@
     }
     .messages {
         list-style-type: none;
-        margin: 0;
-        padding: 0;
+        display: inline-block;
+        margin: 10px;
+        padding: 10px;
+        background-color: #f1f0f0;
+        border-radius: 10px;
+        &.sender{
+            clear: right;
+            float: right;
+            background-color: #0084ff;
+            color: white;
+            margin-right: 30px;
+        }
         li {
             padding: 5px 10px;
             &:nth-child(odd) {

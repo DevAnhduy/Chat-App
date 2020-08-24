@@ -8,7 +8,6 @@ import './App.scss';
 
 const { __server } = require('config/constant.json')
 const io = require('socket.io-client');
-const jwt_decode = require('jwt-decode');
 let socket;
 let arr_rooms_chat = [];
 
@@ -28,12 +27,6 @@ export class App extends React.Component{
         socket = io(__server,{
           query: "authorization=" + window.localStorage.token
         });
-        // socket.on('connect',() => {
-        //   // const user = jwt_decode(localStorage.getItem('token').split(' ')[1]);
-        //   // socket.io.engine.id = user.user_id;
-        //   // socket.id = user.user_id;
-        //   console.log(socket)
-        // })
         socket.on('/send-message',(msg) => {
           const main_message = document.getElementById('main-message');
           let msg_element = document.createElement('ul');
@@ -43,7 +36,7 @@ export class App extends React.Component{
         })
         socket.on('/send-message/room',(msg) => {
           const main_message = document.getElementById('main-message');
-          let msg_element = document.createElement('ul');
+          let msg_element = document.createElement('div');
           msg_element.innerHTML = `${msg.sender} : ${msg.content}`;
           msg_element.className = 'messages';
           main_message.appendChild(msg_element)
@@ -104,7 +97,7 @@ export class App extends React.Component{
   render_list_room = () => {
     return (arr_rooms_chat.map((room, index) => {
       return (
-        <Link onClick={() => { this.join_room(room._id,'rooms');this.render_message_in_room(room._id)}}  
+        <Link onClick={() => { this.join_room(room._id,'rooms');this.render_message_in_room(room._id,'rooms')}}  
               key={index} 
               to={`/chat/${room._id}`}>
           <li>
@@ -123,7 +116,11 @@ export class App extends React.Component{
     })
       .then(messages => {
         arr_message = messages.data.map((message) => {
-          return <ul className="messages">{message.sender_name} : {message.content} </ul>
+          return (
+            <div>
+              <div className="messages">{message.sender_name} : {message.content} </div>
+            </div>
+          )
         })
         if(arr_message.length){
           this.setState({arr_message: arr_message})
