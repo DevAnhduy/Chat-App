@@ -84,7 +84,7 @@ export class App extends React.Component{
     if(room_name == null || room_name == '')
       return;
     else{
-      Axios.post('http://localhost:3001/chat-rooms', { room_name: room_name }, { withCredentials: true })
+      Axios.post('http://localhost:3001/chat-rooms', {room_name: room_name })
         .then(response => {
           arr_rooms_chat.push(response.data)
           this.setState({component_should_update: true})

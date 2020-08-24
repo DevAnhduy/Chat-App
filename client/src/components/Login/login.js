@@ -8,10 +8,9 @@ export class  Login_Form extends React.Component{
         if(this.username.value && this.password.value){
             Axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
                 username: this.username.value,
-                password: this.password.value},{
-                    withCredentials: true
-                })
+                password: this.password.value})
             .then((response) => {
+                console.log(response)
                 //window.localStorage.setItem('user',JSON.stringify({}))
                 if(response.data){
                     window.localStorage.setItem('token',`Bearer ${response.data.token}`)

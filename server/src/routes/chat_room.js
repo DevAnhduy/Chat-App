@@ -28,6 +28,9 @@ router.route('/:room_id/files')
     .get(chat_room_controller.get_all_file)
     .post(upload_file.single('upload_file'),chat_room_controller.upload_file)
 
-router.put('/chat/rooms/:room_id/name',check_auth,chat_room_controller.update_room_name);
+router.route('/:room_id/name')
+    .all(check_auth)
+    .put(chat_room_controller.update_room_name)    
+
 
 module.exports = router;

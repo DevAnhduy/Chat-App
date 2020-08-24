@@ -4,7 +4,7 @@ const { __server } = require('config/constant.json');
 const check_auth = async (callback) => {
     try {
         Axios.get(`${process.env.REACT_APP_API_URL}/check-auth`, 
-            { withCredentials: true,
+            { 
               headers: {
                 authorization : window.localStorage.token
               } 

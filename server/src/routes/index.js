@@ -2,11 +2,12 @@ const user_route = require('src/routes/user');
 const chat_user_route = require('src/routes/chat_user');
 const chat_room_route = require('src/routes/chat_room');
 const check_auth_route = require('src/routes/check-auth');
-console.log(chat_room_route)
 
 module.exports = async (app) => {
-    await app.use('/users',user_route);
-    await app.use('/chat/users/:receiver_id',chat_user_route);
-    await app.use('/chat/rooms',chat_room_route);
-    await app.use('/check-auth',check_auth_route);
+    Promise.all([
+        app.use('/users',user_route),
+        app.use('/chat/rooms',chat_room_route),
+        app.use('/check-auth',check_auth_route),
+        app.use('/chat/users/:receiver_id',chat_user_route)
+    ])
 }

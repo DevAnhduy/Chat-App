@@ -169,7 +169,6 @@ module.exports = {
         })
     },
     upload_file : (req, res) => {
-        console.log(req.file)
         const new_file_uploaded = new File_Model({
             _id: req.file.file_id,
             name: req.file.originalname,
