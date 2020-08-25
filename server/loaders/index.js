@@ -15,6 +15,6 @@ module.exports = async (app) => {
         cookie_parser_loader(app),
         body_parser_loader(app),
         mongodb_loader(),
-        routes_loader(app),
+        routes_loader(app)
     ])
 }
