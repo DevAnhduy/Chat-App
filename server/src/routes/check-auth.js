@@ -1,5 +1,5 @@
 const router = require('express').Router({mergeParams: true});
-const check_auth_controller = require('src/controller/check-auth');
+const check_auth_controller = require('src/controller/check_auth_controller');
 
 // router.get('/check-auth',check_auth_controller);
 router.route('/')

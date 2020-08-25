@@ -1,6 +1,6 @@
 const upload_file = require('src/middleware/upload_file');
 const router = require('express').Router({mergeParams: true});
-const chat_user_controller = require('src/controller/chat_user');
+const chat_user_controller = require('src/controller/chat_user_controller');
 const check_auth = require('src/middleware/check-auth');
 
 router.route('/messages')
