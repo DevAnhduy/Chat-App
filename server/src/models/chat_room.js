@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-const room_schema = mongoose.Schema({
-    _id : mongoose.Schema.Types.ObjectId,
+const room_schema = new mongoose.Schema({
     avatar: String,
     name : String,
     admin : {
