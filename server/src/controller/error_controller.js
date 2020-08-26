@@ -1,4 +1,3 @@
-import AppError from "src/utils/app_error";
 const AppError = require('src/utils/app_error');
 
 const handle_cast_error_DB = err => {
