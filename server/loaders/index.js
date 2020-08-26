@@ -7,6 +7,7 @@ const mongodb_loader = require('loaders/mongodb.js');
 const routes_loader = require('loaders/routes');
 const cookie_parser_loader = require('loaders/cookie-parser');
 const cors = require('loaders/cors');
+const loader_error_controller = require('loaders/global_error_handle');
 //const cors = require('cors');
 
 module.exports = async (app) => {
@@ -15,6 +16,7 @@ module.exports = async (app) => {
         cookie_parser_loader(app),
         body_parser_loader(app),
         mongodb_loader(),
-        routes_loader(app)
+        routes_loader(app),
+        loader_error_controller(app)
     ])
 }
