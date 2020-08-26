@@ -6,6 +6,13 @@ const User_Model = require('src/models/user');
 const logger = require('src/utils/logger');
 const Message_Service = require('src/utils/message_service');
 const excelJS = require('exceljs');
+const factory = require('src/controller/handle_factory');
+const catch_async = require('src/utils/catch_async');
+
+// exports.get_all_messages = catch_async(async (req,res,next) => {
+//     const receiver_id = req.params.id;
+    
+// })
 
 module.exports = {
     get_recent_messages : (req, res) => {
