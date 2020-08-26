@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router({mergeParams: true});
-const controller_user = require('../controller/user');
+const controller_user = require('../controller/user_controller');
 const check_auth = require('../middleware/check-auth'); 
 
 router.route('/login')
@@ -10,19 +10,10 @@ router.route('/')
     .get(controller_user.get_all_users)
     .post(controller_user.create_user)
 
-router.route('/:user_id')
+router.route('/:id')
     .all(check_auth)
     .get(controller_user.get_user)
     .delete(controller_user.delete_user)
-router.route('/:user_id/name')
-    .all(check_auth)
-    .put(controller_user.update_user_name)
-
-router.route('/:user_id/socket-id')
-    .all(check_auth)
-    .put(controller_user.update_socket_id)
-    
-// router.put('/:user_id/name',check_auth,controller_user.update_user_name);
-// router.put('/:user_id/socket-id',controller_user.update_socket_id);
+    .put(controller_user.update_user)
 
 module.exports = router;
