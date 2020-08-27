@@ -8,9 +8,7 @@ exports.create_one = Model => catch_async(async (req, res, next) => {
     if(!doc) return next(new AppError('Some thing error',500)) 
     res.status(201).json({
       status: 'success',
-      data: {
-        data: doc
-      }
+      data: doc
     });
 });
 //Get one handle factory
@@ -23,9 +21,7 @@ exports.get_one = (Model,pop_options) => catch_async(async (req,res,next) => {
 
     res.status(200).json({
         status: 'success',
-        data: {
-            data: doc
-        }
+        data: doc
     });
 });
 //Get all handle factory
@@ -37,9 +33,7 @@ exports.get_all = (Model,pop_options) => catch_async(async (req,res,next) => {
     
     res.status(200).json({
         status: 'success',
-        data: {
-            data: docs
-        }
+        data: docs
     });
 })
 //Update one handle factory
