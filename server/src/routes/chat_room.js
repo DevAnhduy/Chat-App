@@ -14,24 +14,18 @@ router.route('/:id')
     .put(chat_room_controller.update_room)
     .delete(chat_room_controller.delete_room)
 
-// router.route('/:room_id/messages')
-//     .all(check_auth)
-//     .post(chat_room_controller.create_message)
-//     .put(chat_room_controller.edit_message)
-//     .delete(chat_room_controller.delete_message)
+router.route('/:id/messages')
+    .all(check_auth)
+    .get(chat_room_controller.get_all_message)
+    .post(chat_room_controller.create_message)
+    .put(chat_room_controller.update_message)
+    .delete(chat_room_controller.delete_message)
 
-// router.route('/:room_id/messages/most-recent')
-//     .all(check_auth)
-//     .get(chat_room_controller.get_recent_messages)
-
-// router.route('/:room_id/files')
-//     .all(check_auth)
-//     .get(chat_room_controller.get_all_file)
-//     .post(upload_file.single('upload_file'),chat_room_controller.upload_file)
-
-// router.route('/:room_id/name')
-//     .all(check_auth)
-//     .put(chat_room_controller.update_room_name)    
+ router.route('/:room_id/files')
+    .all(check_auth)
+    .get(chat_room_controller.get_all_file)
+    .post(upload_file.single('upload_file'),chat_room_controller.upload_file)
+   
 
 
 module.exports = router;
