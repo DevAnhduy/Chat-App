@@ -33,6 +33,6 @@
     "socket.io": "^2.3.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.5.0",
-    "lodash": ">=4.17.19"
+    "lodash": "^4.17.19"
   }
 }
