@@ -26,7 +26,7 @@ class Message_Service {
                 });
             }
             else {  //Not exist folder store message
-                fs.mkdir(this.message.store_path, (err) => {
+                fs.mkdir(this.message.store_path,{recursive: true}, (err) => {
                     if (err)
                         rejects(err);
                     else {
