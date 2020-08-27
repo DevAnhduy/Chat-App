@@ -24,10 +24,8 @@ class Message_Query {
     }
 
     sort(){
-        if(this.query_options.sort === 'date'){
-            this.data.sort((a,b) => {return a-b})
-            return this;
-        }
+        this.data.sort((a, b) => { return a.timestamp - b.timestamp })
+        return this;
     }
 
     limit() {

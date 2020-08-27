@@ -29,7 +29,7 @@ exports.get_all_message = catch_async( async(req,res,next) => {
             const last_message_at = moment(room.last_message_at).format('YYYY-MM-DD')
             const path_file = `${__root}/data/messages/user_to_room/${room_id}`
             const message_query = new Message_Query(path_file, 'room',req.query);
-            const messages = message_query.paginate().limit();
+            const messages = message_query.paginate().limit().sort();
             if (messages)
                 res.status(200).json({
                     status: 'success',
