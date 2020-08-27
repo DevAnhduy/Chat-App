@@ -1,18 +1,19 @@
 const moment = require('moment');
-const date_now = moment().format('DD-MM-YYYY');
+const date_now = moment().format('YYYY-MM-DD');
 const fs = require('fs');
 const File_Model = require('src/models/file');
 const User_Model = require('src/models/user');
 const logger = require('src/utils/logger');
 const Message_Service = require('src/utils/message_service');
+const Message_Query = require('src/utils/message_query');
 const excelJS = require('exceljs');
 const factory = require('src/controller/handle_factory');
 const catch_async = require('src/utils/catch_async');
 
-// exports.get_all_messages = catch_async(async (req,res,next) => {
-//     const receiver_id = req.params.id;
-    
-// })
+exports.get_all_messages = catch_async(async(req,res,next) => {
+    const receiver_id = req.params.id;
+    const user_id = req.user_id;
+})
 
 module.exports = {
     get_recent_messages : (req, res) => {
@@ -91,22 +92,21 @@ module.exports = {
             .select('username')
             .exec()
             .then(receiver => {
-                const sender = req.user_id;
+                const sender_id = req.user_id;
                 const receiver_id = req.params.receiver_id;
                 const new_message = {
                     content: {
-                        sender,
+                        sender_id,
                         sender_name: req.username,
                         receiver_id,
                         receiver_name: receiver.username,
                         content: req.body.content,
-                        sent_date: moment().format('DD-MM-YYYY, h:mm:ss'),
+                        sent_date: moment().format('YYYY-MM-DD, h:mm:ss'),
                         timestamp: Date.now()
                     },
-                    store_path: `${__root}/data/messages/user_to_user/${date_now}`,
+                    store_path: `${__root}/data/messages/user_to_user/${sender_id}/${receiver_id}`,
                     file_names: [
-                        `${sender}_${receiver_id}.json`,
-                        `${receiver_id}_${sender}.json`
+                        `${date_now}.json`
                     ]
                 }
                 const message_service = new Message_Service(new_message);
@@ -117,12 +117,6 @@ module.exports = {
                         else
                             res.status(500).json({ send_message_success: false })
                     })
-                // write_message(new_message, (response) => {
-                //     if (response)
-                //         res.status(201).json({ send_message_success: true })
-                //     else
-                //         res.status(500).json({ send_message_success: false })
-                // })
             })
     },
     edit_message : (req, res) => {
