@@ -104,9 +104,10 @@ module.exports = {
                         sent_date: moment().format('YYYY-MM-DD, h:mm:ss'),
                         timestamp: Date.now()
                     },
-                    store_path: `${__root}/data/messages/user_to_user/${sender_id}/${receiver_id}`,
+                    store_path: `${__root}/data/messages/user_to_user/${date_now}`,
                     file_names: [
-                        `${date_now}.json`
+                        `${sender_id}_${receiver_id}.json`,
+                        `${receiver_id}_${sender_id}.json`
                     ]
                 }
                 const message_service = new Message_Service(new_message);
