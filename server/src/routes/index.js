@@ -8,6 +8,6 @@ module.exports = async (app) => {
         app.use('/users',user_route),
         app.use('/chat/rooms',chat_room_route),
         app.use('/check-auth',check_auth_route),
-        app.use('/chat/users/:receiver_id',chat_user_route)
+        app.use('/chat/users/:id',chat_user_route)
     ])
 }
