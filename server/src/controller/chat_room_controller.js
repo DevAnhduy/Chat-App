@@ -26,10 +26,10 @@ exports.get_all_message = catch_async( async(req,res,next) => {
     Room_Model.findById(room_id)
         .exec()
         .then(async (room) => {
-            const last_message_at = moment(room.last_message_at).format('YYYY-MM-DD')
-            const path_file = `${__root}/data/messages/user_to_room/${room_id}`
-            const message_query = new Message_Query(path_file, 'room',req.query);
+            const store_data = room_id;
+            const message_query = new Message_Query(store_data, 'room',req.query);
             const messages = message_query.paginate().limit().sort();
+            console.log(messages)
             if (messages)
                 res.status(200).json({
                     status: 'success',
@@ -90,7 +90,7 @@ exports.update_message = catch_async( async(req,res,next) => {
 })
 exports.delete_message = catch_async( async(req,res,next) => {
     const sender = req.user_id;
-    const room_id = req.params.room_id;
+    const room_id = req.params.id;
     const message = req.body;
     const sent_day = message.sent_date.split(',')[0];
     const message_deleted = {
@@ -117,7 +117,7 @@ exports.upload_file = catch_async( async(req,res,next) => {
         name: req.file.originalname,
         sender: req.user_id,
         receiver: {
-            room_id: req.params.room_id
+            room_id: req.params.id
         },
         url: req.file.path,
         file_type: req.file.mimetype
@@ -132,20 +132,4 @@ exports.upload_file = catch_async( async(req,res,next) => {
             return next(new AppError(error,500))
         })
 })
-exports.get_all_file = catch_async( async(req,res,next) => {
-    File_Model.find({ 'receiver.room_id': req.params.room_id })
-        .exec()
-        .then(files => {
-            if (files)
-                res.status(200).json({
-                    status: 'success',
-                    results: files.length,
-                    data : files
-                })
-            else return next(new AppError('No file found !',404))
-        })
-        .catch(err => {
-            logger.error(err);
-            return next(new AppError(err,500))
-        })
-})
+exports.get_all_file = factory.get_all(File_Model)
