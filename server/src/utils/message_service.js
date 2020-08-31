@@ -61,6 +61,7 @@ class Message_Service {
         let path_file_write = '';
         const preparing_to_update = new Promise((resolve, rejects) => {
             if (fs.existsSync(this.message.store_path)) {    //Exist folder store message
+                console.log(this.message.file_names)
                 this.message.file_names.forEach((file_name, index) => {
                     const path_file = path.join(this.message.store_path, file_name);
                     if (fs.existsSync(path_file)) {    //Exist file message
