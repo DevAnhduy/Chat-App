@@ -56,7 +56,7 @@ export class App extends React.Component{
         authorization : window.localStorage.token
       }})
       .then(response => {
-        arr_rooms_chat = response.data;
+        arr_rooms_chat = response.data.data;
         this.setState({ load_chat_rooms_done: true })
       })
       .catch(error => {
@@ -65,7 +65,6 @@ export class App extends React.Component{
   }
   send_message = () => {
     if(this.input_message.value){
-      //socket.emit('/send-message', { content: this.input_message.value });
       socket.emit('/send-message', { content: this.input_message.value });
       document.getElementById('message').value = '';
     }
@@ -77,8 +76,9 @@ export class App extends React.Component{
     if(room_name == null || room_name == '')
       return;
     else{
-      Axios.post('http://localhost:3001/chat-rooms', {room_name: room_name })
+      Axios.post(`${process.env.REACT_APP_API_URL}/chat/rooms`, {room_name: room_name })
         .then(response => {
+  
           arr_rooms_chat.push(response.data)
           this.setState({component_should_update: true})
         })
@@ -109,13 +109,13 @@ export class App extends React.Component{
   }
   render_message_in_room = (room_id,receiver_type) => {
     let arr_message = [];
-    Axios.get(`${process.env.REACT_APP_API_URL}/chat/${receiver_type}/${room_id}/messages/most-recent?offset=1`,{
+    Axios.get(`${process.env.REACT_APP_API_URL}/chat/${receiver_type}/${room_id}/messages?page=1`,{
       headers:{
         authorization : localStorage.getItem('token')
       }
     })
-      .then(messages => {
-        arr_message = messages.data.map((message) => {
+      .then(response => {
+        arr_message = response.data.messages.map((message) => {
           return (
             <div>
               <div className="messages">{message.sender_name} : {message.content} </div>
@@ -127,6 +127,7 @@ export class App extends React.Component{
         }
       })
       .catch(error => {
+        console.log(error)
         this.setState({arr_message: []})
       })
   }
