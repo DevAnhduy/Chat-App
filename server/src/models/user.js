@@ -18,12 +18,7 @@ const user_schema = new mongoose.Schema({
     create_at: {
         type: Date,
         default: moment().format('YYYY-MM-DD')
-    },
-    last_online: {
-        type: Date,
-        default: moment().format('YYYY-MM-DD')
-    },
-    last_message_at: Date
+    }
 })
 
 //Encryption password for user

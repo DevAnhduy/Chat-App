@@ -18,8 +18,7 @@ const room_schema = new mongoose.Schema({
     create_at: {
         type: Date,
         default: moment().format('YYYY-MM-DD')
-    },
-    last_message_at: Date
+    }
 })
 
 module.exports = mongoose.model('Chat Room',room_schema);
