@@ -117,8 +117,8 @@ export class App extends React.Component{
       .then(response => {
         arr_message = response.data.messages.map((message) => {
           return (
-            <div>
-              <div className="messages">{message.sender_name} : {message.content} </div>
+            <div className="messages"> 
+              <span>{message.sender_name} : {message.content}</span>
             </div>
           )
         })

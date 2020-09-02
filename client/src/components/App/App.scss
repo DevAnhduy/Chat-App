@@ -26,25 +26,22 @@
         }
     }
     .messages {
-        list-style-type: none;
-        display: inline-block;
         margin: 10px;
-        padding: 10px;
-        background-color: #f1f0f0;
-        border-radius: 10px;
+        display: flex;
+        flex-direction: row;        
         &.sender{
-            clear: left;
-            float: right;
-            background-color: #0084ff;
+            flex-direction: row-reverse;
             color: white;
             margin-right: 30px;
-        }
-        li {
-            padding: 5px 10px;
-            &:nth-child(odd) {
-                background: #eee;
+            span {
+                background-color: #0084ff;
             }
-        };
+        }
+        span {
+            padding: 10px;
+            background-color: #f1f0f0;
+            border-radius: 10px;
+        }
     } 
     .chat-room {
         border: 1px solid #24292e;
