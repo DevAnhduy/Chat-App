@@ -34,12 +34,24 @@ module.exports = (server) => {
             socket.on('/send-message', (msg) => {
                 if(user.username){
                     if(data.type === 'rooms')
-                        io.to(data.room_id).emit('/send-message', { sender: user.username, content: msg.content });
+                        io.to(data.room_id).emit('/send-message', { 
+                            sender: user.username, 
+                            sender_id: user.user_id,
+                            content: msg.content });
                     else {
-                        io.to(user_connected[data.room_id]).emit('/send-message', { sender: user.username, content: msg.content });
-                        io.to(user_connected[user.user_id]).emit('/send-message', { sender: user.username, content: msg.content });
+                        io.to(user_connected[data.room_id]).emit('/send-message', 
+                        { 
+                          sender_id: user.user_id, 
+                          sender: user.username, 
+                          content: msg.content
+                        });
+                        io.to(user_connected[user.user_id]).emit('/send-message', 
+                        { 
+                          sender_id: user.user_id, 
+                          sender: user.username, 
+                          content: msg.content,
+                        });
                     }
-                        
                     request.post({
                         url : `${__host}:${__port}/chat/${data.type}/${data.room_id}/messages`,
                         headers: {
@@ -53,6 +65,7 @@ module.exports = (server) => {
             socket.removeAllListeners('/send-messages/users');
             socket.on('/send-messages/users', (msg) => {
                 if(user.username){
+                    console.log(user)
                     User_Model.findById(ObjectID(body.receiver_id))
                         .select('username socket_id')
                         .exec()
