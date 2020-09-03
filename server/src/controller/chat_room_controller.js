@@ -15,30 +15,38 @@ exports.create_room = (req,res,next) => {
 }
 exports.get_room = factory.get_one(Room_Model);
 
-exports.get_all_rooms = factory.get_all(Room_Model);
+//exports.get_all_rooms = factory.get_all(Room_Model);
 
 exports.update_room = factory.update_one(Room_Model);
 
 exports.delete_room = factory.delete_one(Room_Model);
 
+exports.get_all_rooms = catch_async( async(req,res,next) => {
+    Room_Model.find({ $or: [
+            { admin: req.user_id },
+            { members: req.user_id }
+        ]})
+        .exec()
+        .then(rooms => {
+            res.status(200).json({
+                status: 'success',
+                results: rooms.length,
+                rooms
+            })
+        })
+        .catch(error => { return next(new AppError(error,500))})
+})
+
 exports.get_all_message = catch_async( async(req,res,next) => {
     const room_id = req.params.id;
-    Room_Model.findById(room_id)
-        .exec()
-        .then(async (room) => {
-            const store_data = room_id;
-            const message_query = new Message_Query(store_data, 'room',req.query);
-            const messages = message_query.paginate().limit().sort();
-            console.log(messages)
-            if (messages)
-                res.status(200).json({
-                    status: 'success',
-                    results: messages.length,
-                    messages: messages.data
-                })
-        })
-        .catch(err => {
-            return next(new AppError(err,404))
+    const store_data = room_id;
+    const message_query = new Message_Query(store_data, 'room',req.query);
+    const messages = message_query.paginate().limit().sort();
+    if (messages)
+        res.status(200).json({
+            status: 'success',
+            results: messages.length,
+            messages: messages.data
         })
 })
 exports.create_message = catch_async( async(req, res, next) => {
