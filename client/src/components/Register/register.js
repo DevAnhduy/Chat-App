@@ -4,17 +4,20 @@ import Axios from 'axios'
 
 export class Register_Form extends React.Component {
     submit_register = () => {
-        if (this.username.value && this.password.value) {
+        if (this.name.value && this.password.value && this.mobile.value) {
             Axios.post('http://localhost:3001/users', {
-                username: this.username.value,
-                password: this.password.value
+                mobile: this.mobile.value,
+                password: this.password.value,
+                name: this.name.value
             }, {
                 withCredentials: true
             })
                 .then((response) => {
                     alert('Tạo tài khoản thành công !')
                 })
-                .catch((error) => alert('Tài khoản đã tồn tại'))
+                .catch((error) => {
+                    console.log(error)
+                    alert('Tài khoản đã tồn tại')})
         }
         else {
             alert('Username và Password không được để trống !')
@@ -25,13 +28,13 @@ export class Register_Form extends React.Component {
             <div className={`text-center ${register_style['main-register']}`}>
                 <form>
                     <div className="form-group">
-                        <label htmlFor="username">Tên đăng nhập</label>
+                        <label htmlFor="mobile">Số điện thoại</label>
                         <input type="text"
-                            id="username"
-                            name="username"
+                            id="mobile"
+                            name="mobile"
                             className="form-control"
                             required
-                            ref={input => this.username = input}
+                            ref={input => this.mobile = input}
                         />
                     </div>
                     <div className="form-group">
@@ -43,6 +46,16 @@ export class Register_Form extends React.Component {
                             required
                             ref={input => this.password = input}
                         />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="name">Họ và tên</label>
+                        <input type="text" 
+                               id="name" 
+                               name="name" 
+                               className="form-control" 
+                               required
+                               ref={ input => this.name = input }
+                         />
                     </div>
                     <div className="form-group" >
                         <button onClick={this.submit_register} type="button" className={`btn ${register_style['btn-register']}`} >
