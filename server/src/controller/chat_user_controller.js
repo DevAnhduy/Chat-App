@@ -33,7 +33,7 @@ exports.create_message = catch_async(async(req,res,next) => {
         .exec()
         .then(receiver => {
         const sender_id = req.user_id;
-        const receiver_id = req.params.receiver_id;
+        const receiver_id = req.params.id;
         const new_message = {
             content: {
                 sender_id,
