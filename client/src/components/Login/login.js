@@ -5,10 +5,11 @@ const { __server } = require('config/constant.json');
 
 export class  Login_Form extends React.Component{
     submit_login = () => {
-        if(this.username.value && this.password.value){
+        if(this.mobile.value && this.password.value){
             Axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
-                username: this.username.value,
-                password: this.password.value})
+                mobile: this.mobile.value,
+                password: this.password.value,
+            })
             .then((response) => {
                 console.log(response)
                 //window.localStorage.setItem('user',JSON.stringify({}))
@@ -35,13 +36,13 @@ export class  Login_Form extends React.Component{
             <div className={`text-center ${login_style['main-login']}`}>
                 <form>
                     <div className="form-group">
-                        <label htmlFor="username">Tên đăng nhập</label>
+                        <label htmlFor="username">Số điện thoại</label>
                         <input type="text" 
-                               id="username" 
-                               name="username" 
+                               id="mobile" 
+                               name="mobile" 
                                className="form-control" 
                                required
-                               ref={ input => this.username = input }
+                               ref={ input => this.mobile = input }
                          />
                     </div>
                     <div className="form-group">
