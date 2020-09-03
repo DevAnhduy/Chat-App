@@ -5,24 +5,20 @@ const jwt_decoded = require('jwt-decode');
 const check_auth = async (callback) => {
     try {
         if(localStorage.token){
-          return callback(jwt_decoded(localStorage.token))
+          const decoded = jwt_decoded(localStorage.token);
+          Axios.get(`${process.env.REACT_APP_API_URL}/users/${decoded.user_id}`,{
+            headers : {
+              authorization : localStorage.token
+            }
+          })
+            .then(response => {
+              return callback(response.data.data)
+            })
+            .catch(error => callback(false))
         }
         else {
           return callback(false)
         }
-        // Axios.get(`${process.env.REACT_APP_API_URL}/check-auth`, 
-        //     { 
-        //       headers: {
-        //         authorization : window.localStorage.token
-        //       } 
-        //     })
-        //     .then(response => {
-        //       console.log(response)
-        //         return callback(response.data);
-        //     })
-        //     .catch(error => {
-        //       console.log(error)
-        //     })
     }
     catch (err) {
         console.log(err)
