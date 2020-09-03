@@ -13,7 +13,8 @@ const sign_token = payload => {
 
 //Create and send token
 const create_send_token = (user,status_code,res) => {
-    const token = sign_token({user_id: user._id,username : user.username});
+    const token = sign_token({user_id: user._id,
+                              mobile : user.mobile});
     const cookie_options = {
         expires: new Date(Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000),
         httpOnly: true
@@ -36,14 +37,14 @@ const create_send_token = (user,status_code,res) => {
 
 //Login
 exports.login = catch_aysnc(async (req,res,next) => {
-    const { username,password } = req.body;
+    const { mobile,password } = req.body;
     //Check if email & Password exists
-    if(!username || !password) 
-        return next(new AppError('Please provide username and password',400));
+    if(!mobile || !password) 
+        return next(new AppError('Please provide mobile and password',400));
     //Check if user exist and password is correct
-    const user = await User_Model.findOne({ username }).select('+password');
+    const user = await User_Model.findOne({ mobile }).select('+password');
     if(!user || !(await user.correct_password(password,user.password)))
-        return next(new AppError('Incorrect username or password',401))
+        return next(new AppError('Incorrect mobile or password',401))
     //If everything ok
     create_send_token(user,200, res);
 })
