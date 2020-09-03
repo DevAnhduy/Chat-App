@@ -4,17 +4,24 @@ const AppError = require('src/utils/app_error');
 const moment = require('moment');
 
 const user_schema = new mongoose.Schema({
-    username: {
+    mobile: {
         type: String,
         required: true,
         unique: true
     },
     password: {
         type: String,
+        required: true,
+        select: false
+    },
+    name: {
+        type: String,
         required: true
     },
-    name: String,
-    avatar: String,
+    avatar: {
+        type: String,
+        default: "/images/user_default_avatar.jpg"
+    },
     create_at: {
         type: Date,
         default: moment().format('YYYY-MM-DD')
