@@ -11,20 +11,22 @@ const { __server } = require('config/constant.json')
 const io = require('socket.io-client');
 // Init global variable
 let socket;
-let user = {};
+//let user = {};
 let list_chats = [];
 
 const App = props => {
   const [is_auth,set_is_auth] = useState(false); //Check client is auth, default false 
   //const [load_list_chats,set_load_list_chats] = useState(false); //Check load list chat, default false
   const [re_render,set_re_render] = useState(false); //Variable to re render browser, default false
-  const [list_chats,set_list_chats] = useState([]); 
+  const [list_chats,set_list_chats] = useState([]);
+  const [user,set_user] = useState({});
   //Load user
   useEffect(() => {
+    console.log('Use Effect')
     //Call function check auth 
     check_auth(is_auth => {
       if (is_auth) {
-        user = is_auth; // Set variable user 
+        set_user(is_auth) // Set variable user 
         socket = io(__server, {
           query: "authorization=" + window.localStorage.token
         }); // Connect socket io
@@ -41,40 +43,67 @@ const App = props => {
           wrap_message.appendChild(span_message);
           main_message.appendChild(wrap_message);
         })
-        // Get all receiver detail
-        user.list_chats.forEach((receiver,index) => {
-          if(receiver.type === 'user'){
-            Axios(`${process.env.REACT_APP_API_URL}/users/${receiver._id}`,{
-              headers: { authorization: localStorage.token }
-            })
-              .then(response => {
-                receiver.detail = response.data.data;
-              })
-              .catch(error => console.log(error))
-          } 
-          else {
-            Axios(`${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`,{
-              headers: { authorization: localStorage.token }
-            })
-              .then(response => {
-                receiver.detail = response.data.data;
-                console.log(receiver.detail)
-              })
-              .catch(error => console.log(error))
-          }
-        })
         set_is_auth(true);
       }
       else
         window.location = '/login'
     })
   },[]);
+  useEffect(() => {
+    if(user.list_chats){
+      console.log("Use effect 2")
+      // Get all receiver detail
+      let arr_promise = [];
+      user.list_chats.forEach((receiver,index) => {
+        if(receiver.type === 'user'){
+          arr_promise.push(
+            Axios(`${process.env.REACT_APP_API_URL}/users/${receiver._id}`,{
+              headers: { authorization: localStorage.token }
+            })
+          )
+            // .then(response => {
+            //   console.log('Data user')
+            //   set_re_render(true)
+            //   receiver.detail = response.data.data;
+            // })
+            // .catch(error => console.log(error))
+        } 
+        else {
+          arr_promise.push(
+            Axios(`${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`,{
+              headers: { authorization: localStorage.token }
+            })
+          )
+          // Axios(`${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`,{
+          //   headers: { authorization: localStorage.token }
+          // })
+          //   .then(response => {
+          //     console.log('Data room')
+          //     receiver.detail = response.data.data;
+          //     set_re_render(true)
+          //   })
+          //   .catch(error => console.log(error))
+        }
+
+        if(index === user.list_chats.length - 1) {
+          Promise.all(arr_promise)
+            .then((receivers) => {
+              console.log(receivers)
+              receivers.forEach(receiver => {
+                const receiver_index = user.list_chats.findIndex(element => element._id === receiver.data.data._id);
+                user.list_chats[receiver_index].detail = receiver.data.data; 
+              })
+              set_re_render(true)
+            })
+        }
+      })
+
+    }
+  },user.list_chats)
   //Render list chats
   const render_list_chats = () => {
-    console.log(user.list_chats[0])
     if(user.list_chats){
       return (user.list_chats.map((receiver, index) => {
-        console.log(receiver)
         return (
           // onClick={() => { this.join_room(room._id,'rooms');
           //                  this.render_message_in_room(room._id,'rooms')}} 
@@ -95,6 +124,7 @@ const App = props => {
   else{
     return (
       <div className="row chat-container">
+      {console.log('Render')}
         <div className={`col-3 chat-room `}>
           <div className="row mt-3">
             <div className="col-3">
@@ -103,14 +133,14 @@ const App = props => {
                 <div className="user-settings-container">
                   <div className="user-setting-option">
                     Chỉnh sửa trang cá nhân
-                      </div>
+                  </div>
                   <div className="user-setting-option" >
                     {/* onClick={this.chat_with_user} */}
                     Chat với bạn bè
-                      </div>
+                  </div>
                   <div className="user-setting-option">
                     Đăng xuất
-                      </div>
+                  </div>
                 </div>
               </Popup>
             </div>
@@ -123,7 +153,7 @@ const App = props => {
           </div>
           <div>
             <ul style={{ listStyle: 'none', padding: 20 }}>
-              {render_list_chats()}
+              {console.log(render_list_chats())}
               {/* {this.render_chat_with_user('5f50bf892f8c613814230aa7', 'users')}
               {this.render_chat_with_user('5f50bf8d2f8c613814230aa8', 'users')} */}
             </ul>
@@ -143,7 +173,6 @@ const App = props => {
       </div>
     )
   }
-    
 }
 
 
