@@ -20,22 +20,8 @@ exports.update_room = factory.update_one(Room_Model);
 
 exports.delete_room = factory.delete_one(Room_Model);
 
-exports.get_all_rooms = catch_async( async(req,res,next) => {
-    console.log(req.user_id)
-    Room_Model.find({ $or: [
-            { admin: req.user_id },
-            { members: req.user_id }
-        ]})
-        .exec()
-        .then(rooms => {
-            res.status(200).json({
-                status: 'success',
-                results: rooms.length,
-                rooms
-            })
-        })
-        .catch(error => { return next(new AppError(error,500))})
-})
+exports.get_all_rooms = factory.get_all(Room_Model);
+
 exports.get_all_message = catch_async( async(req,res,next) => {
     const room_id = req.params.id;
     const store_data = room_id;
