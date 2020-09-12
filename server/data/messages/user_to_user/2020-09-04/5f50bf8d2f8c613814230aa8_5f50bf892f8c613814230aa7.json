@@ -1,0 +1,25 @@
+[
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "sender_name": "Anh Duy",
+        "sender_avatar": "https://assets.dryicons.com/uploads/icon/svg/11874/fdc5e87e-d459-4393-b6c7-b57c8e5b5cba.svg",
+        "receiver_id": "5f50bf8d2f8c613814230aa8",
+        "content": "123123",
+        "sent_date": "2020-09-04, 11:18:27",
+        "timestamp": "1599236307579"
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50bf8d2f8c613814230aa8",
+        "content": "123123",
+        "sent_date": "2020-09-04, 11:34:51",
+        "timestamp": 1599237291115
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50bf8d2f8c613814230aa8",
+        "content": "123123",
+        "sent_date": "2020-09-04, 11:35:40",
+        "timestamp": 1599237340318
+    }
+]
