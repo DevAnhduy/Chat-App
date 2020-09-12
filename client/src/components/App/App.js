@@ -11,52 +11,83 @@ const { __server } = require('config/constant.json')
 const io = require('socket.io-client');
 // Init global variable
 let socket;
-let arr_rooms_chat = [];
 let user = {};
-let users_in_chat = [];
 let list_chats = [];
 
 const App = props => {
   const [is_auth,set_is_auth] = useState(false); //Check client is auth, default false 
   //const [load_list_chats,set_load_list_chats] = useState(false); //Check load list chat, default false
   const [re_render,set_re_render] = useState(false); //Variable to re render browser, default false
-  //Call function check auth 
-  check_auth(is_auth => {
-    if (is_auth) {
-      user = is_auth;
-      socket = io(__server, {
-        query: "authorization=" + window.localStorage.token
-      });
-      socket.on('/send-message', (msg) => {
-        const main_message = document.getElementById('main-message');
-        let wrap_message = document.createElement('div');
-        if (msg.sender_id === user.user_id)
-          wrap_message.className = 'messages sender';
-        else
-          wrap_message.className = 'messages';
-        let span_message = document.createElement('span');
-        span_message.innerHTML = `${msg.sender_name} : ${msg.content}`;
-        wrap_message.appendChild(span_message);
-        main_message.appendChild(wrap_message);
-      })
-      set_is_auth(true)
-    }
-    else
-      window.location = '/login'
-  })
+  const [list_chats,set_list_chats] = useState([]); 
   //Load user
   useEffect(() => {
-    Axios(`${process.env.REACT_APP_API_URL}/users`, {
-      headers: {
-        authorization: localStorage.token
+    //Call function check auth 
+    check_auth(is_auth => {
+      if (is_auth) {
+        user = is_auth; // Set variable user 
+        socket = io(__server, {
+          query: "authorization=" + window.localStorage.token
+        }); // Connect socket io
+        // Event socket io
+        socket.on('/send-message', (msg) => {
+          const main_message = document.getElementById('main-message');
+          let wrap_message = document.createElement('div');
+          if (msg.sender_id === user.user_id)
+            wrap_message.className = 'messages sender';
+          else
+            wrap_message.className = 'messages';
+          let span_message = document.createElement('span');
+          span_message.innerHTML = `${msg.sender_name} : ${msg.content}`;
+          wrap_message.appendChild(span_message);
+          main_message.appendChild(wrap_message);
+        })
+        // Get all reiceiver detail
+        user.list_chats.forEach((receiver,index) => {
+          if(receiver.type === 'user'){
+            Axios(`${process.env.REACT_APP_API_URL}/users/${receiver._id}`,{
+              headers: { authorization: localStorage.token }
+            })
+              .then(response => {
+                receiver.detail = response.data.data;
+              })
+              .catch(error => console.log(error))
+          } 
+          else {
+            Axios(`${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`,{
+              headers: { authorization: localStorage.token }
+            })
+              .then(response => {
+                receiver.detail = response.data.data;
+                console.log(receiver.detail)
+              })
+              .catch(error => console.log(error))
+          }
+        })
+        set_is_auth(true);
       }
+      else
+        window.location = '/login'
     })
-      .then(response => {
-        user = response.data // Assignment response data to global variable
-        list_chats = response.data
-      })
-      .catch(error => console.log(error))
-  })
+  },[]);
+  //Render list chats
+  const render_list_chats = () => {
+    if(user.list_chats){
+      return (user.list_chats.map((receiver, index) => {
+        console.log(receiver)
+        return (
+          // onClick={() => { this.join_room(room._id,'rooms');
+          //                        this.render_message_in_room(room._id,'rooms')}} 
+          <Link  
+                key={index} 
+                to={`/chat/${receiver._id}`}>
+            <li>
+              <CHAT_ROOM key={index} room_name={receiver.detail} />
+            </li>
+          </Link>
+        )
+      }))
+    }
+  }
   //Render 
   if(!is_auth)
     return <CIRCLE_LOADING />
@@ -66,7 +97,6 @@ const App = props => {
         <div className={`col-3 chat-room `}>
           <div className="row mt-3">
             <div className="col-3">
-              {console.log(user)}
               <Popup trigger={<div className="avatar" style={{ backgroundImage: `url("${user.avatar}")` }} ></div>}
                 position="bottom left">
                 <div className="user-settings-container">
@@ -92,8 +122,8 @@ const App = props => {
           </div>
           <div>
             <ul style={{ listStyle: 'none', padding: 20 }}>
-              {/* {this.render_list_room()}
-              {this.render_chat_with_user('5f50bf892f8c613814230aa7', 'users')}
+              {render_list_chats()}
+              {/* {this.render_chat_with_user('5f50bf892f8c613814230aa7', 'users')}
               {this.render_chat_with_user('5f50bf8d2f8c613814230aa8', 'users')} */}
             </ul>
           </div>
