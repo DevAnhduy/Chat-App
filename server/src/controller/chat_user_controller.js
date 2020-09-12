@@ -28,38 +28,31 @@ exports.get_all_messages = catch_async(async(req,res,next) => {
 })
 
 exports.create_message = catch_async(async(req,res,next) => {
-    User_Model.findById(req.params.id)
-        .select('username')
-        .exec()
-        .then(receiver => {
-        const sender_id = req.user_id;
-        const receiver_id = req.params.id;
-        const new_message = {
-            content: {
-                sender_id,
-                sender_name: req.username,
-                receiver_id,
-                receiver_name: receiver.username,
-                content: req.body.content,
-                sent_date: moment().format('YYYY-MM-DD, h:mm:ss'),
-                timestamp: Date.now()
-            },
-            store_path: `${__root}/data/messages/user_to_user/${date_now}`,
-            file_names: [
-                `${sender_id}_${receiver_id}.json`,
-                `${receiver_id}_${sender_id}.json`
-            ]
-        }
-        const message_service = new Message_Service(new_message);
-        message_service
-            .write_message(response => {
-                if(response)
-                    res.status(200).json({
-                        status: 'success'
-                    })
-                else return next(new AppError('Cannot create message',500))
-            })
-        })            
+    const sender_id = req.user_id;
+    const receiver_id = req.params.id;
+    const new_message = {
+        content: {
+            sender_id,
+            receiver_id,
+            content : req.body.content,
+            sent_date: moment().format('YYYY-MM-DD, h:mm:ss'),
+            timestamp: Date.now()
+        },
+        store_path: `${__root}/data/messages/user_to_user/${date_now}`,
+        file_names: [
+            `${sender_id}_${receiver_id}.json`,
+            `${receiver_id}_${sender_id}.json`
+        ]
+    }
+    const message_service = new Message_Service(new_message);
+    message_service
+        .write_message(response => {
+            if (response)
+                res.status(200).json({
+                    status: 'success'
+                })
+            else return next(new AppError('Cannot create message', 500))
+        })           
 })
 
 exports.update_message = catch_async(async(req,res,next) => {
