@@ -14,7 +14,9 @@ const check_auth = async (callback) => {
             .then(response => {
               return callback(response.data.data)
             })
-            .catch(error => callback(false))
+            .catch(error => {
+              console.log(error);
+            })
         }
         else {
           return callback(false)
