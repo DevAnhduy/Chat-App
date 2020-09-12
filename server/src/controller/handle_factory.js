@@ -1,6 +1,8 @@
 const catch_async = require('src/utils/catch_async');
 const AppError = require('src/utils/app_error');
 const jwt = require('jsonwebtoken');
+const Mongodb_Query = require('src/utils/mongodb_query');
+const User_Model = require('src/models/user');
 
 //Create one handle factory
 exports.create_one = Model => catch_async(async (req, res, next) => {
@@ -25,10 +27,11 @@ exports.get_one = (Model,pop_options) => catch_async(async (req,res,next) => {
     });
 });
 //Get all handle factory
-exports.get_all = (Model,pop_options) => catch_async(async (req,res,next) => {
+exports.get_all = (Model, pop_options) => catch_async(async (req,res,next) => {
     let query = Model.find();
     if(pop_options) query = query.populate(pop_options);
-    const docs = await query;
+    const mongodb_query = new Mongodb_Query(query,req.query).paginate().filter();
+    const docs = await mongodb_query.query;
     if(!docs) return next(new AppError('No document found',404))
     
     res.status(200).json({
@@ -39,12 +42,10 @@ exports.get_all = (Model,pop_options) => catch_async(async (req,res,next) => {
 //Update one handle factory
 exports.update_one = Model => catch_async(async (req,res,next) => {
     const doc = await Model.findByIdAndUpdate(req.params.id,req.body);
-
     if(!doc) return next(new AppError('No document found with that ID'))
 
     res.status(204).json({
-        status: 'success',
-        data: null
+        status: 'success'
     });
 });
 //Delete one handle factory
