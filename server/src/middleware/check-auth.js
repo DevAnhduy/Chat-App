@@ -8,6 +8,6 @@ module.exports = (req,res,next) => {
         req.user_id = decoded.user_id; 
         next();
     } catch (error) {
-        res.status(404).json({message : 'User not found !'})
+        return next(new AppError(error,404))
     }
 }
