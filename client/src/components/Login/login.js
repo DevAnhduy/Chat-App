@@ -11,10 +11,9 @@ export class  Login_Form extends React.Component{
                 password: this.password.value,
             })
             .then((response) => {
-                console.log(response)
                 //window.localStorage.setItem('user',JSON.stringify({}))
                 if(response.data){
-                    window.localStorage.setItem('token',`Bearer ${response.data.token}`)
+                    localStorage.setItem('token',`Bearer ${response.data.token}`)
                     window.location = '/'
                 }
                 else
