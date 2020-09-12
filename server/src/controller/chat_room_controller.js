@@ -1,13 +1,14 @@
-const moment = require('moment');
-const date_now = moment().format('YYYY-MM-DD');
 const Room_Model = require('src/models/chat_room');
 const File_Model = require('src/models/file');
-const logger = require('src/utils/logger');
+const User_Model = require('src/models/user');
 const Message_Service = require('src/utils/message_service');
-const catch_async = require('src/utils/catch_async');
-const factory = require('src/controller/handle_factory');
 const Message_Query = require('src/utils/message_query');
 const AppError = require('src/utils/app_error');
+const moment = require('moment');
+const date_now = moment().format('YYYY-MM-DD');
+const logger = require('src/utils/logger');
+const factory = require('src/controller/handle_factory');
+const catch_async = require('src/utils/catch_async');
 
 exports.create_room = (req,res,next) => {
     req.body.admin = req.user_id;
@@ -15,13 +16,12 @@ exports.create_room = (req,res,next) => {
 }
 exports.get_room = factory.get_one(Room_Model);
 
-//exports.get_all_rooms = factory.get_all(Room_Model);
-
 exports.update_room = factory.update_one(Room_Model);
 
 exports.delete_room = factory.delete_one(Room_Model);
 
 exports.get_all_rooms = catch_async( async(req,res,next) => {
+    console.log(req.user_id)
     Room_Model.find({ $or: [
             { admin: req.user_id },
             { members: req.user_id }
@@ -36,7 +36,6 @@ exports.get_all_rooms = catch_async( async(req,res,next) => {
         })
         .catch(error => { return next(new AppError(error,500))})
 })
-
 exports.get_all_message = catch_async( async(req,res,next) => {
     const room_id = req.params.id;
     const store_data = room_id;
@@ -55,7 +54,6 @@ exports.create_message = catch_async( async(req, res, next) => {
     const new_message = {
         content: {
             sender: req.user_id,
-            sender_name: req.username,
             room_id: room_id,
             content: req.body.content,
             sent_date: moment().format('YYYY-MM-DD, h:mm:ss'),
