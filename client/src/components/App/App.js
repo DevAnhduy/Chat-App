@@ -41,7 +41,7 @@ const App = props => {
           wrap_message.appendChild(span_message);
           main_message.appendChild(wrap_message);
         })
-        // Get all reiceiver detail
+        // Get all receiver detail
         user.list_chats.forEach((receiver,index) => {
           if(receiver.type === 'user'){
             Axios(`${process.env.REACT_APP_API_URL}/users/${receiver._id}`,{
@@ -71,12 +71,13 @@ const App = props => {
   },[]);
   //Render list chats
   const render_list_chats = () => {
+    console.log(user.list_chats[0])
     if(user.list_chats){
       return (user.list_chats.map((receiver, index) => {
         console.log(receiver)
         return (
           // onClick={() => { this.join_room(room._id,'rooms');
-          //                        this.render_message_in_room(room._id,'rooms')}} 
+          //                  this.render_message_in_room(room._id,'rooms')}} 
           <Link  
                 key={index} 
                 to={`/chat/${receiver._id}`}>
@@ -91,7 +92,7 @@ const App = props => {
   //Render 
   if(!is_auth)
     return <CIRCLE_LOADING />
-  else
+  else{
     return (
       <div className="row chat-container">
         <div className={`col-3 chat-room `}>
@@ -114,7 +115,7 @@ const App = props => {
               </Popup>
             </div>
             <div className="col-9">
-              <button  className="btn-add-chat-room">
+              <button className="btn-add-chat-room">
                 {/* onClick={this.create_room} */}
                 Thêm phòng chat +
                   </button>
@@ -133,14 +134,16 @@ const App = props => {
             {/* {this.state.arr_message} */}
           </div>
           <form className="form-chat">
-            <input id="message" autoComplete="off"  />
+            <input id="message" autoComplete="off" />
             {/* ref={(input) => this.input_message = input} */}
-            <button  type="button">Send</button>
+            <button type="button">Send</button>
             {/* onClick={this.send_message} */}
           </form>
         </div>
       </div>
     )
+  }
+    
 }
 
 
