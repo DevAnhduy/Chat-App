@@ -25,7 +25,20 @@ const user_schema = new mongoose.Schema({
     create_at: {
         type: Date,
         default: moment().format('YYYY-MM-DD')
-    }
+    },
+    list_chats : [
+        {
+            type : {
+                type : String,
+                enum: ['room','user'],
+                required: true
+            },
+            _id : {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true
+            }
+        }
+    ]
 })
 
 //Encryption password for user
