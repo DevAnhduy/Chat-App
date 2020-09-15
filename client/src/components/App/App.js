@@ -283,19 +283,42 @@ const App = props => {
                 </div>
               </Popup>
             </div>
-            <div className="col-8 large-text">
+            <div className="col-5 large-text">
               Let's talk
             </div>
-            <div className="col-1 p-0">
-              <Popup trigger={<div className="small-icon" 
-                                   onClick={create_room}>
-                                    <i class="material-icons">group_add</i>
-                              </div>}
+            <div className="col-4 tools-bar">
+              <Popup trigger={<div className="small-icon"
+                onClick={create_room}>
+                <i class="material-icons">group_add</i>
+              </div>}
+                on="hover"
+              >
+                <div className="popup-small-text">Tạo phòng chat</div>
+              </Popup>
+              <Popup trigger={<div className="small-icon"
+                onClick={create_room}>
+                <i class="material-icons">group_add</i>
+              </div>}
+                on="hover"
+              >
+                <div className="popup-small-text">Tạo phòng chat</div>
+              </Popup>
+              <Popup trigger={<div className="small-icon"
+                onClick={create_room}>
+                <i class="material-icons">group_add</i>
+              </div>}
                 on="hover"
               >
                 <div className="popup-small-text">Tạo phòng chat</div>
               </Popup>
             </div>
+            
+          </div>
+          <div className="row mt-4">
+            <input type="text" 
+                   className="search-bar" 
+                   placeholder="Tìm kiếm tên bạn bè, hoặc tên phòng" >
+            </input>
           </div>
           <div>
             <ul className="list-chats">
