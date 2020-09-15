@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import check_auth from 'utils/check-auth'
 import { CIRCLE_LOADING } from 'components/Utils/circle_loading';
-import { CHAT_ROOM } from './chat-room';
+import { CHAT_BLOCK } from './Chat_Block';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
 import Popup from 'reactjs-popup';
@@ -11,131 +11,270 @@ const { __server } = require('config/constant.json')
 const io = require('socket.io-client');
 // Init global variable
 let socket;
-//let user = {};
-let list_chats = [];
 
 const App = props => {
-  const [is_auth,set_is_auth] = useState(false); //Check client is auth, default false 
-  //const [load_list_chats,set_load_list_chats] = useState(false); //Check load list chat, default false
+  //#region State
+  const [is_auth,set_is_auth] = useState(false); //Check client is auth, default false
   const [re_render,set_re_render] = useState(false); //Variable to re render browser, default false
-  const [list_chats,set_list_chats] = useState([]);
   const [user,set_user] = useState({});
+  const [list_chats,set_list_chats] = useState([]);
+  const [obj_receivers,set_obj_receiver] = useState({});
+  //#endregion
+  //#region Ref
+  const input_message = useRef(null);
+  //#endregion
+  //#region Effect
   //Load user
   useEffect(() => {
-    console.log('Use Effect')
-    //Call function check auth 
+    console.log('Check auth')
+    //Call function check auth
     check_auth(is_auth => {
       if (is_auth) {
-        set_user(is_auth) // Set variable user 
-        socket = io(__server, {
-          query: "authorization=" + window.localStorage.token
-        }); // Connect socket io
-        // Event socket io
-        socket.on('/send-message', (msg) => {
-          const main_message = document.getElementById('main-message');
-          let wrap_message = document.createElement('div');
-          if (msg.sender_id === user.user_id)
-            wrap_message.className = 'messages sender';
-          else
-            wrap_message.className = 'messages';
-          let span_message = document.createElement('span');
-          span_message.innerHTML = `${msg.sender_name} : ${msg.content}`;
-          wrap_message.appendChild(span_message);
-          main_message.appendChild(wrap_message);
-        })
-        set_is_auth(true);
+        set_user(is_auth) // Set variable user
+        set_is_auth(true)
       }
       else
         window.location = '/login'
     })
   },[]);
+  //Load list chats && connect socket io
   useEffect(() => {
     if(user.list_chats){
-      console.log("Use effect 2")
-      // Get all receiver detail
-      let arr_promise = [];
+      //Connect socket io
+      socket = io(__server, { // Connect socket io
+        query: "authorization=" + window.localStorage.token
+      });
+      //Generate event socket io
+      socket.on('/receiver-message', (msg) => {
+          //Get main message element
+          const main_message = document.getElementById('main-message');
+          //Create div wrap message
+          let wrap_message = document.createElement('div');
+          //Set class name for wrap message
+          if (msg.sender_id === user._id)
+            wrap_message.className = 'messages sender';
+          else {
+            wrap_message.className = 'messages';
+            //Create div  element for avatar
+            let avatar_message = document.createElement('div');
+            avatar_message.className = "avatar-message";
+            avatar_message.style.backgroundImage = `url("${obj_receivers[msg.sender_id].avatar}")`;
+            //Append avatar message in wrap message
+            wrap_message.appendChild(avatar_message);
+          }
+          //Create span element for message
+          let span_message = document.createElement('span');
+          span_message.innerHTML = `${msg.content}`;
+          //Append span message in wrap message
+          wrap_message.appendChild(span_message);
+          //Append wrap message in main message
+          main_message.appendChild(wrap_message);
+      })
+      console.log('Load list chat')
+      let arr_promise = []; // Array contain all axios request
       user.list_chats.forEach((receiver,index) => {
-        if(receiver.type === 'user'){
+        if(receiver.type === 'users'){
           arr_promise.push(
             Axios(`${process.env.REACT_APP_API_URL}/users/${receiver._id}`,{
               headers: { authorization: localStorage.token }
             })
           )
-            // .then(response => {
-            //   console.log('Data user')
-            //   set_re_render(true)
-            //   receiver.detail = response.data.data;
-            // })
-            // .catch(error => console.log(error))
-        } 
+        }
         else {
           arr_promise.push(
             Axios(`${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`,{
               headers: { authorization: localStorage.token }
             })
           )
-          // Axios(`${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`,{
-          //   headers: { authorization: localStorage.token }
-          // })
-          //   .then(response => {
-          //     console.log('Data room')
-          //     receiver.detail = response.data.data;
-          //     set_re_render(true)
-          //   })
-          //   .catch(error => console.log(error))
         }
-
+        //Check last element then call promise all
         if(index === user.list_chats.length - 1) {
+          console.log('Last')
           Promise.all(arr_promise)
             .then((receivers) => {
-              console.log(receivers)
+              console.log('Data coming !');
+              //Add detail to list chats
               receivers.forEach(receiver => {
                 const receiver_index = user.list_chats.findIndex(element => element._id === receiver.data.data._id);
-                user.list_chats[receiver_index].detail = receiver.data.data; 
+                user.list_chats[receiver_index].detail = receiver.data.data;
               })
-              set_re_render(true)
+              //Set list chats
+              set_list_chats(user.list_chats.map((receiver,index) => {
+                return (
+                  <Link key={index}
+                        id={receiver._id}
+                        to={`/chat/${receiver._id}`}
+                        onClick={() => { start_chat(receiver) }}
+                  >
+                    <li>
+                      <CHAT_BLOCK key={index}
+                                  name={receiver.detail ? receiver.detail.name : ''}
+                                  avatar={receiver.detail.avatar ? receiver.detail.avatar : ''}
+                                 />
+                    </li>
+                  </Link>
+                )
+              }))
+              set_obj_receiver(obj_receivers[user._id] = user)
             })
         }
       })
-
+    } ;
+  },[user])
+  //#endregion
+  //#region Function logic
+  const send_message = (e,receiver_id) => {
+    e.preventDefault();
+    if (input_message.current.value) {
+      socket.emit('/send-message', {
+        content: input_message.current.value,
+        sender_id: user._id,
+        receiver_id
+       });
+      document.getElementById('message').value = '';
+      return false;
     }
-  },user.list_chats)
-  //Render list chats
-  const render_list_chats = () => {
-    if(user.list_chats){
-      return (user.list_chats.map((receiver, index) => {
-        return (
-          // onClick={() => { this.join_room(room._id,'rooms');
-          //                  this.render_message_in_room(room._id,'rooms')}} 
-          <Link  
-                key={index} 
-                to={`/chat/${receiver._id}`}>
-            <li>
-              <CHAT_ROOM key={index} room_name={receiver.detail} />
-            </li>
-          </Link>
-        )
-      }))
+    else
+      alert('Tin nhắn không được để trống !');
+  }
+  const create_room = () => {
+    const room_name = prompt('Nhập tên phòng muốn tạo');
+    if(room_name == null || room_name == '')
+      return;
+    else {
+      Axios.post(`${process.env.REACT_APP_API_URL}/chat/rooms`,
+        { name: room_name },
+        { headers: {
+          authorization : localStorage.token
+        }})
+        .then(response => {
+          console.log('Room created !');
+          const receiver = response.data.data;
+          let list_chats_updated = list_chats;
+          const new_ele_room = (
+            <Link
+              key={list_chats_updated.length}
+              to={`/chat/${receiver._id}`}>
+              <li>
+                <CHAT_BLOCK key={list_chats_updated.length}
+                            name={receiver ? receiver.name : ''}
+                            onClick={start_chat(receiver._id,'room')}
+                            />
+              </li>
+            </Link>
+          )
+          set_list_chats([new_ele_room,...list_chats])
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
-  //Render 
+  const start_chat = (receiver) => {
+    console.log('Start chat')
+    // Join socket
+    socket.emit('/start-chat',{
+      _id : receiver._id,
+      type: receiver.type
+    })
+    // Load obj receivers information
+    if(receiver.type === 'users'){
+      set_obj_receiver(obj_receivers[receiver._id] = receiver.detail)
+    }
+    else {
+      let str_query_users = '';
+      receiver.detail.members.map((member,index) => {
+        str_query_users += `_id=${member}&`;
+        if(index === receiver.detail.members.length - 1) {
+          Axios.get(`${process.env.REACT_APP_API_URL}/users?${str_query_users}`,{
+            headers : {
+              authorization : localStorage.token
+            }
+          })
+            .then(members => {
+              members.data.data.map((member) => {
+                set_obj_receiver(obj_receivers[member._id] = member);
+                get_all_message(receiver);
+              })
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        }
+      })
+    }
+    // Active chat block DOM
+    const chat_block_selected = document.getElementById(receiver._id);
+    const element_chat_block = chat_block_selected.getElementsByClassName("chat-block");
+    const list_chat_blocks = document.getElementsByClassName("row chat-block active");
+    if (list_chat_blocks.length){
+      list_chat_blocks[0].classList = ("row chat-block");
+      element_chat_block[0].classList = ("row chat-block active");
+    }
+    else
+      element_chat_block[0].classList = ("row chat-block active")
+  }
+  const get_all_message = (receiver) => {
+    console.log('Get messages');
+    // Get main message element
+    const main_message = document.getElementById('main-message');
+    Axios.get(`${process.env.REACT_APP_API_URL}/chat/${receiver.type}/${receiver._id}/messages?page=1`,{
+      headers: {
+        authorization: localStorage.token
+      }
+    })
+      .then(response => {
+        main_message.innerHTML = '';
+        //Loop all message
+        response.data.messages.map((message) => {
+          //Create div wrap message
+          let wrap_message = document.createElement('div');
+          //Set class name for wrap message
+          if (message.sender_id === user._id)
+            wrap_message.className = 'messages sender';
+          else {
+            wrap_message.className = 'messages';
+            //Create div  element for avatar
+            let avatar_message = document.createElement('div');
+            avatar_message.className = "avatar-message";
+            avatar_message.style.backgroundImage = `url("${obj_receivers[message.sender_id].avatar}")`
+            //Append avatar message in wrap message
+            wrap_message.appendChild(avatar_message);
+          }
+          // Create span element for message
+          let span_message = document.createElement('span');
+          span_message.innerHTML = `${message.content}`;
+          // Append span message in wrap message
+          wrap_message.appendChild(span_message);
+          // Append wrap message in main message
+          main_message.appendChild(wrap_message);
+        })
+      })
+      .catch(error => {
+        console.log(error)
+        main_message.innerHTML = '';
+      })
+  }
+  //#endregion
+  //#region Render
   if(!is_auth)
     return <CIRCLE_LOADING />
-  else{
+  else {
+    console.log('Render')
     return (
       <div className="row chat-container">
-      {console.log('Render')}
-        <div className={`col-3 chat-room `}>
+        <div className="col-3 list-chat-room">
           <div className="row mt-3">
             <div className="col-3">
-              <Popup trigger={<div className="avatar" style={{ backgroundImage: `url("${user.avatar}")` }} ></div>}
-                position="bottom left">
+              <Popup trigger={<div className="avatar" style={{ backgroundImage: `url("${user.avatar}")` }}></div>}
+                     position="bottom left"
+                     on="hover"
+              >
                 <div className="user-settings-container">
                   <div className="user-setting-option">
                     Chỉnh sửa trang cá nhân
                   </div>
                   <div className="user-setting-option" >
-                    {/* onClick={this.chat_with_user} */}
                     Chat với bạn bè
                   </div>
                   <div className="user-setting-option">
@@ -144,250 +283,45 @@ const App = props => {
                 </div>
               </Popup>
             </div>
-            <div className="col-9">
-              <button className="btn-add-chat-room">
-                {/* onClick={this.create_room} */}
-                Thêm phòng chat +
-                  </button>
+            <div className="col-8 large-text">
+              Let's talk
+            </div>
+            <div className="col-1 p-0">
+              <Popup trigger={<div className="small-icon" 
+                                   onClick={create_room}>
+                                    <i class="material-icons">group_add</i>
+                              </div>}
+                on="hover"
+              >
+                <div className="popup-small-text">Tạo phòng chat</div>
+              </Popup>
             </div>
           </div>
           <div>
-            <ul style={{ listStyle: 'none', padding: 20 }}>
-              {console.log(render_list_chats())}
-              {/* {this.render_chat_with_user('5f50bf892f8c613814230aa7', 'users')}
-              {this.render_chat_with_user('5f50bf8d2f8c613814230aa8', 'users')} */}
+            <ul className="list-chats">
+              {list_chats}
             </ul>
           </div>
         </div>
         <div className="col-9">
           <div id="main-message" >
-            {/* {this.state.arr_message} */}
           </div>
-          <form className="form-chat">
-            <input id="message" autoComplete="off" />
-            {/* ref={(input) => this.input_message = input} */}
-            <button type="button">Send</button>
-            {/* onClick={this.send_message} */}
+          <form className="form-chat"
+                onSubmit={(e) => {send_message(e,props.match.params.receiver_id)}}
+                method="POST"
+          >
+            <input id="message"
+                   ref={input_message}
+                   autoComplete="off"
+                   placeholder="Nhập tin nhắn ở đây ..."
+                   onKeyPress={(e) => console.log(e.key)}
+            />
           </form>
         </div>
       </div>
     )
   }
+  //#endregion
 }
 
-
-
 export default App;
-// export class App extends React.Component{
-//   constructor(props){
-//     super(props);
-//     this.state = {
-//       is_auth: false,
-//       load_chat_rooms_done : false,
-//       component_should_update: false,
-//       arr_message : []
-//     }
-//   }
-//   componentWillMount(){
-//     check_auth(is_auth => {
-//       if(is_auth){
-//         user = is_auth;
-//         socket = io(__server,{
-//           query: "authorization=" + window.localStorage.token
-//         });
-//         socket.on('/send-message',(msg) => {
-//           console.log(msg)
-//           const main_message = document.getElementById('main-message');
-//           let wrap_message = document.createElement('div');
-//           if(msg.sender_id === user.user_id)
-//             wrap_message.className = 'messages sender';
-//           else 
-//             wrap_message.className = 'messages';
-//           let span_message = document.createElement('span');
-//           span_message.innerHTML = `${msg.sender_name} : ${msg.content}`;
-//           wrap_message.appendChild(span_message);
-//           main_message.appendChild(wrap_message);
-//         })
-//         this.setState({ is_auth: true });
-//       }
-//       else
-//         window.location = '/login'
-//     })
-//   }
-//   componentDidMount(){
-//     Axios(`${process.env.REACT_APP_API_URL}/users`,{
-//       headers : {
-//         authorization: localStorage.token
-//       }
-//     })
-//       .then(response => {
-//         user = response.data // Assignment response data to global variable
-//         this.setState({component_should_update: true})
-//       }) 
-//       .catch(error => console.log(error))
-
-    
-//     // Axios.get(`${process.env.REACT_APP_API_URL}/chat/rooms`,
-//     //   { headers: {
-//     //     authorization : window.localStorage.token
-//     //   }})
-//     //   .then(response => {
-//     //     arr_rooms_chat = response.data.rooms;
-//     //     this.setState({ load_chat_rooms_done: true })
-//     //   })
-//     //   .catch(error => {
-//     //     console.log(error)
-//     //   })
-//   }
-//   send_message = () => {
-//     if(this.input_message.value){
-//       socket.emit('/send-message', { content: this.input_message.value });
-//       document.getElementById('message').value = '';
-//     }
-//     else
-//       alert('Tin nhắn không được để trống !');
-//   }
-//   create_room = () => {
-//     const room_name = prompt('Nhập tên phòng muốn tạo');
-//     if(room_name == null || room_name == '')
-//       return;
-//     else{
-//       Axios.post(`${process.env.REACT_APP_API_URL}/chat/rooms`, 
-//         {name: room_name },
-//         { headers: {
-//           authorization : window.localStorage.token
-//         }})
-//         .then(response => {
-//           arr_rooms_chat.push(response.data)
-//           this.setState({component_should_update: true})
-//         })
-//         .catch(error => {
-//           console.log(error)
-//         })
-//     }
-
-//   }
-//   join_room = (room_id,type) => {
-//     socket.emit('/join-room',{ room_id,type });
-//   }
-//   chat_with_user = () => {
-//     const friend_number = prompt('Nhập số điện thoại của bạn bè để chat : ')
-//     if(friend_number === null || friend_number === '') alert('Số điện thoại trống')
-//     else {
-//       Axios.get(`${process.env.REACT_APP_API_URL}/users/${friend_number}`)
-//         .then(response => {
-//           if(response){
-//             this.join_room(response.data._id,'user')
-//           } else alert('Không thể tìm thấy người dùng với số điện thoại' + friend_number);
-//         })
-//         .catch(error => {
-//           console.log(error)
-//         })
-//     }
-//   }
-//   render_list_room = () => {
-//     return (arr_rooms_chat.map((room, index) => {
-//       return (
-//         <Link onClick={() => { this.join_room(room._id,'rooms');this.render_message_in_room(room._id,'rooms')}}  
-//               key={index} 
-//               to={`/chat/${room._id}`}>
-//           <li>
-//             <CHAT_ROOM key={index} room_name={room.name} />
-//           </li>
-//         </Link>
-//       )
-//     }))
-//   }
-//   render_message_in_room = async (room_id,receiver_type) => {
-//     let arr_message = [];
-//     const get_messages = Axios.get(`${process.env.REACT_APP_API_URL}/chat/${receiver_type}/${room_id}/messages?page=1`, {
-//       headers: {
-//         authorization: localStorage.getItem('token')
-//       }
-//     }).then(response => {
-//         arr_message = response.data.messages.map((message) => {
-//           if (message.sender_id === user.user_id)
-//             return (
-//               <div className="messages sender">
-//                 <span>{message.sender_name} : {message.content}</span>
-//               </div>
-//             )
-//           else {
-//             return (
-//               <div className="messages">
-//                 <span>{message.sender_name} : {message.content}</span>
-//               </div>
-//             )
-//           }
-//         })})
-//     const get_users_in_chat = new Promise((resolve,reject) => {
-//       if(receiver_type === 'user'){
-//         Axios.get(`${process.env.REACT_APP_API_URL}/users/${room_id}`)
-//       }
-//       else {
-
-//       }
-//     })
-//   }
-//   render_chat_with_user = (receiver_id,type) => {
-//     return (
-//       <Link onClick={() => { this.join_room(receiver_id,type) ; this.render_message_in_room(receiver_id,type) }}  
-//             to={`/chat/${receiver_id}`}>
-//               <li>
-//                 <CHAT_ROOM room_name='dev1' />
-//               </li>
-//       </Link>
-//     )
-//   }
-//   render(){
-//     if(!this.state.is_auth)
-//       return <CIRCLE_LOADING />
-//     else {
-//      return (
-//         <div className="row chat-container">
-//           <div className={`col-3 chat-room `}>
-//             <div className="row mt-3">
-//               <div className="col-3"> 
-//                 <Popup trigger={<div className="avatar" style={{backgroundImage:`url("${user.avatar}")`}} ></div>} 
-//                        position="bottom left">
-//                   <div className="user-settings-container">
-//                     <div className="user-setting-option">
-//                       Chỉnh sửa trang cá nhân
-//                     </div>
-//                     <div className="user-setting-option" onClick={this.chat_with_user}>
-//                       Chat với bạn bè
-//                     </div>
-//                     <div className="user-setting-option">
-//                       Đăng xuất
-//                     </div>
-//                   </div>
-//                 </Popup>
-//               </div>
-//               <div className="col-9">
-//                 <button onClick={this.create_room} className="btn-add-chat-room">
-//                   Thêm phòng chat +
-//                 </button>
-//               </div>
-//             </div>
-//             <div>
-//               <ul style={{listStyle:'none',padding:20}}>
-//                 {this.render_list_room()}
-//                 {this.render_chat_with_user('5f50bf892f8c613814230aa7','users')}
-//                 {this.render_chat_with_user('5f50bf8d2f8c613814230aa8','users')}
-//               </ul>
-//             </div>
-//           </div>
-//           <div className="col-9">
-//             <div id="main-message" >
-//              {this.state.arr_message}
-//             </div>
-//             <form className="form-chat">
-//               <input id="message" autoComplete="off" ref={(input) => this.input_message = input} />
-//               <button onClick={this.send_message} type="button">Send</button>
-//             </form>
-//           </div>
-//         </div>
-//       )
-//     }
-//   }
-// }
