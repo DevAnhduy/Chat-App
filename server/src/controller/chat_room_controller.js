@@ -12,6 +12,7 @@ const catch_async = require('src/utils/catch_async');
 
 exports.create_room = (req,res,next) => {
     req.body.admin = req.user_id;
+    req.body.members = [req.user_id];
     factory.create_one(Room_Model)(req,res,next)
 }
 exports.get_room = factory.get_one(Room_Model);
@@ -34,13 +35,14 @@ exports.get_all_message = catch_async( async(req,res,next) => {
             messages: messages.data
         })
 })
+
 exports.create_message = catch_async( async(req, res, next) => {
     const room_id = req.params.id;
     const path_room_folder = `${__root}/data/messages/user_to_room/${room_id}`
     const new_message = {
         content: {
-            sender: req.user_id,
-            room_id: room_id,
+            sender_id: req.user_id,
+            receiver_id: room_id,
             content: req.body.content,
             sent_date: moment().format('YYYY-MM-DD, h:mm:ss'),
             timestamp: Date.now()
@@ -57,6 +59,7 @@ exports.create_message = catch_async( async(req, res, next) => {
         else return next(new AppError('Cannot create message'), 500)
     })
 })
+
 exports.update_message = catch_async( async(req,res,next) => {
     const sender = req.user_id;
     const room_id = req.params.id;
@@ -80,6 +83,7 @@ exports.update_message = catch_async( async(req,res,next) => {
         else return next(new AppError('Cannot update message'),500)
     })
 })
+
 exports.delete_message = catch_async( async(req,res,next) => {
     const sender = req.user_id;
     const room_id = req.params.id;
@@ -103,6 +107,7 @@ exports.delete_message = catch_async( async(req,res,next) => {
         else return next(new AppError('Cannot delete message',500))
     })
 })
+
 exports.upload_file = catch_async( async(req,res,next) => {
     const new_file_uploaded = new File_Model({
         _id: req.file.file_id,
@@ -124,4 +129,5 @@ exports.upload_file = catch_async( async(req,res,next) => {
             return next(new AppError(error,500))
         })
 })
+
 exports.get_all_file = factory.get_all(File_Model)
