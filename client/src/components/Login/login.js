@@ -1,7 +1,6 @@
 import React from 'react';
-import login_style from './login.module.css';
 import Axios from 'axios';
-const { __server } = require('config/constant.json');
+import './Login.scss';
 
 export class  Login_Form extends React.Component{
     submit_login = () => {
@@ -11,7 +10,6 @@ export class  Login_Form extends React.Component{
                 password: this.password.value,
             })
             .then((response) => {
-                //window.localStorage.setItem('user',JSON.stringify({}))
                 if(response.data){
                     localStorage.setItem('token',`Bearer ${response.data.token}`)
                     window.location = '/'
@@ -32,7 +30,7 @@ export class  Login_Form extends React.Component{
     }
     render(){
         return(
-            <div className={`text-center ${login_style['main-login']}`}>
+            <div className="text-center main-login">
                 <form>
                     <div className="form-group">
                         <label htmlFor="username">Số điện thoại</label>
@@ -55,10 +53,14 @@ export class  Login_Form extends React.Component{
                                />
                     </div>
                     <div className="form-group" >
-                        <button onClick={this.submit_login} type="button" className={`btn ${login_style['btn-login']}`} >
+                        <button onClick={this.submit_login} 
+                                type="button" 
+                                className="btn btn-login" >
                             Đăng nhập
                         </button>&emsp;
-                        <button onClick={this.click_register} type="button" className={`btn ${login_style['btn-login']}`} >
+                        <button onClick={this.click_register} 
+                                type="button" 
+                                className="btn btn-login" >
                             Đăng ký
                         </button>
                     </div>
