@@ -32,7 +32,7 @@ module.exports = (server) => {
 
             socket.on('/send-message', (msg) => {
                 const message_to_client = {
-                    sender_id,
+                    sender_id: user._id,
                     receiver_id: data.room_id,
                     content: msg.content
                 }
