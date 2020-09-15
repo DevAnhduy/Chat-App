@@ -26,11 +26,16 @@ const user_schema = new mongoose.Schema({
         type: Date,
         default: moment().format('YYYY-MM-DD')
     },
+    friends : [
+        {
+            type: mongoose.Schema.Types.ObjectId
+        }
+    ],
     list_chats : [
         {
             type : {
                 type : String,
-                enum: ['room','user'],
+                enum: ['rooms','users'],
                 required: true
             },
             _id : {
