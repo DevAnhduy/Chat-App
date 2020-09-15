@@ -1,0 +1,32 @@
+.chat-block {
+    height: 64px;
+    cursor: pointer;
+    margin-left: 15px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    &:hover {
+        background: rgba(0, 0, 0, .05);
+        border-radius: 10px;
+    }
+    &.active {
+        background: rgba(0, 0, 0, .05);
+        border-radius: 10px;
+    }
+}
+.chat-block-avatar {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    margin-top: 7px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-image: url(('/images/chat_room_default_icon.jpg')) ;
+}
+.chat-block-name{
+    color: rgba(0, 0, 0, 1) ;
+    padding-top: 7%;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 0;
+}
