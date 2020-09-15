@@ -1,8 +1,8 @@
 const app = require('express')();
 const loaders = require('./loaders/index');
 const server = require('http').createServer(app);
-require('tests/socketio')(server);
-const cors = require('cors')
+require('src/socket.io/index')(server);
+
 
 (async() => { // Start server
     await loaders(app);
