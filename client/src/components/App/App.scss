@@ -1,34 +1,44 @@
+ul {
+    list-style: none;
+    margin-block-start: 0;
+    padding-inline-start: 0;
+}
 .chat-container{
+    width: 100%;
+    height: 100%;
+    #main-message {
+        height: 92%;
+    }
     .form-chat {
         background:white;
-        padding: 3px;
-        position: fixed;
         bottom: 0;
-        width: 72%;
-        input {
-            border: 1px solid #24292e;
-            padding: 10px;
-            width: 90%;
-            margin-right: 0.5%;   
+        width: 100%;
+        height: 36px;
+        #message {
+            border: 1px solid rgba(0, 0, 0, .3) ;
+            padding: 5px 20px;
+            width: 100%;
+            margin-right: 0.5%;
+            margin-bottom: 10px; 
+            background-color: rgba(0, 0, 0, .05); 
+            border-radius: 25px; 
         }
-        button {
-            width: 9%;
-            background: #24292e ;
-            border: none;
-            padding: 10px;
-            color: white;
-            &:focus{
-                outline: none;
-            }
-            &:hover{
-                 box-shadow: 0px 1px 10px #24292e;
-            }
+        input:focus {
+            outline: none;
         }
     }
     .messages {
         margin: 10px;
         display: flex;
-        flex-direction: row;        
+        flex-direction: row;
+        .avatar-message {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-position: 50% 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }        
         &.sender{
             flex-direction: row-reverse;
             color: white;
@@ -41,11 +51,20 @@
             padding: 10px;
             background-color: #f1f0f0;
             border-radius: 10px;
+            margin-left: 20px;
         }
     } 
-    .chat-room {
-        border: 1px solid #24292e;
+    .list-chat-room {
+        border-right: 0.5px solid rgba(0, 0, 0, .3);
         height: 100vh;
+    }
+    .list-chats {
+        margin-top: 30px;
+        width: 100%;
+        a:focus .chat-block{
+            background: rgba(0, 0, 0, .05);
+            border-radius: 10px;
+        }
     }
     .btn-add-chat-room{
         display: block;
@@ -73,18 +92,19 @@
     margin-left: 30px;
     border-radius: 50%; 
     background-image: url(/images/user_default_avatar.jpg);
-    background-position: center;
-    background-size: 100% 100%;
+    background-position: 50% 50%;
+    background-size: cover;
     background-repeat: no-repeat;
 }
 .user-settings-container {
     border-radius: 10px;
     .user-setting-option {
-        padding: 10px;
         font-size: 14px;
+        padding: 2px 15px;
         &:hover{
             cursor: pointer;
-            background: #afb8c2;
+            padding-left: 20px;;
+            background: rgba(0, 0, 0, .4) ;
             transition: all 0.5s;
             color: white;
         }
@@ -92,4 +112,22 @@
             display: none;
         }
     }
+}
+.small-icon {
+    cursor: pointer;
+}
+.popup-small-text {
+    padding: 2px 15px;
+    font-size: 14px;
+    &:hover {
+        background-color: rgba(0, 0, 0, .4);
+        padding-left: 20px;
+        transition: 0.5s all;
+        color: white;
+        cursor: pointer;
+    }
+}
+.large-text {
+    font-size: 25px;
+    font-weight: bold;
 }
