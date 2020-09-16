@@ -5,5 +5,5 @@ workflows:
   node-tests:
     jobs:
       - node/test
-    app-dir:
-      - ~/server
+    parameter:
+      - app-dir : "~/server"
