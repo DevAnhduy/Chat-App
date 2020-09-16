@@ -17,4 +17,7 @@ code {
 .circle-loading circle{
   stroke: #24292e !important
 }
+.row {
+  margin: 0px !important;
+}
 
