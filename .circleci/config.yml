@@ -5,3 +5,5 @@ workflows:
   node-tests:
     jobs:
       - node/test
+install-packages:
+  app-dir : ~/server
