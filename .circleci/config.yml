@@ -4,6 +4,6 @@ orbs:
 workflows:
   node-tests:
     jobs:
-      - ~/server
+      -node/test
 install-packages:
   app-dir : ~/server
