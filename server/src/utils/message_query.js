@@ -17,7 +17,7 @@ class Message_Query {
              const room_folder = path.join(__messages,'user_to_room',this.store_data)
              const files = fs.readdirSync(room_folder);
              //Check file exists
-             const path_file = `${room_folder}/${files[page - 1]}`;
+             const path_file = `${room_folder}/${files[files.length - page]}`;
              if (fs.existsSync(path_file))
                  this.data  = require(path_file);
              return this;
