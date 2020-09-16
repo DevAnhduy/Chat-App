@@ -3,6 +3,6 @@ orbs:
   node: circleci/node@3.0.0
 workflows:
   node-tests:
+    app-dir: ~/server
     jobs:
-      - app-dir: ~/server
       - node/test
