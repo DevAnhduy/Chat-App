@@ -69,6 +69,7 @@ const App = props => {
           wrap_message.appendChild(span_message);
           //Append wrap message in main message
           main_message.appendChild(wrap_message);
+          main_message.scrollTop = main_message.scrollHeight;
       })
       console.log('Load list chat')
       let arr_promise = []; // Array contain all axios request
@@ -125,6 +126,7 @@ const App = props => {
   //#region Function logic
   const send_message = (e,receiver_id) => {
     e.preventDefault();
+    console.log('Send message');
     if (input_message.current.value) {
       socket.emit('/send-message', {
         content: input_message.current.value,
@@ -132,7 +134,6 @@ const App = props => {
         receiver_id
        });
       document.getElementById('message').value = '';
-      return false;
     }
     else
       alert('Tin nhắn không được để trống !');
@@ -179,7 +180,8 @@ const App = props => {
     })
     // Load obj receivers information
     if(receiver.type === 'users'){
-      set_obj_receiver(obj_receivers[receiver._id] = receiver.detail)
+      set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
+      get_all_message(receiver);
     }
     else {
       let str_query_users = '';
@@ -218,6 +220,28 @@ const App = props => {
     console.log('Get messages');
     // Get main message element
     const main_message = document.getElementById('main-message');
+    const wrapper_receiver_info = document.createElement("div");
+    wrapper_receiver_info.classList = "wrapper-receiver-info";
+    // Div avatar
+    const div_avatar = document.createElement("div");
+    div_avatar.classList = "receiver-info-avatar";
+    div_avatar.style.backgroundImage = `url(${receiver.detail.avatar})`;
+    // Div name
+    const div_name = document.createElement("div");
+    div_name.innerHTML = receiver.detail.name;
+    div_name.classList = "receiver-info-name";
+    // Div icon
+    const div_icon = document.createElement("div");
+    div_icon.classList = "receiver-info-icon";
+    const create_icon_info = document.createElement("i")
+    create_icon_info.classList = "material-icons";
+    create_icon_info.innerHTML = "info";
+    div_icon.appendChild(create_icon_info);
+    // Append
+    wrapper_receiver_info.appendChild(div_avatar);
+    wrapper_receiver_info.appendChild(div_name);
+    wrapper_receiver_info.appendChild(div_icon);
+      
     Axios.get(`${process.env.REACT_APP_API_URL}/chat/${receiver.type}/${receiver._id}/messages?page=1`,{
       headers: {
         authorization: localStorage.token
@@ -225,6 +249,7 @@ const App = props => {
     })
       .then(response => {
         main_message.innerHTML = '';
+        main_message.appendChild(wrapper_receiver_info);
         //Loop all message
         response.data.messages.map((message) => {
           //Create div wrap message
@@ -249,10 +274,12 @@ const App = props => {
           // Append wrap message in main message
           main_message.appendChild(wrap_message);
         })
+        main_message.scrollTop = main_message.scrollHeight;
       })
       .catch(error => {
         console.log(error)
         main_message.innerHTML = '';
+        main_message.appendChild(wrapper_receiver_info);
       })
   }
   //#endregion
@@ -265,7 +292,7 @@ const App = props => {
       <div className="row chat-container">
         <div className="col-3 list-chat-room">
           <div className="row mt-3">
-            <div className="col-3">
+            <div className="col-2">
               <Popup trigger={<div className="avatar" style={{ backgroundImage: `url("${user.avatar}")` }}></div>}
                      position="bottom left"
                      on="hover"
@@ -283,13 +310,13 @@ const App = props => {
                 </div>
               </Popup>
             </div>
-            <div className="col-5 large-text">
+            <div className="col-6 large-text">
               Let's talk
             </div>
             <div className="col-4 tools-bar">
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
-                <i class="material-icons">group_add</i>
+                <i className="material-icons">group_add</i>
               </div>}
                 on="hover"
               >
@@ -297,15 +324,15 @@ const App = props => {
               </Popup>
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
-                <i class="material-icons">group_add</i>
+                <i className="material-icons">settings</i>
               </div>}
                 on="hover"
               >
-                <div className="popup-small-text">Tạo phòng chat</div>
+                <div className="popup-small-text">Cài đặt, trợ giúp</div>
               </Popup>
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
-                <i class="material-icons">group_add</i>
+                <i className="material-icons">group_add</i>
               </div>}
                 on="hover"
               >
@@ -326,7 +353,7 @@ const App = props => {
             </ul>
           </div>
         </div>
-        <div className="col-9">
+        <div className="col-9 p-0" style={{height:"100vh"}}>
           <div id="main-message" >
           </div>
           <form className="form-chat"
