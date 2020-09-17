@@ -19,6 +19,8 @@ const App = props => {
   const [user,set_user] = useState({});
   const [list_chats,set_list_chats] = useState([]);
   const [obj_receivers,set_obj_receiver] = useState({});
+  const [load_list_chats_done,set_load_list_chats] = useState(false);
+  const [load_messages,set_load_messages] = useState(false);
   //#endregion
   //#region Ref
   const input_message = useRef(null);
@@ -349,12 +351,13 @@ const App = props => {
           </div>
           <div>
             <ul className="list-chats">
-              {list_chats}
+              {list_chats.length ? list_chats : <CIRCLE_LOADING width="100%" height="50vh" />}
             </ul>
           </div>
         </div>
         <div className="col-9 p-0" style={{height:"100vh"}}>
           <div id="main-message" >
+            <CIRCLE_LOADING width="100%" />
           </div>
           <form className="form-chat"
                 onSubmit={(e) => {send_message(e,props.match.params.receiver_id)}}

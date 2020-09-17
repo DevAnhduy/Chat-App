@@ -29,11 +29,12 @@ ul {
         height: 36px;
         #message {
             position: fixed;
+            right: 0;
             background-color: white ;
             bottom: 30px;
             border: 1px solid rgba(0, 0, 0, .3) ;
             padding: 5px 20px;
-            width: 73%;
+            width: 65%;
             border-radius: 25px; 
         }
         input:focus {
