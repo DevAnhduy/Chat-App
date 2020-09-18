@@ -40,6 +40,26 @@ ul {
         input:focus {
             outline: none;
         }
+        .tools-message {
+            position: fixed;
+            background-color: white ;
+            bottom: 30px;
+            border: 1px solid rgba(0, 0, 0, .3) ;
+            padding: 0px 5px;
+            width: 8%;
+            border-radius: 25px; 
+            .tools-options {
+                display: inline-block;
+                width: 25%;
+                i {
+                    margin-top: 5px;
+                    margin-left: 5px;
+                };
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
     }
     .messages {
         margin: 10px;
