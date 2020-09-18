@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const AppError = require('src/utils/app_error');
 
 module.exports = (req,res,next) => {
     try{
