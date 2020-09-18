@@ -18,7 +18,7 @@ const App = props => {
   const [is_auth,set_is_auth] = useState(false);
   const [re_render,set_re_render] = useState(false); //Variable to re render browser, default false
   const [user,set_user] = useState({}); // State contain object data of user
-  const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
+  const [list_chats,set_list_chats] = useState();  // State contain array element html of list chat
   const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
   //#endregion
   //#region Ref
@@ -54,7 +54,6 @@ const App = props => {
   //#endregion
   //#region Function logic
   const load_list_chats = () => {
-    console.log('Load list chat')
     //#region //* READ ME. DOCUMENTATION
       /**
        * * Function process :
@@ -69,8 +68,9 @@ const App = props => {
        */
     //#endregion
     //#region //* FUNCTION HANDLE
-      let arr_request = []; // Array contain all axios request
-      user.list_chats.forEach((receiver,index) => {
+      if(user.list_chats.length){
+        let arr_request = []; // Array contain all axios request
+        user.list_chats.forEach((receiver,index) => {
           const api_get_user = `${process.env.REACT_APP_API_URL}/users/${receiver._id}`;
           const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
           const api_get_recevier = receiver.type === 'rooms' ? api_get_rooms : api_get_user;
@@ -110,6 +110,10 @@ const App = props => {
           }
       })
       set_obj_receiver(obj_receivers[user._id] = user)
+      }
+      else {
+        set_list_chats([]);
+      }
     //#endregion
   }
   const send_message = (e,receiver_id) => {
@@ -142,7 +146,7 @@ const App = props => {
     //#region //* FUNCTION HANDLE
       //Step 1
       const room_name = prompt('Nhập tên phòng muốn tạo');
-      if(room_name == null || room_name == '')
+      if(room_name === null || room_name === '')
         return;
       else {
         //Step 2
@@ -459,10 +463,10 @@ const App = props => {
                 </div>
               </Popup>
             </div>
-            <div className="col-6 large-text">
+            <div className="col-5 large-text talk-text">
               Let's talk
             </div>
-            <div className="col-4 tools-bar">
+            <div className="col-5 tools-bar">
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
                 <i className="material-icons">group_add</i>
@@ -497,13 +501,13 @@ const App = props => {
           </div>
           <div>
             <ul className="list-chats">
-              {!list_chats.length ? <CIRCLE_LOADING width="100%" height="50vh" /> : list_chats}
+              {!list_chats ? <CIRCLE_LOADING width="100%" height="50vh" /> : list_chats}
             </ul>
           </div>
         </div>
         <div className="col-9 p-0" style={{height:"100vh"}}>
           <div id="main-message" >
-            <CIRCLE_LOADING width="100%" />
+            {/* <CIRCLE_LOADING width="100%" /> */}
           </div>
           <form className="form-chat"
                 onSubmit={(e) => {send_message(e,props.match.params.receiver_id)}}
