@@ -15,11 +15,11 @@ let socket;
 
 const App = props => {
   //#region State
-  //const [is_auth,set_is_auth] = useState(false); //Check client is auth, default false
+  const [is_auth,set_is_auth] = useState(false);
   const [re_render,set_re_render] = useState(false); //Variable to re render browser, default false
-  const [user,set_user] = useState({});
-  const [list_chats,set_list_chats] = useState([]); 
-  const [obj_receivers,set_obj_receiver] = useState({}); //Object receivers
+  const [user,set_user] = useState({}); // State contain object data of user
+  const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
+  const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
   //#endregion
   //#region Ref
   const input_message = useRef(null);
@@ -30,7 +30,9 @@ const App = props => {
     //Call function check auth
     check_auth(is_auth => {
       if (is_auth) {
-        set_user(is_auth) // Set variable user
+        console.log('Authentication success')
+        set_user({...is_auth}); // Set variable user
+        set_is_auth(true);
       }
       else
         window.location = '/login';
@@ -39,6 +41,7 @@ const App = props => {
   //Load list chats && connect socket io
   useEffect(() => {
     if(user.list_chats){
+      console.log('Effect 2')
       //Connect socket io
       socket = io(__server, { // Connect socket io
         query: "authorization=" + window.localStorage.token
@@ -52,57 +55,75 @@ const App = props => {
   //#region Function logic
   const load_list_chats = () => {
     console.log('Load list chat')
-    let arr_request = []; // Array contain all axios request
-    user.list_chats.forEach((receiver,index) => {
-        const api_get_user = `${process.env.REACT_APP_API_URL}/users/${receiver._id}`;
-        const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
-        const api_get_recevier = receiver.type === 'rooms' ? api_get_rooms : api_get_user;
-        arr_request.push(
-          call_api({
-            url : api_get_recevier,
-            method: 'get'
-          })
-        )
-        //Check last element then call promise all
-        if(index === user.list_chats.length - 1) {
-          Promise.all(arr_request)
-            .then((receivers) => {
-              //Add detail to list chats
-              receivers.forEach(receiver => {
-                const receiver_index = user.list_chats.findIndex(user_in_list_chat => user_in_list_chat._id === receiver.data.data._id);
-                user.list_chats[receiver_index].detail = receiver.data.data;
-              })
-              //Set list chats
-              set_list_chats(user.list_chats.map((receiver,index) => {
-                return (
-                  <Link key={index}
-                        id={receiver._id}
-                        to={`/chat/${receiver._id}`}
-                        onClick={() => { start_chat(receiver) }}
-                  >
-                    <li>
-                      <CHAT_BLOCK key={index}
-                                  name={receiver.detail ? receiver.detail.name : ''}
-                                  avatar={receiver.detail.avatar ? receiver.detail.avatar : ''}
-                      />
-                    </li>
-                  </Link>
-                )
-              }))
-              set_obj_receiver(obj_receivers[user._id] = user)
+    //#region //* READ ME. DOCUMENTATION
+      /**
+       * * Function process :
+       *    1. Init array request contain all axios request
+       *    2. Loop array list chats of user. Init variable api_get_user,api_get_room. 
+       *    Check if receiver type is room then assignment api_get_room to api_get_receiver else ...
+       *    3. Push axios request to array request (1)
+       *    4. Check if loop is last then call Promise.all with array request(1) to get receiver data
+       *      4.1. Map response data from api. With each loop then add data detail to state user. Set state object receivers 
+       *      4.2. Set state list chats with map list chats of state user
+       * * Result : State list_chats contain list elements to render, state obj_receiver contain user data 
+       */
+    //#endregion
+    //#region //* FUNCTION HANDLE
+      let arr_request = []; // Array contain all axios request
+      user.list_chats.forEach((receiver,index) => {
+          const api_get_user = `${process.env.REACT_APP_API_URL}/users/${receiver._id}`;
+          const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
+          const api_get_recevier = receiver.type === 'rooms' ? api_get_rooms : api_get_user;
+          arr_request.push(
+            call_api({
+              url : api_get_recevier,
+              method: 'get'
             })
-        }
+          )
+          //Check last element then call promise all
+          if(index === user.list_chats.length - 1) {
+            Promise.all(arr_request)
+              .then((receivers) => {
+                //Add detail to list chats
+                receivers.forEach(receiver => {
+                  const receiver_index = user.list_chats.findIndex(user_in_list_chat => user_in_list_chat._id === receiver.data.data._id);
+                  user.list_chats[receiver_index].detail = receiver.data.data;
+                })
+                //Set list chats
+                set_list_chats(user.list_chats.map((receiver,index) => {
+                  return (
+                    <Link key={index}
+                          id={receiver._id}
+                          to={`/chat/${receiver._id}`}
+                          onClick={() => { start_chat(receiver) }}
+                    >
+                      <li>
+                        <CHAT_BLOCK key={index}
+                                    name={receiver.detail ? receiver.detail.name : ''}
+                                    avatar={receiver.detail.avatar ? receiver.detail.avatar : ''}
+                        />
+                      </li>
+                    </Link>
+                  )
+                }))
+              })
+          }
       })
+      set_obj_receiver(obj_receivers[user._id] = user)
+    //#endregion
   }
   const send_message = (e,receiver_id) => {
     e.preventDefault();
+    //Check input message exists
     if (input_message.current.value) {
+      //Send message to server
       socket_handle_factory.send_to_server.message({
         socket,
         user,
         receiver_id,
         message : input_message.current.value
       })
+      //Clear text input message
       document.getElementById('message').value = '';
     }
     else
@@ -161,26 +182,42 @@ const App = props => {
       /**
        * @param receiver Object receiver
        * * Function process :
+       *    1. Check type of receiver
+       *      1.1. Receiver type is users
+       *        1.1.1. Set state obj_receivers
+       *        1.1.2. Call function get_all_message 
+       *      1.2. Receiver type is rooms
+       *        1.2.1. Init str query users
+       *        1.2.2. Map members in room. With each loop add member id to str query users (1.2.1) 
+       *        1.2.3. Check if index is last then call api
+       *        1.2.4. When transfer data completed then map response data to obj_receiver state & call get_all_message function
        * * Result : set state obj_receiver
        */
     //#endregion
     //#region //* FUNCTION HANDLE
+      //Step 1.1
       if(receiver.type === 'users'){
         set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
         get_all_message(receiver);
       }
-      else {
+      else { //Step 1.2
+        //Step 1.2.1
         let str_query_users = '';
+        //Step 1.2.2
         receiver.detail.members.map((member,index) => {
           str_query_users += `_id=${member}&`;
+          //Step 1.2.3
           if(index === receiver.detail.members.length - 1) {
             call_api({
               url : `${process.env.REACT_APP_API_URL}/users?${str_query_users}`
             })
               .then(members => {
-                members.data.data.map((member) => {
+                //Step 1.2.4
+                members.data.data.map((member,index) => {
                   set_obj_receiver(obj_receivers[member._id] = member);
-                  get_all_message(receiver);
+                  if(index === members.data.data.length - 1){
+                    get_all_message(receiver);
+                  }
                 })
               })
               .catch(error => {
@@ -396,7 +433,7 @@ const App = props => {
   }
   //#endregion
   //#region Render
-  if(!user)
+  if(!is_auth)
     return <CIRCLE_LOADING />
   else {
     console.log('Render')
@@ -451,7 +488,6 @@ const App = props => {
                 <div className="popup-small-text">Tạo phòng chat</div>
               </Popup>
             </div>
-            
           </div>
           <div className="row mt-4">
             <input type="text" 
@@ -461,17 +497,32 @@ const App = props => {
           </div>
           <div>
             <ul className="list-chats">
-              {list_chats}
+              {!list_chats.length ? <CIRCLE_LOADING width="100%" height="50vh" /> : list_chats}
             </ul>
           </div>
         </div>
         <div className="col-9 p-0" style={{height:"100vh"}}>
           <div id="main-message" >
+            <CIRCLE_LOADING width="100%" />
           </div>
           <form className="form-chat"
                 onSubmit={(e) => {send_message(e,props.match.params.receiver_id)}}
                 method="POST"
           >
+            <div className="tools-message">
+              <div className="tools-options">
+                <i className="material-icons">grid_on</i>
+              </div>
+              <div className="tools-options">
+                <i className="material-icons">image</i>
+              </div>
+              <div className="tools-options">
+                <i className="material-icons">view_compact</i>
+              </div>
+              <div className="tools-options">
+                <i className="material-icons">add_to_photos</i>
+              </div>
+            </div>
             <input id="message"
                    ref={input_message}
                    autoComplete="off"
