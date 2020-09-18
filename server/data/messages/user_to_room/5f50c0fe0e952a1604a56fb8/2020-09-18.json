@@ -5,5 +5,12 @@
         "content": "Dit me Sang",
         "sent_date": "2020-09-18, 11:03:01",
         "timestamp": 1600401781370
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50c0fe0e952a1604a56fb8",
+        "content": "Yo",
+        "sent_date": "2020-09-18, 3:23:52",
+        "timestamp": 1600417432854
     }
 ]
