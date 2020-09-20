@@ -181,7 +181,7 @@ const App = props => {
       }
     //#endregion
   }
-  const load_obj_receiver_infomation = (receiver) => {
+  const load_obj_receiver_information = (receiver) => {
     //#region //* READ ME. DOCUMENTATION
       /**
        * @param receiver Object receiver
@@ -263,7 +263,7 @@ const App = props => {
     // Join socket
     socket_handle_factory.send_to_server.start_chat(socket,receiver);
     // Load obj receivers information
-    load_obj_receiver_infomation(receiver);
+    load_obj_receiver_information(receiver);
     // Active chat block DOM
     set_active_chat_block(receiver);
   }
@@ -445,7 +445,7 @@ const App = props => {
       <div className="row chat-container">
         <div className="col-3 list-chat-room">
           <div className="row mt-3">
-            <div className="col-2">
+            <div className=" wrapper-avatar">
               <Popup trigger={<div className="avatar" style={{ backgroundImage: `url("${user.avatar}")` }}></div>}
                      position="bottom left"
                      on="hover"
@@ -527,12 +527,23 @@ const App = props => {
                 <i className="material-icons">add_to_photos</i>
               </div>
             </div>
+            <div className="tools-message-sm">
+              <div className="tools-options">
+                <i className="material-icons">grid_on</i>
+              </div>
+            </div>
             <input id="message"
                    ref={input_message}
                    autoComplete="off"
                    placeholder="Nhập tin nhắn ở đây ..."
                    onKeyPress={(e) => console.log(e.key)}
             />
+            <button type="button" 
+                    className="btn-send-message"
+                    onClick={(e) => send_message(e,props.match.params.receiver_id)}
+            >
+                      Send
+            </button>
           </form>
         </div>
       </div>
