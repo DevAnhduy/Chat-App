@@ -1,16 +1,16 @@
-.chat-block {
-    height: 64px;
-    cursor: pointer;
-    margin: 1px 15px !important;
-    &:hover {
-        background: rgba(0, 0, 0, .05);
-        border-radius: 10px;
-    }
-    &.active {
-        background: rgba(0, 0, 0, .05);
-        border-radius: 10px;
-    }
-}
+$col-1: 8.333334%;
+$col-2: $col-1 * 2;
+$col-3: $col-1 * 3;
+$col-4: $col-1 * 4;
+$col-5: $col-1 * 5;
+$col-6: $col-1 * 6;
+$col-7: $col-1 * 7;
+$col-8: $col-1 * 8;
+$col-9: $col-1 * 9;
+$col-10: $col-1 * 10;
+$col-11: $col-1 * 11;
+$col-12: $col-1 * 12;
+
 .chat-block-avatar {
     background-size: cover;
     background-repeat: no-repeat;
@@ -26,18 +26,56 @@
     padding-top: 7%;
     font-size: 15px;
     font-weight: 400;
-    line-height: 0;
+}
+@media all and (min-width: 0px) {
+    .chat-block {
+        max-width: 100%;
+        flex: 0 0 100%;
+        height: 64px;
+        cursor: pointer;
+        &:hover {
+            background: rgba(0, 0, 0, .05);
+            border-radius: 10px;
+        }
+        &.active {
+            background: rgba(0, 0, 0, .05);
+            border-radius: 10px;
+        }
+        .wrapper-block-name {
+            display: none;
+        }
+        .wrapper-block-avatar {
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+        .chat-block-avatar {
+            margin-left: auto;
+            margin-right: auto;
+        } 
+    }
 }
 
 @media all and (min-width: 320px) {
     .chat-block {
-        margin: 0px !important;
-        .col-9 {
+        max-width: 100%;
+        flex: 0 0 100%;
+        height: 64px;
+        cursor: pointer;
+        &:hover {
+            background: rgba(0, 0, 0, .05);
+            border-radius: 10px;
+        }
+        &.active {
+            background: rgba(0, 0, 0, .05);
+            border-radius: 10px;
+        }
+        .wrapper-block-name {
             display: none;
         }
-        .chat-block-name {
-            display: none;
-        } 
+        .wrapper-block-avatar {
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
         .chat-block-avatar {
             margin-left: auto;
             margin-right: auto;
@@ -47,13 +85,30 @@
 
 @media all and (min-width: 600px) {
     .chat-block {
-        .col-3 {
-            flex: 0 0 100%;
-            max-width: 100%;
+        .wrapper-block-avatar {
+            max-width: $col-12;
+            flex: 0 0 $col-12;
         }
-        .chat-block-avatar {
-            flex: 0 0 100%;
-            max-width: 100%;
+    }
+}
+
+@media all and (min-width: 768px){
+    .chat-block {
+        padding: 0px 15px;;
+        .wrapper-block-avatar {
+            max-width: $col-3;
+            flex: $col-3;
+        }
+        .wrapper-block-name {
+            display: block;
+            max-width: $col-9;
+            flex: 0 0 $col-9;
+            padding: 10px 20px;
+            .chat-block-name {
+                width: 100%;
+                height: 50px;
+                overflow: hidden;
+            }
         }
     }
 }

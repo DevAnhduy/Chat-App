@@ -435,6 +435,14 @@ const App = props => {
       })
     //#endregion
   }
+  const add_friend = () => {
+    const mobile_friend = prompt("Nhập vào số điện thoại của bạn bè : ");
+    if(mobile_friend === null || mobile_friend === '')
+      alert('Số điện thoại không được để trống');
+    else {  // Something .....
+
+    }
+  }
   //#endregion
   //#region Render
   if(!is_auth)
@@ -443,9 +451,9 @@ const App = props => {
     console.log('Render')
     return (
       <div className="row chat-container">
-        <div className="col-3 list-chat-room">
+        <div className="wrapper-list-chat-room">
           <div className="row mt-3">
-            <div className=" wrapper-avatar">
+            <div className="wrapper-avatar">
               <Popup trigger={<div className="avatar" style={{ backgroundImage: `url("${user.avatar}")` }}></div>}
                      position="bottom left"
                      on="hover"
@@ -463,18 +471,10 @@ const App = props => {
                 </div>
               </Popup>
             </div>
-            <div className="col-5 large-text talk-text">
-              Let's talk
+            <div className="message-text">
+              Message
             </div>
             <div className="tools-bar">
-              <Popup trigger={<div className="small-icon"
-                onClick={create_room}>
-                <i className="material-icons">group_add</i>
-              </div>}
-                on="hover"
-              >
-                <div className="popup-small-text">Tạo phòng chat</div>
-              </Popup>
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
                 <i className="material-icons">settings</i>
@@ -482,6 +482,14 @@ const App = props => {
                 on="hover"
               >
                 <div className="popup-small-text">Cài đặt, trợ giúp</div>
+              </Popup>
+              <Popup trigger={<div className="small-icon"
+                onClick={create_room}>
+                <i className="material-icons">person_add</i>
+              </div>}
+                on="hover"
+              >
+                <div className="popup-small-text">Thêm bạn bè</div>
               </Popup>
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
@@ -505,7 +513,7 @@ const App = props => {
             </ul>
           </div>
         </div>
-        <div className="col-9 p-0" style={{height:"100vh"}}>
+        <div className="wrapper-main-message">
           <div id="main-message" >
             {/* <CIRCLE_LOADING width="100%" /> */}
           </div>
