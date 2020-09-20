@@ -466,7 +466,7 @@ const App = props => {
             <div className="col-5 large-text talk-text">
               Let's talk
             </div>
-            <div className="col-5 tools-bar">
+            <div className="tools-bar">
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
                 <i className="material-icons">group_add</i>
