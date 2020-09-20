@@ -75,5 +75,19 @@
         "content": "123123",
         "sent_date": "2020-09-18, 7:06:57",
         "timestamp": 1600430817680
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50c0fe0e952a1604a56fb8",
+        "content": "TEst",
+        "sent_date": "2020-09-20, 3:39:28",
+        "timestamp": 1600547968284
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50c0fe0e952a1604a56fb8",
+        "content": "Huhuh",
+        "sent_date": "2020-09-20, 3:39:33",
+        "timestamp": 1600547973659
     }
 ]
