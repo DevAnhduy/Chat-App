@@ -1,3 +1,16 @@
+$col-1: 8.333334%;
+$col-2: $col-1 * 2;
+$col-3: $col-1 * 3;
+$col-4: $col-1 * 4;
+$col-5: $col-1 * 5;
+$col-6: $col-1 * 6;
+$col-7: $col-1 * 7;
+$col-8: $col-1 * 8;
+$col-9: $col-1 * 9;
+$col-10: $col-1 * 10;
+$col-11: $col-1 * 11;
+$col-12: $col-1 * 12;
+
 ul {
     list-style: none;
     margin-block-start: 0;
@@ -160,23 +173,23 @@ ul {
             margin-left: 20px;
             height: 100%;
         }
-        .receiver-info-icon {
-            float: right;
-            color: rgba(0, 0, 0, .4);
-            margin-top: 8px;
-            cursor: pointer;
-            &:hover::after {
-                content: "Thông tin về cuộc trò chuyện";
-                font-size: 14px;
-                display: block;
-                padding: 5px 10px;
-                right: 5px;
-                position: absolute;
-                width: 15%;
-                background-color: rgba(0,0,0,.7);
-                color: white;
-            }
-        }
+        // .receiver-info-icon {
+        //     float: right;
+        //     color: rgba(0, 0, 0, .4);
+        //     margin-top: 8px;
+        //     cursor: pointer;
+        //     &:hover::after {
+        //         content: "Thông tin về cuộc trò chuyện";
+        //         font-size: 14px;
+        //         display: block;
+        //         padding: 5px 10px;
+        //         right: 5px;
+        //         position: absolute;
+        //         width: 15%;
+        //         background-color: rgba(0,0,0,.7);
+        //         color: white;
+        //     }
+        // }
     }
 }
 .avatar {
@@ -250,28 +263,31 @@ ul {
     }
 
 }
-
+// * Mobile ( Apple iphone 5, Samsung Galaxy S8,S9,... )
 @media all and (min-width: 320px) {
     .talk-text {
-      display: none;
+        display: none;
     }
     .tools-bar {
-    display: none;
+        display: none;
     }
     .search-bar {
-      display: none;
+        display: none;
     }
     .popup-content {
-      display: none;
+        display: none;
     }
     .chat-container {
+        .list-chats {
+            margin : 0px
+        }
         .form-chat {
             .tools-message {
                 display: none;
             }
             #message {
-                width: 140px;
-                right: 50px;
+                width: 43%;
+                right: 65px;
                 bottom: 15px;
             }
         }
@@ -280,13 +296,90 @@ ul {
                 display: none;
             }
         }
+        .btn-send-message {
+            border: none;
+            position: fixed;
+            bottom: 15px;
+            right: 5px;
+            border-radius: 15px;
+            padding: 5px 10px;
+            background-color: #0084ff;
+            color: white;
+            &:focus {
+                outline: none;
+            }
+        }
+        .tools-message-sm {
+            position: fixed;
+            bottom: 15px;
+            border-radius: 15px;
+            left: 27%;
+        }
     }
 }
-
+// * Tablets ( Nexus 7,... )
 @media all and (min-width: 600px) {
-    
+    .chat-container {
+        .form-chat {
+            #message {
+                width: 55%;
+            }
+        }
+        .wrapper-receiver-info {
+            .receiver-info-icon {
+                display: block;
+                float: right;
+                color: rgba(0, 0, 0, .4);
+                margin-top: 8px;
+                cursor: pointer;
+                &:hover::after {
+                    content: "Thông tin về cuộc trò chuyện";
+                    font-size: 14px;
+                    display: block;
+                    padding: 5px 10px;
+                    right: 5px;
+                    position: absolute;
+                    width: 50%;
+                    background-color: rgba(0,0,0,.7);
+                    color: white;
+                }
+            }
+        }
+    }
+    .wrapper-avatar {
+        flex: 0 0 100%;
+        max-width: 100%;
+        .avatar {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
 }
-
+// * Tables (iPad Air,Mini,Nexus 9,...)
+@media all and (min-width: 768px) {
+    .chat-container {
+        .tools-bar {
+            display: block;
+            flex: 0 0 $col-8;
+            max-width: $col-8;
+            .small-icon {
+                height: 20px;
+                width: 20px;
+            }
+            i {
+                font-size: 24px
+            }
+        }
+    }
+    .wrapper-avatar {
+        flex: 0 0 $col-3;
+        max-width: $col-3;
+        .avatar {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
 
 @media all and (min-width: 1024px) {
     
