@@ -32,14 +32,30 @@
 @media all and (min-width: 320px) {
     .chat-block {
         margin: 0px !important;
+        .col-9 {
+            display: none;
+        }
+        .chat-block-name {
+            display: none;
+        } 
+        .chat-block-avatar {
+            margin-left: auto;
+            margin-right: auto;
+        } 
     }
-    .chat-block-name {
-        display: none;
-    }   
 }
 
 @media all and (min-width: 600px) {
-    
+    .chat-block {
+        .col-3 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        .chat-block-avatar {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
 }
 
 @media all and (min-width: 1024px) {
