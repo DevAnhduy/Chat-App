@@ -47,7 +47,7 @@ const App = props => {
         query: "authorization=" + window.localStorage.token
       });
       //Generate event socket io
-      socket_handle_factory.receiver_from_server.message({socket,user,obj_receivers});
+      //socket_handle_factory.receiver_from_server.message({socket,user,obj_receivers});
       load_list_chats();
     };
   },[user])
@@ -75,16 +75,15 @@ const App = props => {
           const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
           let api_get_receiver = '';
           if(receiver.type === 'rooms'){
-            console.log("Room")
             api_get_receiver = api_get_rooms;
-            socket_handle_factory.send_to_server.start_chat(socket,receiver);
+            socket_handle_factory.send_to_server.start_chat(socket, receiver);
           } 
           else 
             api_get_receiver = api_get_user;
-          const api_get_recevier = receiver.type === 'rooms' ? api_get_rooms : api_get_user;
+          //const api_get_receiver = receiver.type === 'rooms' ? api_get_rooms : api_get_user;
           arr_request.push(
             call_api({
-              url : api_get_recevier,
+              url: api_get_receiver,
               method: 'get'
             })
           )
@@ -277,7 +276,6 @@ const App = props => {
   const start_chat = (receiver) => {
     console.log('Start chat')
     // Join socket
-    console.log(receiver)
     socket_handle_factory.send_to_server.start_chat(socket,receiver);
     // Load obj receivers information
     load_obj_receiver_information(receiver);
