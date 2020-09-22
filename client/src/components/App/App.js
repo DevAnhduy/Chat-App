@@ -75,6 +75,7 @@ const App = props => {
           const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
           let api_get_receiver = '';
           if(receiver.type === 'rooms'){
+            console.log("Room")
             api_get_receiver = api_get_rooms;
             socket_handle_factory.send_to_server.start_chat(socket,receiver);
           } 
@@ -276,6 +277,7 @@ const App = props => {
   const start_chat = (receiver) => {
     console.log('Start chat')
     // Join socket
+    console.log(receiver)
     socket_handle_factory.send_to_server.start_chat(socket,receiver);
     // Load obj receivers information
     load_obj_receiver_information(receiver);
