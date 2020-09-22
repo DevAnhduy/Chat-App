@@ -32,7 +32,7 @@ exports.get_all = (Model, pop_options) => catch_async(async (req,res,next) => {
     if(pop_options) query = query.populate(pop_options);
     const mongodb_query = new Mongodb_Query(query,req.query).paginate().filter();
     const docs = await mongodb_query.query;
-    if(!docs) return next(new AppError('No document found',404))
+    if(!docs.length) return next(new AppError('No document found',404))
     
     res.status(200).json({
         status: 'success',
