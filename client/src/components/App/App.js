@@ -47,9 +47,9 @@ const App = props => {
         query: "authorization=" + window.localStorage.token
       });
       //Generate event socket io
-      socket_handle_factory.receiver_from_server.message(socket,user,obj_receivers);
+      socket_handle_factory.receiver_from_server.message({socket,user,obj_receivers});
       load_list_chats();
-    } ;
+    };
   },[user])
   //#endregion
   //#region Function logic
@@ -73,6 +73,13 @@ const App = props => {
         user.list_chats.forEach((receiver,index) => {
           const api_get_user = `${process.env.REACT_APP_API_URL}/users/${receiver._id}`;
           const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
+          let api_get_receiver = '';
+          if(receiver.type === 'rooms'){
+            api_get_receiver = api_get_rooms;
+            socket_handle_factory.send_to_server.start_chat(socket,receiver);
+          } 
+          else 
+            api_get_receiver = api_get_user;
           const api_get_recevier = receiver.type === 'rooms' ? api_get_rooms : api_get_user;
           arr_request.push(
             call_api({
@@ -113,71 +120,6 @@ const App = props => {
       }
       else {
         set_list_chats([]);
-      }
-    //#endregion
-  }
-  const send_message = (e,receiver_id) => {
-    e.preventDefault();
-    //Check input message exists
-    if (input_message.current.value) {
-      //Send message to server
-      socket_handle_factory.send_to_server.message({
-        socket,
-        user,
-        receiver_id,
-        message : input_message.current.value
-      })
-      //Clear text input message
-      document.getElementById('message').value = '';
-    }
-    else
-      alert('Tin nhắn không được để trống !');
-  }
-  const create_room = () => {
-    //#region //* READ ME. DOCUMENTATION
-    /**
-     * * Function process :
-     *    1. Get room name of alert box
-     *    2. If exist room name then call api create room
-     *    3. If response add chat block to list chats state
-     * * Result : create one room & save in database
-     */
-    //#endregion
-    //#region //* FUNCTION HANDLE
-      //Step 1
-      const room_name = prompt('Nhập tên phòng muốn tạo');
-      if(room_name === null || room_name === '')
-        return;
-      else {
-        //Step 2
-        call_api({
-          url : `${process.env.REACT_APP_API_URL}/chat/rooms`,
-          method : 'post',
-          data : {
-            name: room_name
-          }
-        })
-          .then(response => {
-            //Step 3
-            const receiver = response.data.data;
-            let list_chats_updated = list_chats;
-            const new_ele_room = (
-              <Link
-                key={list_chats_updated.length}
-                to={`/chat/${receiver._id}`}>
-                <li>
-                  <CHAT_BLOCK key={list_chats_updated.length}
-                              name={receiver ? receiver.name : ''}
-                              onClick={start_chat(receiver._id,'room')}
-                              />
-                </li>
-              </Link>
-            )
-            set_list_chats([new_ele_room,...list_chats])
-          })
-          .catch(error => {
-            console.log(error)
-          })
       }
     //#endregion
   }
@@ -229,6 +171,79 @@ const App = props => {
               })
           }
         })
+      }
+    //#endregion
+  }
+  const send_message = (e,receiver_id) => {
+    e.preventDefault();
+    //Check input message exists
+    if (input_message.current.value) {
+      //Send message to server
+      socket_handle_factory.send_to_server.message({
+        socket,
+        user,
+        receiver_id,
+        message : input_message.current.value
+      })
+      //Clear text input message
+      document.getElementById('message').value = '';
+      //Make receiver chat block up to top
+      list_chats.some((chat_block,index) => {
+        if(chat_block.props.id === receiver_id){
+          const chat_block_selected = list_chats.splice(index,1)[0];
+          set_list_chats([chat_block_selected,...list_chats]);
+          return true;
+        }
+      })      
+    }
+    else
+      alert('Tin nhắn không được để trống !');
+  }
+  const create_room = () => {
+    //#region //* READ ME. DOCUMENTATION
+    /**
+     * * Function process :
+     *    1. Get room name of alert box
+     *    2. If exist room name then call api create room
+     *    3. If response add chat block to list chats state
+     * * Result : create one room & save in database
+     */
+    //#endregion
+    //#region //* FUNCTION HANDLE
+      //Step 1
+      const room_name = prompt('Nhập tên phòng muốn tạo');
+      if(room_name === null || room_name === '')
+        return;
+      else {
+        //Step 2
+        call_api({
+          url : `${process.env.REACT_APP_API_URL}/chat/rooms`,
+          method : 'post',
+          data : {
+            name: room_name
+          }
+        })
+          .then(response => {
+            //Step 3
+            const receiver = response.data.data;
+            let list_chats_updated = list_chats;
+            const new_ele_room = (
+              <Link
+                key={list_chats_updated.length}
+                to={`/chat/${receiver._id}`}>
+                <li>
+                  <CHAT_BLOCK key={list_chats_updated.length}
+                              name={receiver ? receiver.name : ''}
+                              onClick={start_chat(receiver._id,'room')}
+                              />
+                </li>
+              </Link>
+            )
+            set_list_chats([new_ele_room,...list_chats])
+          })
+          .catch(error => {
+            console.log(error)
+          })
       }
     //#endregion
   }
@@ -382,6 +397,27 @@ const App = props => {
     return wrap_message;
     //#endregion
   }
+  const create_html_chat_block = (receiver_detail) => {
+    const receiver = {
+      type : "users",
+      _id : receiver_detail._id,
+      detail : receiver_detail
+    }
+    const new_chat_block = (<Link key={list_chats.length}
+      id={receiver._id}
+      to={`/chat/${receiver._id}`}
+      onClick={() => { start_chat(receiver) }}
+    >
+      <li>
+        <CHAT_BLOCK key={list_chats.length}
+                    name={receiver.detail.name}
+                    avatar={receiver.detail.avatar}
+        />
+      </li>
+    </Link>)
+
+    set_list_chats([new_chat_block,...list_chats])
+  }
   const get_all_message = (receiver) => {
     //#region //*READ ME. DOCUMENTATION
       /**
@@ -435,12 +471,21 @@ const App = props => {
       })
     //#endregion
   }
-  const add_friend = () => {
-    const mobile_friend = prompt("Nhập vào số điện thoại của bạn bè : ");
-    if(mobile_friend === null || mobile_friend === '')
+  const chat_with_user = () => {
+    const mobile_user = prompt("Nhập vào số điện thoại của người muốn chat : ");
+    if(mobile_user === null || mobile_user === '')
       alert('Số điện thoại không được để trống');
     else {  // Something .....
-
+      call_api({
+        url: `${process.env.REACT_APP_API_URL}/users?mobile=${mobile_user}`
+      })
+        .then(user => {
+          create_html_chat_block(user.data.data[0])
+        })
+        .catch(error => {
+          console.log(error);
+          alert("Không thể tìm thấy người dùng với số điện thoại ",mobile_user)
+        })
     }
   }
   //#endregion
@@ -483,13 +528,12 @@ const App = props => {
               >
                 <div className="popup-small-text">Cài đặt, trợ giúp</div>
               </Popup>
-              <Popup trigger={<div className="small-icon"
-                onClick={create_room}>
-                <i className="material-icons">person_add</i>
-              </div>}
-                on="hover"
+              <Popup trigger={<div className="small-icon" onClick={chat_with_user}>
+                                  <i className="material-icons">person_add</i>
+                              </div>}
+                     on="hover"
               >
-                <div className="popup-small-text">Thêm bạn bè</div>
+                <div className="popup-small-text">Chat với người lạ</div>
               </Popup>
               <Popup trigger={<div className="small-icon"
                 onClick={create_room}>
@@ -544,7 +588,6 @@ const App = props => {
                    ref={input_message}
                    autoComplete="off"
                    placeholder="Nhập tin nhắn ở đây ..."
-                   onKeyPress={(e) => console.log(e.key)}
             />
             <button type="button" 
                     className="btn-send-message"
