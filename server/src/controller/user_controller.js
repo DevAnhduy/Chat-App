@@ -1,8 +1,3 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const logger = require('src/utils/logger');
-const path = require('path');
 const factory = require('src/controller/handle_factory');
 const User_Model = require('src/models/user');
 const auth_controller = require('src/controller/auth_controller');
@@ -21,13 +16,6 @@ exports.create_user = factory.create_one(User_Model);
 
 exports.update_user = factory.update_one(User_Model);
 
-exports.insert_user_to_list_chat = catch_async(async(req,res,next) => {
-    User_Model.find({ mobile : req.body.mobile })
-        .exec()
-        .then(user => {
-            
-        })
-})
 exports.join_chat = catch_async(async(req,res,next) => {
     if(req.body.receiver_type === 'user'){
         User_Model.findByIdAndUpdate(req.params.id,{ $push: {'list_chat.users': req.body.receiver_id }})
