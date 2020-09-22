@@ -1,0 +1,16 @@
+[
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f61ce69d2d124348c08f051",
+        "content": "ZZ",
+        "sent_date": "2020-09-22, 2:49:45",
+        "timestamp": 1600760985242
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f61ce69d2d124348c08f051",
+        "content": "12312312",
+        "sent_date": "2020-09-22, 3:02:51",
+        "timestamp": 1600761771502
+    }
+]
