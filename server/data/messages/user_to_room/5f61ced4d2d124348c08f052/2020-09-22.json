@@ -19,5 +19,12 @@
         "content": "123123",
         "sent_date": "2020-09-22, 4:42:49",
         "timestamp": 1600767769289
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f61ced4d2d124348c08f052",
+        "content": "123123",
+        "sent_date": "2020-09-22, 10:18:45",
+        "timestamp": 1600787925598
     }
 ]

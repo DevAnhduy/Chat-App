@@ -1,0 +1,23 @@
+[
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50c3ba0136980c78386a0e",
+        "content": "123123",
+        "sent_date": "2020-09-23, 1:16:41",
+        "timestamp": 1600798601597
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50c3ba0136980c78386a0e",
+        "content": "Test",
+        "sent_date": "2020-09-23, 1:16:48",
+        "timestamp": 1600798608502
+    },
+    {
+        "sender_id": "5f50bf892f8c613814230aa7",
+        "receiver_id": "5f50c3ba0136980c78386a0e",
+        "content": "Test",
+        "sent_date": "2020-09-23, 1:16:59",
+        "timestamp": 1600798619645
+    }
+]
