@@ -47,7 +47,7 @@ const App = props => {
         query: "authorization=" + window.localStorage.token
       });
       //Generate event socket io
-      //socket_handle_factory.receiver_from_server.message({socket,user,obj_receivers});
+      socket_handle_factory.receiver_from_server.message({socket,user,obj_receivers});
       load_list_chats();
     };
   },[user])
@@ -76,6 +76,7 @@ const App = props => {
           let api_get_receiver = '';
           if(receiver.type === 'rooms'){
             api_get_receiver = api_get_rooms;
+            // Join socket
             socket_handle_factory.send_to_server.start_chat(socket, receiver);
           } 
           else 
