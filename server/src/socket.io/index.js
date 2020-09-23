@@ -18,7 +18,6 @@ module.exports = (server) => {
         users_connected[user._id] = socket.id ; // Storage socket id of user to object users connected ;
 
         socket.on('/start-chat',(receiver) => {
-            console.log(receiver)
             message_factory.start_chat({ io, socket,receiver,users_connected,token,user })
         })
         socket.on("disconnect",() => {
