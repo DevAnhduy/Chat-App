@@ -2,15 +2,20 @@ const request = require('request');
 
 exports.start_chat = ({io,socket,receiver,users_connected,token,user}) => {
     console.log("Start chat")
+    //socket.removeAllListeners("/send-message")
     if (receiver.type === 'rooms'){
         socket.join(receiver._id)
     }
          //Join room with room id
     if (!socket._events["/send-message"]) { //Init event send message from client
+        console.log("CHeck")
         socket.on('/send-message', (msg) => {
             this.send_message({ io, receiver, msg, users_connected, token, user })
         })
     }
+    // socket.on('/send-message', (msg) => {
+    //     this.send_message({ io, receiver, msg, users_connected, token, user })
+    // })
 }
 
 exports.send_message = ({ io, receiver, msg, users_connected, token, user }) => {
