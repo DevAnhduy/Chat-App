@@ -7,16 +7,19 @@ const socket_handle_factory = {
                 receiver_id
                });
         },
-        start_chat : async (socket,receiver) => {
-            await socket.emit('/start-chat',{
-                _id : receiver._id,
-                type: receiver.type
-              })
+        start_chat : (socket,receiver) => {
+            console.log("Startchat")
+            // socket.emit('/start-chat', {
+            //     _id: receiver._id,
+            //     type: receiver.type
+            // })  
+            socket.emit('/start-chat',{receiver}) 
         }
     },
     receiver_from_server : {
         message : ({socket,user,obj_receivers}) => {
             socket.on('/receiver-message', (msg) => {
+                console.log(msg)
                 const isChatPage = window.location.href.includes("http://localhost:3000/chat");
                 // if (isChatPage) {
                 //     //*Update after ...
@@ -39,7 +42,7 @@ const socket_handle_factory = {
                         main_message.appendChild(wrap_message);
                         main_message.scrollTop = main_message.scrollHeight;
                     }
-                    else if (msg.sender_id === receiver_selected && msg.receiver_id === user._id) { //Check receiver_selected is sender and receiver is user
+                    else if (msg.sender_id === receiver_selected && msg.receiver_id === user._id || receiver_selected === msg.receiver_id ) { //Check receiver_selected is sender and receiver is user
                         wrap_message.className = 'messages';
                         //Create div  element for avatar
                         let avatar_message = document.createElement('div');
