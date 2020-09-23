@@ -8,12 +8,10 @@ const socket_handle_factory = {
                });
         },
         start_chat : (socket,receiver) => {
-            console.log("Startchat")
-            // socket.emit('/start-chat', {
-            //     _id: receiver._id,
-            //     type: receiver.type
-            // })  
-            socket.emit('/start-chat',{receiver}) 
+            socket.emit('/start-chat', {
+                _id: receiver._id,
+                type: receiver.type
+            })  
         }
     },
     receiver_from_server : {
