@@ -71,14 +71,14 @@ const App = props => {
     //#region //* FUNCTION HANDLE
       if(user.list_chats.length){
         let arr_request = []; // Array contain all axios request
+        let arr_room = [];
         user.list_chats.forEach((receiver,index) => {
           const api_get_user = `${process.env.REACT_APP_API_URL}/users/${receiver._id}`;
           const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
-          const arr_room = [];
           let api_get_receiver = '';
           if(receiver.type === 'rooms'){
             api_get_receiver = api_get_rooms;
-            arr_room.push(receiver._id);
+            arr_room.push(receiver);
             // Join socket
             //socket_handle_factory.send_to_server.start_chat(socket,receiver); 
           } 
@@ -93,9 +93,12 @@ const App = props => {
           )
           //Check last element then call promise all
           if(index === user.list_chats.length - 1) {
-            socket_handle_factory.send_to_server.start_chat(socket,arr_room);
+            console.log(arr_room)
             Promise.all(arr_request)
               .then((receivers) => {
+                arr_room.forEach(room => {
+                  socket_handle_factory.send_to_server.start_chat(socket, room);
+                })
                 //Add detail to list chats
                 receivers.forEach(receiver => {
                   const receiver_index = user.list_chats.findIndex(user_in_list_chat => user_in_list_chat._id === receiver.data.data._id);
@@ -281,7 +284,7 @@ const App = props => {
   const start_chat = (receiver) => {
     console.log('Start chat')
     // Join socket
-    socket_handle_factory.send_to_server.start_chat(socket,receiver);
+    //socket_handle_factory.send_to_server.start_chat(socket,receiver);
     // Load obj receivers information
     load_obj_receiver_information(receiver);
     // Active chat block DOM
