@@ -7,6 +7,7 @@ import Popup from 'reactjs-popup';
 import call_api from '../../utils/call_api';
 import './App.scss';
 import socket_handle_factory from './socket_handle_factory';
+import async from 'async';
 
 const { __server } = require('config/constant.json')
 const io = require('socket.io-client');
@@ -73,11 +74,13 @@ const App = props => {
         user.list_chats.forEach((receiver,index) => {
           const api_get_user = `${process.env.REACT_APP_API_URL}/users/${receiver._id}`;
           const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
+          const arr_room = [];
           let api_get_receiver = '';
           if(receiver.type === 'rooms'){
             api_get_receiver = api_get_rooms;
+            arr_room.push(receiver._id);
             // Join socket
-            socket_handle_factory.send_to_server.start_chat(socket, receiver);
+            //socket_handle_factory.send_to_server.start_chat(socket,receiver); 
           } 
           else 
             api_get_receiver = api_get_user;
@@ -90,6 +93,7 @@ const App = props => {
           )
           //Check last element then call promise all
           if(index === user.list_chats.length - 1) {
+            socket_handle_factory.send_to_server.start_chat(socket,arr_room);
             Promise.all(arr_request)
               .then((receivers) => {
                 //Add detail to list chats
@@ -117,7 +121,7 @@ const App = props => {
               })
           }
       })
-      set_obj_receiver(obj_receivers[user._id] = user)
+        set_obj_receiver(obj_receivers[user._id] = user)
       }
       else {
         set_list_chats([]);
