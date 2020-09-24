@@ -42,7 +42,6 @@ const App = props => {
   //Load list chats && connect socket io
   useEffect(() => {
     if(user.list_chats){
-      console.log('Effect 2')
       //Connect socket io
       socket = io(__server, { // Connect socket io
         query: "authorization=" + window.localStorage.token
@@ -79,12 +78,9 @@ const App = props => {
           if(receiver.type === 'rooms'){
             api_get_receiver = api_get_rooms;
             arr_room.push(receiver);
-            // Join socket
-            //socket_handle_factory.send_to_server.start_chat(socket,receiver); 
           } 
           else 
             api_get_receiver = api_get_user;
-          //const api_get_receiver = receiver.type === 'rooms' ? api_get_rooms : api_get_user;
           arr_request.push(
             call_api({
               url: api_get_receiver,
@@ -93,7 +89,6 @@ const App = props => {
           )
           //Check last element then call promise all
           if(index === user.list_chats.length - 1) {
-            console.log(arr_room)
             Promise.all(arr_request)
               .then((receivers) => {
                 arr_room.forEach(room => {
@@ -109,7 +104,7 @@ const App = props => {
                   return (
                     <Link key={index}
                           id={receiver._id}
-                          to={`/chat/${receiver._id}`}
+                          to={`/chat/${receiver.type}/${receiver._id}`}
                           onClick={() => { start_chat(receiver) }}
                     >
                       <li>
@@ -182,22 +177,23 @@ const App = props => {
       }
     //#endregion
   }
-  const send_message = (e,receiver_id) => {
+  const send_message = (e, receiver) => {
     e.preventDefault();
+    console.log(receiver)
     //Check input message exists
     if (input_message.current.value) {
       //Send message to server
       socket_handle_factory.send_to_server.message({
         socket,
         user,
-        receiver_id,
+        receiver,
         message : input_message.current.value
       })
       //Clear text input message
       document.getElementById('message').value = '';
       //Make receiver chat block up to top
       list_chats.some((chat_block,index) => {
-        if(chat_block.props.id === receiver_id){
+        if(chat_block.props.id === receiver._id){
           const chat_block_selected = list_chats.splice(index,1)[0];
           set_list_chats([chat_block_selected,...list_chats]);
           return true;
@@ -238,7 +234,7 @@ const App = props => {
             const new_ele_room = (
               <Link
                 key={list_chats_updated.length}
-                to={`/chat/${receiver._id}`}>
+                to={`/chat/${receiver.type}/${receiver._id}`}>
                 <li>
                   <CHAT_BLOCK key={list_chats_updated.length}
                               name={receiver ? receiver.name : ''}
@@ -413,7 +409,7 @@ const App = props => {
     }
     const new_chat_block = (<Link key={list_chats.length}
       id={receiver._id}
-      to={`/chat/${receiver._id}`}
+      to={`/chat/${receiver.type}/${receiver._id}`}
       onClick={() => { start_chat(receiver) }}
     >
       <li>
@@ -543,8 +539,7 @@ const App = props => {
               >
                 <div className="popup-small-text">Chat với người lạ</div>
               </Popup>
-              <Popup trigger={<div className="small-icon"
-                onClick={create_room}>
+              <Popup trigger={<div className="small-icon" onClick={create_room}>
                 <i className="material-icons">group_add</i>
               </div>}
                 on="hover"
@@ -570,7 +565,7 @@ const App = props => {
             {/* <CIRCLE_LOADING width="100%" /> */}
           </div>
           <form className="form-chat"
-                onSubmit={(e) => {send_message(e,props.match.params.receiver_id)}}
+                onSubmit={(e) => {send_message(e,{_id : props.match.params.receiver_id, type: props.match.params.receiver_type})}}
                 method="POST"
           >
             <div className="tools-message">
@@ -599,7 +594,7 @@ const App = props => {
             />
             <button type="button" 
                     className="btn-send-message"
-                    onClick={(e) => send_message(e,props.match.params.receiver_id)}
+                    onClick={(e) => send_message(e,{_id : props.match.params.receiver_id, type : props.match.params.receiver_type})}
             >
                       Send
             </button>
