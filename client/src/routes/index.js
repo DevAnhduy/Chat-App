@@ -12,7 +12,7 @@ export class Routes extends React.Component{
                     <Route exact path="/" component={App} />
                     <Route path="/login" component={Login_Form} />
                     <Route path="/register" component={Register_Form} />
-                    <Route path="/chat/:receiver_id" component={App} />
+                    <Route path="/chat/:receiver_type/:receiver_id" component={App} />
                 </Switch>
             </Router>
         )
