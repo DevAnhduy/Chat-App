@@ -1,10 +1,10 @@
 const socket_handle_factory = {
     send_to_server : {
-        message : ({socket = {},user = {},receiver_id = '',message = ''}) => {
+        message : ({socket = {},user = {},receiver = {},message = ''}) => {
             socket.emit('/send-message', {
                 content: message,
                 sender_id: user._id,
-                receiver_id
+                receiver
                });
         },
         start_chat : (socket,receiver) => {
