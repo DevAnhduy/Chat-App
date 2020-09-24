@@ -28,6 +28,7 @@ exports.get_all_messages = catch_async(async(req,res,next) => {
 })
 
 exports.create_message = catch_async(async(req,res,next) => {
+    console.log("Create message")
     const sender_id = req.user_id;
     const receiver_id = req.params.id;
     const new_message = {
