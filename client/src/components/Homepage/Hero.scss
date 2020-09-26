@@ -1,0 +1,36 @@
+.hover-animate {
+    transition: transform .2s;
+    &:active,
+    &:focus,
+    &:hover {
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, .4);
+        transform: translate3d(0, -3px, 0)
+    }
+}
+
+@media (min-width: 0px) {
+    .img-skewed {
+        img {
+            transform: none;
+        }
+    }
+    .py-8 {
+        padding: 4rem 0;
+    }
+}
+
+@media (min-width: 992px) {
+    .img-skewed {
+        perspective: 1500px;
+        img {
+            transform: rotateY(-35deg) rotateX(15deg) translateZ(0);
+            box-shadow: 25px 60px 125px -25px rgba(80, 102, 144, .1);
+            border-radius: 10px;
+        }
+    }
+    .img-skewed-right {
+        img {
+            transform: rotateY(35deg) rotateX(15deg) translateZ(0);
+        }
+    }
+}
