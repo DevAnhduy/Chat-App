@@ -1,0 +1,90 @@
+$core-color: #ff5252;
+.navbar {
+    padding: 20px;
+    .navbar-nav {
+        .nav-item {
+            position: relative;
+            &.active>.nav-link {
+                color: $core-color;
+            }
+        }
+        .nav-link {
+            padding-right: 1.5rem;
+            padding-left: 1.5rem;
+            font-weight: 600;
+        }
+    }
+}
+
+@media (min-width:992px) {
+    .navbar {
+        .navbar-nav {
+            .nav-item {
+                &:hover {
+                    ul {
+                        display: flex;
+                        margin-top: 0;
+                        visibility: visible;
+                        opacity: 1;
+                    }
+                }
+            }
+            .nav-link+.navbar-nav {
+                visibility: hidden;
+                opacity: 0;
+                flex-direction: column;
+                position: absolute;
+                background-color: #fff;
+                width: 180px;
+                border-radius: 7px;
+                left: 0;
+                z-index: 9;
+                padding: 10px 0;
+                margin-top: 5px;
+                box-shadow: 0 1rem 2.5rem rgba(22, 28, 45, .1);
+                transition: all .2s;
+                .nav-link {
+                    position: relative;
+                    padding-left: 35px;
+                    &::before {
+                        content: "";
+                        display: block;
+                        height: 5px;
+                        width: 5px;
+                        background-color: #000;
+                        border-radius: 50%;
+                        position: absolute;
+                        left: 20px;
+                        top: 50%;
+                        opacity: .15;
+                        pointer-events: none;
+                        margin-top: -2.5px;
+                    }
+                }
+                .nav-item.active {
+                    .nav-link::before {
+                        background-color: $core-color;
+                        opacity: .5;
+                    }
+                }
+            }
+            .nav-link {
+                &:hover {
+                    color: $core-color;
+                }
+            }
+        }
+    }
+}
+@media (min-width:0px) {
+    .navbar {
+        .navbar-nav {
+            .navbar-nav {
+                .nav-link::before {
+                    content: "-";
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}
