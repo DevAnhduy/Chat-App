@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js'
+import '@mdi/font/css/materialdesignicons.min.css'
+import './index.scss';
 import * as serviceWorker from './serviceWorker';
 import { Routes } from '../src/routes/index';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './config';
 
-ReactDOM.render(<Routes />,document.getElementById('root'));
+ReactDOM.render( < Routes / > , document.getElementById('root'));
 
 serviceWorker.unregister();
