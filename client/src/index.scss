@@ -22,10 +22,6 @@ a {
     stroke: #24292e !important
 }
 
-.row {
-    margin: 0px !important;
-}
-
 .bg-white {
     background-color: #fff !important;
 }
@@ -62,6 +58,59 @@ a {
 
 .btn.btn-sm {
     padding: 10px 20px;
+}
+
+.btn.btn-facebook{
+    background-color: #3b5998;
+    color: #fff
+}
+
+.btn.btn-google {
+    background-color: #db4437;
+    color: #fff
+}
+
+.btn.btn-twitter {
+    background-color: #55acee;
+    color: #fff
+}
+
+.btn.btn-linkedin {
+    background-color: #0077b5;
+    color: #fff;
+}
+
+.btn.btn-github {
+    background-color: #24292e;
+    color: #fff;
+}
+
+.btn.btn-floating {
+    padding: 0;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 100%
+}
+
+.btn.btn-floating.btn-sm {
+    width: 40px;
+    height: 40px;
+    line-height: 40px
+}
+
+.btn.btn-floating:hover {
+    opacity: .8
+}
+
+.form-control {
+    padding: 15px 30px;
+    height: auto;
+    border-radius: 7px;
+    &:focus {
+        box-shadow: none;
+        border-color: #000;
+    }
 }
 
 .text-primary {
