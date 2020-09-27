@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import hero_image from '../../assets/images/homepage/hero-image.jpg';
 import './Hero.scss';
 
 const Hero = props => {
+    useEffect(() => { 
+        const hero_component = document.getElementById("hero");
+        const aos_inits = hero_component.getElementsByClassName("aos-init");
+        const hero_padding = 100
+        for(let i = 0; i < aos_inits.length; i++) {
+            aos_inits[i].classList.add("aos-animate")
+        }
+        if(hero_component.getBoundingClientRect().top <= -hero_padding){
+            for (let i = 0; i < aos_inits.length; i++) {
+                aos_inits[i].classList.remove("aos-animate")
+            }
+        }
+    },[props.scroll_bot])
     return(
-        <section className="py-8" >
+        <section className="py-8" id="hero" >
             <div className="container">
                 <div className="row align-items-center">
                     <div className="col-12 col-lg-5 text-center text-lg-left mb-5 mb-lg-0">
-                        <div data-aos="zoom-in-right" className="aos-init aos-animate">
+                        <div data-aos="zoom-in-right" className="aos-init">
                             <h1 className="hero-title">
                                 <strong>FSNET</strong> là 1 trang web <span className="text-primary">ứng dụng chat</span>
                             </h1>
@@ -30,7 +43,7 @@ const Hero = props => {
                         </div>
                     </div>
                     <div className="col-12 col-lg-7">
-                        <div data-aos="zoom-in-left" className="img-skewed img-skewed-left aos-init aos-animate">
+                        <div data-aos="zoom-in-left" className="img-skewed img-skewed-left aos-init">
                             <img src={hero_image} className="img-fluid" alt="Hero image" />
                         </div>
                     </div>
