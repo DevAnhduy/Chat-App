@@ -1,0 +1,12 @@
+.subscribe {
+    position: relative;
+    .form-control {
+        padding-right: 170px;
+    }
+    .btn {
+        top: 6px;
+        right: 6px;
+        padding: 10px 30px;
+        position: absolute;
+    }
+}
