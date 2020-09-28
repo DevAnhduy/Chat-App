@@ -1,5 +1,5 @@
 import React from 'react';
-import './AwesomeKeyFeatures.module.scss'
+import './AwesomeKeyFeatures.scss'
 
 const AwesomeKeyFeatures = props => {
     return(
