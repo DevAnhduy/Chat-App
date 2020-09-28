@@ -118,7 +118,7 @@ const SignIn = props => {
                 <div className="container">
                     <div className="col-md-12">
                         <div className="preference">
-                            <h2>Xin chào đã trở lại</h2>
+                            <h2>Xin chào</h2>
                             <p>Nếu như bạn đã có tài khoản. Hãy đăng nhập để giữ liên lạc với bạn bè</p>
                             <Link to="/sign-in" className="btn button">Đăng nhập</Link>
                         </div>
