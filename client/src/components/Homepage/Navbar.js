@@ -57,7 +57,7 @@ const Navbar =  props => {
                             </ul>
                         </li>
                     </ul>
-                    <Link className="btn btn-primary ml-auto">Buy now</Link>
+                    <Link className="btn btn-primary ml-auto">Chat ngay</Link>
                 </div>
             </div>
         </navbar>
