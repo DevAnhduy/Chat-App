@@ -32,11 +32,11 @@ const Hero = props => {
                                     Việc giao tiếp với bạn bè, gia đình, đồng nghiệp,... chưa bao giờ đơn giản như thế.
                                 </strong>
                             </p>
-                            <Link to="/register" className="btn btn-primary hover-animate mr-2">
+                            <Link to="/sign-up" className="btn btn-primary hover-animate mr-2">
                                 Đăng kí miễn phí
                                 <i className="mdi mdi-arrow-right ml-2 small"></i>
                             </Link>
-                            <Link to="/login" className="btn btn-light-primary hover-animate">
+                            <Link to="/sign-in" className="btn btn-light-primary hover-animate">
                                 Đăng nhập
                                 <i className="mdi mdi-arrow-right ml-2 small"></i>
                             </Link>
