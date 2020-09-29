@@ -12,23 +12,19 @@ const Chat_Block = props => {
             <div className="users-list-body">
                 <div>
                     <h5>{props.name}</h5>
-                    <p>
-                        <i className="mdi mdi-check-all text-info mr-1">
-                            Last message
-                        </i>
-                    </p>
+                    <p>Last message</p>
                 </div>
                 <div className="users-list-action">
                     <small className="text-muted">4:30 PM</small>
                     <div className="action-toggle">
                         <div className="dropdown">
-                            <Link to="#" >
+                            <a href="#" data-toggle="dropdown">
                                 <i className="mdi mdi-dots-horizontal"></i>
-                            </Link>
+                            </a>
                             <div className="dropdrown-menu dropdown-menu-right">
-                                <Link className="dropdown-item" to="#">Mở</Link>
-                                <Link className="dropdown-item" to="#">Thông tin cá nhân</Link>
-                                <Link className="dropdown-item text-danger" to="#">Xóa</Link>
+                                <a className="dropdown-item" href="#">Mở</a>
+                                <a className="dropdown-item" href="#">Thông tin cá nhân</a>
+                                <a className="dropdown-item text-danger" href="#">Xóa</a>
                             </div>
                         </div>
                     </div>
