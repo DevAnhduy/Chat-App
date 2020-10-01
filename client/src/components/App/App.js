@@ -5,7 +5,7 @@ import { CHAT_BLOCK } from './Chat_Block';
 import { Link } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import call_api from '../../utils/call_api';
-import './App.scss';
+//import './App.scss';
 import socket_handle_factory from './socket_handle_factory';
 import async from 'async';
 

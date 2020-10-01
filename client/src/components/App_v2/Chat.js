@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import style from './Chat.module.scss';
+import PerfectScroll from 'react-perfect-scrollbar';
 
 const Chat = props => {
     return (
@@ -10,7 +11,7 @@ const Chat = props => {
                     <span className="sr-only">Loading....</span>
                 </div>
             </div>
-            <div className="no-message-container">
+            <div className="no-message-content">
                 <div className="row mb-5">
                     <div className="col-md-4 offset-4">
                         <img src='#' className="img-fluid" alt="image" />
@@ -21,8 +22,12 @@ const Chat = props => {
             <div className="chat-header">
                 <div className="chat-header-user">
                     <figure className="avatar avatar-state-success">
-                        <img src="#" className="rounded-circle" alt="avatar user"/>
+                        <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar user"/>
                     </figure>
+                    <div>
+                        <h5>Javascript</h5>
+                        <small className="text-success">Online</small>
+                    </div>
                 </div>
                 <div className="chat-header-action">
                     <ul className="list-inline" data-intro-js="7">
@@ -31,10 +36,10 @@ const Chat = props => {
                                 <i className="mdi mdi-arrow-left"></i>
                             </Link>
                         </li>
-                        <li className="list-inline-item" data-toggle="tooltip" title="" data-original-title="Voice call">
-                            <Link to="#" className="btn btn-info btn-floating">
+                        <li className="list-inline-item" data-toggle="tooltip" title="Voice call" data-original-title="Voice call">
+                            <a href="#" className="btn btn-info btn-floating" data-right-slidebar="notifications">
                                 <i className="mdi mdi-bell-outline"></i>
-                            </Link>
+                            </a>
                         </li>
                         <li className="list-inline-item" data-toggle="tooltip" title="" data-original-title="Voice call">
                             <Link to="#" className="btn btn-success btn-floating voice-call-request">
@@ -43,7 +48,7 @@ const Chat = props => {
                         </li>
                         <li className="list-inline-item" data-toggle="tooltip" title="" data-original-title="Video call">
                             <Link to="#" className="btn btn-warning btn-floating video-call-request">
-                                <i className="mdi mdi-vdeo-outline"></i>
+                                <i className="mdi mdi-video-outline"></i>
                             </Link>
                         </li>
                         <li className="list-inline-item">
@@ -60,29 +65,29 @@ const Chat = props => {
                     </ul>
                 </div>
             </div>
-            <div className="chat-body ps ps--active-y">
+            <PerfectScroll className="chat-body">
                 <div className="messages">
                     <div className="message-item in">
                         <div className="message-avatar">
                             <figure className="avatar avatar-sm">
-                                <img src="#" className="rounded-circle" alt="avatar" />
+                                <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar" />
                             </figure>
                             <div>
-                                <h5>Name</h5>
+                                <h5>Javascript</h5>
                                 <div className="time">10:12</div>
                             </div>
                         </div>
                         <div className="message-content">
                             <div className="message-text">Test</div>
                             <div className="dropdown">
-                                <Link to="#" data-toggle="dropdown">
+                                <a href="#" data-toggle="dropdown">
                                     <i className="mdi mdi-dots-horizontal"></i>
-                                </Link>
+                                </a>
                                 <div className="dropdown-menu">
-                                    <Link to="#" className="dropdown-item">Trả lời</Link>
-                                    <Link to="#" className="dropdown-item">Chuyển tiếp</Link>
-                                    <Link to="#" className="dropdown-item">Sao chép</Link>
-                                    <Link to="#" className="dropdown-item example-delete-message"></Link>
+                                    <a href="#" className="dropdown-item">Trả lời</a>
+                                    <a href="#" className="dropdown-item">Chuyển tiếp</a>
+                                    <a href="#" className="dropdown-item">Sao chép</a>
+                                    <a href="#" className="dropdown-item example-delete-message">Xóa</a>
                                 </div>
                             </div>
                         </div>
@@ -90,34 +95,116 @@ const Chat = props => {
                     <div className="message-item out">
                         <div className="message-avatar">
                             <figure className="avatar avatar-sm">
-                                <img src="#" className="rounded-circle" alt="avatar" />
+                                <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar" />
                             </figure>
                             <div>
-                                <h5>Name</h5>
+                                <h5>Javascript</h5>
                                 <div className="time">10:12</div>
                             </div>
                         </div>
                         <div className="message-content">
                             <div className="message-text">Test</div>
                             <div className="dropdown">
-                                <Link to="#" data-toggle="dropdown">
+                                <a href="#" data-toggle="dropdown">
                                     <i className="mdi mdi-dots-horizontal"></i>
-                                </Link>
+                                </a>
                                 <div className="dropdown-menu">
-                                    <Link to="#" className="dropdown-item">Trả lời</Link>
-                                    <Link to="#" className="dropdown-item">Chuyển tiếp</Link>
-                                    <Link to="#" className="dropdown-item">Sao chép</Link>
-                                    <Link to="#" className="dropdown-item example-delete-message"></Link>
+                                    <a href="#" className="dropdown-item">Trả lời</a>
+                                    <a href="#" className="dropdown-item">Chuyển tiếp</a>
+                                    <a href="#" className="dropdown-item">Sao chép</a>
+                                    <a href="#" className="dropdown-item example-delete-message">Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="message-item in">
+                        <div className="message-avatar">
+                            <figure className="avatar avatar-sm">
+                                <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar" />
+                            </figure>
+                            <div>
+                                <h5>Javascript</h5>
+                                <div className="time">10:12</div>
+                            </div>
+                        </div>
+                        <div className="message-content">
+                            <div className="message-text">Test</div>
+                            <div className="dropdown">
+                                <a href="#" data-toggle="dropdown">
+                                    <i className="mdi mdi-dots-horizontal"></i>
+                                </a>
+                                <div className="dropdown-menu">
+                                    <a href="#" className="dropdown-item">Trả lời</a>
+                                    <a href="#" className="dropdown-item">Chuyển tiếp</a>
+                                    <a href="#" className="dropdown-item">Sao chép</a>
+                                    <a href="#" className="dropdown-item example-delete-message">Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="message-item in">
+                        <div className="message-content">
+                            <div className="message-text">Test</div>
+                            <div className="dropdown">
+                                <a href="#" data-toggle="dropdown">
+                                    <i className="mdi mdi-dots-horizontal"></i>
+                                </a>
+                                <div className="dropdown-menu">
+                                    <a href="#" className="dropdown-item">Trả lời</a>
+                                    <a href="#" className="dropdown-item">Chuyển tiếp</a>
+                                    <a href="#" className="dropdown-item">Sao chép</a>
+                                    <a href="#" className="dropdown-item example-delete-message">Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="message-item out">
+                        <div className="message-avatar">
+                            <figure className="avatar avatar-sm">
+                                <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar" />
+                            </figure>
+                            <div>
+                                <h5>Javascript</h5>
+                                <div className="time">10:12</div>
+                            </div>
+                        </div>
+                        <div className="message-content">
+                            <div className="message-text">Test</div>
+                            <div className="dropdown">
+                                <a href="#" data-toggle="dropdown">
+                                    <i className="mdi mdi-dots-horizontal"></i>
+                                </a>
+                                <div className="dropdown-menu">
+                                    <a href="#" className="dropdown-item">Trả lời</a>
+                                    <a href="#" className="dropdown-item">Chuyển tiếp</a>
+                                    <a href="#" className="dropdown-item">Sao chép</a>
+                                    <a href="#" className="dropdown-item example-delete-message">Xóa</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="message-item out">
+                        <div className="message-content">
+                            <div className="message-text">Test</div>
+                            <div className="dropdown">
+                                <a href="#" data-toggle="dropdown">
+                                    <i className="mdi mdi-dots-horizontal"></i>
+                                </a>
+                                <div className="dropdown-menu">
+                                    <a href="#" className="dropdown-item">Trả lời</a>
+                                    <a href="#" className="dropdown-item">Chuyển tiếp</a>
+                                    <a href="#" className="dropdown-item">Sao chép</a>
+                                    <a href="#" className="dropdown-item example-delete-message">Xóa</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </PerfectScroll>
             <div className="chat-footer">
                 <form className="d-flex">
                     <div className="dropdown">
-                        <button className="btn btn-light-info btn-floating mr-3" data-toogle="dropdown" title="Emoji" type="button">
+                        <button className="btn btn-danger btn-floating mr-3" data-toogle="dropdown" title="Emoji" type="button">
                             <i className="mdi mdi-face"></i>
                         </button>
                         <div className="dropdown-menu dropdown-menu-big p-0">
@@ -136,7 +223,7 @@ const Chat = props => {
                         </div>
                     </div>
                     <div className="dropdown">
-                        <button className="btn btn-light-info btn-floating mr-3" data-toogle="dropdown" title="Emoji" type="button">
+                        <button className="btn btn-danger btn-floating mr-3" data-toogle="dropdown" title="Emoji" type="button">
                             <i className="mdi mdi-plus"></i>
                         </button>
                         <div className="dropdown-menu">
