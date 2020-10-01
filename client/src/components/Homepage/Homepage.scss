@@ -25,3 +25,19 @@ body {
 [data-aos=zoom-in-left] {
     transform: translate3d(100px, 0, 0) scale(.6)
 }
+
+.avatar-border-danger, .avatar-border-info, .avatar-border-primary, .avatar-border-secondary, .avatar-border-success, .avatar-border-warning {
+    position: relative;
+}
+.avatar-border-danger:after, .avatar-border-info:after, .avatar-border-primary:after, .avatar-border-secondary:after, .avatar-border-success:after, .avatar-border-warning:after {
+    content: "";
+    display: block;
+    pointer-events: none;
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    left: -4px;
+    right: -4px;
+    border-radius: 50%;
+    border: 2px solid #ff5252;
+}

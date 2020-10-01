@@ -19,6 +19,8 @@ a {
     color: $core-color;
     &:hover,&:focus {
         color: $core-color;
+        text-decoration: none;
+        outline: none;
     }
 }
 

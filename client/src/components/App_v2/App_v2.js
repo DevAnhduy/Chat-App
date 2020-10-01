@@ -7,17 +7,19 @@ import Chat from './Chat';
 import Notification from'./Notification';
 import User_Profile from'./User_Profile';
 import Setting from './Setting';
+import Navigation from './Navigation';
 import './App_v2.scss';
 
 const App_v2 = props => {
     return (
         <div>
             <div className="layout">
+                <Navigation />
                 <Chat_Left_Sidebar />
                 {/* <Friend_Left_Sidebar />
                 <Favorite_Left_Sidebar />
-                <Archived_Left_Sidebar />
-                <Chat /> */}
+                <Archived_Left_Sidebar /> */}
+                <Chat /> 
             </div>
             {/* <Notification />
             <User_Profile />
