@@ -37,11 +37,6 @@ const Chat = props => {
                                 <i className="mdi mdi-arrow-left"></i>
                             </a>
                         </li>
-                        <li className="list-inline-item" data-toggle="tooltip" title="Thông báo" onClick={() => $("#notifications").addClass("open")} >
-                            <a className="btn btn-info btn-floating" data-right-slidebar="notifications">
-                                <i className="mdi mdi-bell-outline"></i>
-                            </a>
-                        </li>
                         <li className="list-inline-item" data-toggle="modal" title="Voice call" data-target="#voice_call_request" >
                             <a className="btn btn-success btn-floating voice-call-request">
                                 <i className="mdi mdi-phone"></i>
@@ -57,6 +52,7 @@ const Chat = props => {
                                 <i className="mdi mdi-dots-horizontal"></i>
                             </a>
                             <div className="dropdown-menu dropdown-menu-right">
+               
                                 <a href="#" onClick={()=>$('#user-profile').addClass('open')} data-right-sidebar="user-profile" className="dropdown-item">Thông tin cá nhân</a>
                                 <a href="#" className="dropdown-item example-close-selected-chat">Đóng chat</a>
                                 <a href="#" className="dropdown-item">Thêm vào lưu trữ</a>

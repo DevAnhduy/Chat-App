@@ -11,6 +11,7 @@ import Navigation from './Navigation';
 import './App_v2.scss';
 import { Voice_Call_Request,Voice_Call_Accepted } from './Voice_Call_Modal';
 import { Video_Call_Accepted, Video_Call_Request } from './Video_Call_Modal';
+import Edit_Profile from './Edit_Profile';
 
 const App_v2 = props => {
     return (
@@ -30,6 +31,7 @@ const App_v2 = props => {
             <Voice_Call_Accepted />
             <Video_Call_Request />
             <Video_Call_Accepted />
+            <Edit_Profile />
         </div>
     )
 }

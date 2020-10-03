@@ -73,6 +73,10 @@ body {
         width: 1%;
         min-width: 0;
         margin-bottom: 0;
+        &:not(:last-child) {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
     }
 } 
 .input-group-prepend {
@@ -506,12 +510,6 @@ body {
         animation: pulse 1.2s infinite;
     }
 }
-.ps {
-    position: relative;
-    overflow: hidden !important;
-    overflow-anchor: none;
-    touch-action: none;
-}
 .avatar {
     display: inline-block;
     margin-bottom: 0;
@@ -757,6 +755,9 @@ ul.list-inline.social-links .list-inline-item {
         }
         .nav-item {
             margin: 0;
+            &:first-child {
+                margin-left: 0;
+            }
             .nav-link {
                 color: #000;
                 border: none;
@@ -848,6 +849,30 @@ ul.list-inline.social-links .list-inline-item {
     .modal-body {
         padding: 30px;
     }
+    .modal-header {
+        align-items: center;
+        padding: 20px 30px;
+        border-bottom: none;
+        .modal-title {
+            display: flex;
+            align-items: center;
+            &+button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-shadow: none;
+                font-size: 18px;
+                margin: 0;
+                background: none;
+                border-radius: 50%;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                color: #000;
+                opacity: 1;
+            }
+        }
+    }
 }
 .voice-call {
     .call-action-button {
@@ -908,6 +933,34 @@ ul.list-inline.social-links .list-inline-item {
         transform: scale(.9);
         box-shadow: 0 0 0 20px rgba(232, 76, 61, 0)
     }
+}
+.bg-facebook {
+    background: #3b5998 !important;
+    color: #fff !important;
+}
+.bg-twitter {
+    background: #55acee !important;
+    color: #fff !important;
+}
+.bg-instagram {
+    background: #3f729b!important;
+    color: #fff !important;
+}
+.bg-linkedin {
+    background: #0077b5!important;
+    color: #fff !important;
+}
+.bg-youtube {
+    background: #cd201f!important;
+    color: #fff;
+}
+.bg-google {
+    background: #db4437!important;
+    color: #fff;
+}
+.bg-whatsapp {
+    background: #43d854!important;
+    color: #fff;
 }
 
 
@@ -1199,6 +1252,17 @@ body {
         }
         .modal-content {
             background-color: #383a3f;
+            .modal-title {
+                &+button {
+                    color: hsla(0,0%,100%,.7);
+                }
+            }
+            .form-control {
+                background-color: #494b52;
+            }
+            .custom-file-label {
+                background-color: #494b52;
+            }
         }
         .modal-body {
             &::before {
