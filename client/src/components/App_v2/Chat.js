@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import style from './Chat.module.scss';
 import PerfectScroll from 'react-perfect-scrollbar';
+import $ from 'jquery';
 
 const Chat = props => {
     return (
@@ -29,39 +30,41 @@ const Chat = props => {
                         <small className="text-success">Online</small>
                     </div>
                 </div>
-                <div className="chat-header-action">
-                    <ul className="list-inline" data-intro-js="7">
+                <div className="chat-header-action" data-intro-js="7">
+                    <ul className="list-inline">
                         <li className="list-inline-item d-inline d-lg-none">
-                            <Link to="#" className="btn btn-danger btn-floating example-chat-close">
+                            <a href="#" className="btn btn-danger btn-floating example-chat-close">
                                 <i className="mdi mdi-arrow-left"></i>
-                            </Link>
+                            </a>
                         </li>
-                        <li className="list-inline-item" data-toggle="tooltip" title="Voice call" data-original-title="Voice call">
-                            <a href="#" className="btn btn-info btn-floating" data-right-slidebar="notifications">
+                        <li className="list-inline-item" data-toggle="tooltip" title="Thông báo" onClick={() => $("#notifications").addClass("open")} >
+                            <a className="btn btn-info btn-floating" data-right-slidebar="notifications">
                                 <i className="mdi mdi-bell-outline"></i>
                             </a>
                         </li>
-                        <li className="list-inline-item" data-toggle="tooltip" title="" data-original-title="Voice call">
-                            <Link to="#" className="btn btn-success btn-floating voice-call-request">
+                        <li className="list-inline-item" data-toggle="modal" title="Voice call" data-target="#voice_call_request" >
+                            <a className="btn btn-success btn-floating voice-call-request">
                                 <i className="mdi mdi-phone"></i>
-                            </Link>
+                            </a>
                         </li>
-                        <li className="list-inline-item" data-toggle="tooltip" title="" data-original-title="Video call">
-                            <Link to="#" className="btn btn-warning btn-floating video-call-request">
+                        <li className="list-inline-item" data-toggle="modal" title="Video call" data-target="#video_call_request" >
+                            <a className="btn btn-warning btn-floating video-call-request">
                                 <i className="mdi mdi-video-outline"></i>
-                            </Link>
+                            </a>
                         </li>
                         <li className="list-inline-item">
-                            <Link to="#" className="btn btn-dark btn-floating" data-toogle="dropdown">
+                            <a href="#" className="btn btn-dark btn-floating" data-toggle="dropdown">
                                 <i className="mdi mdi-dots-horizontal"></i>
-                            </Link>
+                            </a>
                             <div className="dropdown-menu dropdown-menu-right">
-                                <Link to="#" data-right-sidebar="user-profile" className="dropdown-item">Thông tin cá nhân</Link>
-                                <Link to="#" className="dropdown-item example-close-selected-chat">Đóng chat</Link>
-                                <Link to="#" className="dropdown-item example-delete-chat">Xóa chat</Link>
-                                <Link to="#" className="dropdown-item text-danger example-block-user">Chặn</Link>
+                                <a href="#" onClick={()=>$('#user-profile').addClass('open')} data-right-sidebar="user-profile" className="dropdown-item">Thông tin cá nhân</a>
+                                <a href="#" className="dropdown-item example-close-selected-chat">Đóng chat</a>
+                                <a href="#" className="dropdown-item">Thêm vào lưu trữ</a>
+                                <a href="#" className="dropdown-item example-delete-chat">Xóa chat</a>
+                                <div className="dropdown-divider"></div>
+                                <a href="#" className="dropdown-item text-danger example-block-user">Chặn</a>
                             </div>
-                        </li>   
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -204,7 +207,7 @@ const Chat = props => {
             <div className="chat-footer">
                 <form className="d-flex">
                     <div className="dropdown">
-                        <button className="btn btn-danger btn-floating mr-3" data-toogle="dropdown" title="Emoji" type="button">
+                        <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
                             <i className="mdi mdi-face"></i>
                         </button>
                         <div className="dropdown-menu dropdown-menu-big p-0">
@@ -213,17 +216,43 @@ const Chat = props => {
                             </div>
                             <div className="emojis chat-emojis">
                                 <ul>
-                                    <li>�3d�01</li>
-                                    <li>�3d�02</li>
-                                    <li>�3d�03</li>
-                                    <li>�3d�04</li>
-                                    <li>�3d�05</li>
+                                    <li>😁</li>
+                                    <li>😂</li>
+                                    <li>😃</li>
+                                    <li>😄</li>
+                                    <li>😅</li>
+                                    <li>😆</li>
+                                    <li>😉</li>
+                                    <li>😊</li>
+                                    <li>😋</li>
+                                    <li>😌</li>
+                                    <li>😍</li>
+                                    <li>😏</li>
+                                    <li>😒</li>
+                                    <li>😓</li>
+                                    <li>😔</li>
+                                    <li>😖</li>
+                                    <li>😘</li>
+                                    <li>😝</li>
+                                    <li>😠</li>
+                                    <li>😢</li>
+                                    <li>🙅</li>
+                                    <li>🙆</li>
+                                    <li>🙇</li>
+                                    <li>🙈</li>
+                                    <li>🙉</li>
+                                    <li>🙊</li>
+                                    <li>🙋</li>
+                                    <li>🙌</li>
+                                    <li>🙍</li>
+                                    <li>🙎</li>
+                                    <li>🙏</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div className="dropdown">
-                        <button className="btn btn-danger btn-floating mr-3" data-toogle="dropdown" title="Emoji" type="button">
+                        <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
                             <i className="mdi mdi-plus"></i>
                         </button>
                         <div className="dropdown-menu">

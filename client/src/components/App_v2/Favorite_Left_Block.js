@@ -9,7 +9,7 @@ const Favorite_Left_Block = props => {
                     <p>Test</p>
                 </div>
                 <div className="users-list-action">
-                    <div className="action-toogle">
+                    <div className="action-toggle">
                         <div className="dropdown">
                             <a data-toggle="dropdown"><i className="mdi mdi-dots-horizontal"></i></a>
                             <div className="dropdown-menu dropdown-menu-right">

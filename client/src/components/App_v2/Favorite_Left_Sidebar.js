@@ -3,7 +3,7 @@ import Favorite_Left_Block from './Favorite_Left_Block';
 
 const Favorite_Left_Sidebar = props => {
     return(
-        <div className="favorites" className="left-sidebar">
+        <div id="favorites" className="left-sidebar">
             <div className="left-sidebar-header">
                 <form>
                     <h4 className="mb-4">Yêu thích</h4>
@@ -19,7 +19,9 @@ const Favorite_Left_Sidebar = props => {
             </div>
             <div className="left-sidebar-content ps">
                 <ul className="list-group list-group-flush users-list">
-                    <Favorite_Left_Block />
+                    <Favorite_Left_Block avatar="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" name="Javascript" address="Test" />
+                    <Favorite_Left_Block avatar="https://www.iconfinder.com/data/icons/logos-3/454/nodejs-new-pantone-white-512.png" name="NodeJS" address="ZXCZXC" />
+                    <Favorite_Left_Block avatar="https://www.iconfinder.com/data/icons/black-white-social-media/64/social_media_logo_github-512.png" name="Github" address="Test123" />
                 </ul>
             </div>
         </div>

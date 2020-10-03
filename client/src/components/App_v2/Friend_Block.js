@@ -16,7 +16,7 @@ const Friend_Block = props => {
                 <div className="users-list-action">
                     <div className="action-toggle">
                         <div className="dropdown">
-                            <a data-toogle="dropdown"><i className="mdi mdi-dots-horizontal"></i></a>
+                            <a data-toggle="dropdown"><i className="mdi mdi-dots-horizontal"></i></a>
                         </div>
                         <div className="dropdown-menu dropdown-menu-right">
                             <a className="dropdown-item">Trò chuyện</a>

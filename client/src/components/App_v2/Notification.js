@@ -1,19 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import $ from 'jquery';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const Notification = props => {
     return(
         <div className="right-sidebar" id="notifications">
             <div className="right-sidebar-header">
                 <span className="right-sidebar-title">Thông báo</span>
-                <Link to="#" data-right-sidebar="settings" title="Settings">
+                <a href="#" data-right-sidebar="settings" title="Settings">
                     <i className="mdi mdi-cog"></i>
-                </Link>
-                <Link to="#" className="right-sidebar-close">
+                </a>
+                <a className="right-sidebar-close" onClick={() => $("#notifications").removeClass("open")}>
                     <i className="mdi mdi-close"></i>
-                </Link>
+                </a>
             </div>
-            <div className="right-sidebar-content ps">
+            <PerfectScrollbar className="right-sidebar-content">
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item py-3 px-0 d-flex justify-content-between">
                         <div className="d-flex">
@@ -30,18 +32,18 @@ const Notification = props => {
                             </div>
                         </div>
                         <div className="dropdown">
-                            <Link to="#" data-toogle="dropdown">
+                            <a data-toggle="dropdown">
                                 <i className="mdi mdi-dots-horizontal"></i>
-                            </Link>
-                        </div>
-                        <div className="dropdown-menu dropdown-menu-right">
-                            <Link to="#" className="dropdown-item">Chưa đọc</Link>
-                            <Link to="#" className="dropdown-item">Chi tiết</Link>
-                            <Link to="#" className="dropdown-item">Xóa</Link>
+                            </a>
+                            <div className="dropdown-menu dropdown-menu-right">
+                                <a href="#" className="dropdown-item">Chưa đọc</a>
+                                <a href="#" className="dropdown-item">Chi tiết</a>
+                                <a href="#" className="dropdown-item">Xóa</a>
+                            </div>
                         </div>
                     </li>
                 </ul>
-            </div>
+            </PerfectScrollbar>
         </div>
     )
 } 
