@@ -12,6 +12,9 @@ import './App_v2.scss';
 import { Voice_Call_Request,Voice_Call_Accepted } from './Voice_Call_Modal';
 import { Video_Call_Accepted, Video_Call_Request } from './Video_Call_Modal';
 import Edit_Profile from './Edit_Profile';
+import Settings_Modal from './Settings_Modal';
+import Add_Friend_Modal from './Add_Friend_Modal';
+import New_Group_Modal from './New_Group_Modal';
 
 const App_v2 = props => {
     return (
@@ -32,6 +35,9 @@ const App_v2 = props => {
             <Video_Call_Request />
             <Video_Call_Accepted />
             <Edit_Profile />
+            <Settings_Modal />
+            <Add_Friend_Modal />
+            <New_Group_Modal />
         </div>
     )
 }
