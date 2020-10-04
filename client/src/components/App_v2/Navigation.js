@@ -72,7 +72,7 @@ const Navigation = props => {
                             </figure>
                         </a>
                         <div className="dropdown-menu">
-                            <a href="#" className="dropdown-item" data-toggle="modal" data-target="#editProfile">
+                            <a href="#" className="dropdown-item" data-toggle="modal" data-target="#edit_profile">
                                 Chỉnh sửa thông tin 
                             </a>
                             <a href="#" className="dropdown-item" data-right-sidebar="user-profile">
