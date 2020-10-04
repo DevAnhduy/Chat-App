@@ -1,0 +1,264 @@
+$core-color: #ff5252;
+
+.body {
+    padding: 0px;
+}
+
+.layout {
+    overflow: hidden;
+}
+
+.button {
+    padding: 16px 25px;
+    width: 100%;
+    border-radius: 6px;
+    font-weight: 500;
+    background-color: $core-color;
+    color : #fff;
+    box-shadow: 0 0 30px 5px rgba(0,0,0,.04) !important;
+    &:hover {
+        color: #fff;
+        opacity: .8;
+    }
+}
+
+.btn-login{
+    font-weight: 600;
+    background-color: #24292e;
+    color: white;
+    transition: all 0.5s;
+    &:hover {
+        background-color: white !important; 
+        color: #24292e; 
+        box-shadow: 0px 1px 10px;
+    }
+}
+
+.form-control {
+    background: #f5f5f5;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #bdbac2;
+}
+
+.aside {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 550px;
+    max-width: 500px;
+    height: 100vh;
+    background: linear-gradient(145deg,#fff,$core-color);
+    .preference {
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+        text-align: center;
+        h2 {
+            font-size: 46px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 23px;
+         }
+        p {
+            font-size: 16px;
+            color: #fff;
+            font-weight: 400;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+        .button {
+            max-width: 300px;
+            background: #fff;
+            color: $core-color;
+            box-shadow: none !important;
+        }
+    }
+}
+
+.main-login {
+    width: 25%;
+    margin: auto;
+    padding: 30px;
+    margin-top: 10%;
+    position: relative;
+    border: 2px solid #24292e;
+    box-shadow: 0px 5px 10px #24292e;
+    border-radius: 10px;
+    label {
+        font-weight: 600;
+    }
+}
+
+.main {
+    height: 100vh;
+    background: #fdfdfd;
+    width: 100%;
+    .start {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        .content {
+            width: 100%;
+            text-align: center;
+            h1 {
+                font-size: 46px;
+                font-weight: 800;
+                color: #212529;
+                margin-bottom: 40px;
+            }
+            p {
+                font-size: 16px;
+                font-weight: 400;
+                margin-bottom: 20px;
+            }
+            form {
+                width: 100%;
+                max-width: 366px;
+                margin: 0 auto;
+            }
+            .form-group {
+                position: relative;
+                margin-bottom: 15px;
+                .form-control {
+                    padding: 0 20px 0 58px;
+                    height: 56px;
+                    font-weight: 400;
+                    border: 2px solid transparent;
+                    &:focus {
+                        border: 2px solid $core-color!important;
+                    }
+                    &::placeholder {
+                        font-weight: 400;
+                    }
+                }
+                .btn {
+                    position: relative;
+                    padding: 0 10px 0 20px;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    line-height: 0;
+                    color: #bdbac2;
+                    &.icon {
+                        position: absolute;
+                        padding: 0 10px 0 20px;
+                        top: 0;
+                        bottom: 0;
+                        left: 0;
+                        line-height: 0;
+                        color: #bdbac2;
+                    }
+                }
+            }
+            .third-party {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-align: center;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 38px;
+                .item {
+                    display: -ms-flexbox;
+                    display: flex;
+                    -ms-flex-align: center;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 15px;
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 100%;
+                    box-shadow: 0 0 20px rgba(0,0,0,.04);
+                    margin-right: 20px;
+                    -moz-transition: all .3s;
+                    -webkit-transition: all .3s;
+                    transition: all .3s;
+                    &:hover {
+                        opacity: .9;
+                        -webkit-transform: translateY(-5px) translateZ(0);
+                        transform: translateY(-5px) translateZ(0);
+                    }
+                    &:last-of-type {
+                        margin-right: 0;
+                    }
+                    .mdi {
+                        color: #fff;
+                        font-size: 30px;
+                    }
+                    img {
+                        width: 25px;
+                        height: 25px;
+                    }
+                }
+            }
+            .callout {
+                span {
+                    font-size: 16px;
+                    &>a {
+                        color: $core-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+//Responsive
+@media (max-width: 468px) {
+    .main .start .content {
+        .h1 {
+            font-size: 36px;
+        }
+        .callout {
+            display: block;
+        }
+    }
+}
+
+@media (max-width: 991px) {
+    .aside {
+        display: none;
+    }
+    .main .start {
+        padding: 73px 0 77px;
+        .content .button {
+            margin-bottom: 20px;
+        }
+    }
+}
+
+@media (max-width: 1200px) {
+    .aside {
+        width: 100%;
+        min-width: auto;
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .layout {
+        display: flex;
+    }
+    .sidebar {
+        padding: 30px 0 0;
+        height: 100vh;
+    }
+    .main, .main .start,.sidebar {
+        height: 100vh;
+    }
+    .main .start .content {
+        form.sign-up, form.sign-in {
+            max-width: 466px;
+        }
+        .callout {
+            display: none;
+        }
+    }
+}
