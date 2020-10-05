@@ -2,13 +2,14 @@ $core-color: #ff5252;
 
 .homepage {
     //Global
-    body {
-        color: #212529;
-        background-color: #f5f8fc;
-        overflow-y: scroll;
-    }    
+    color: #212529;
+    background-color: #f5f8fc;
+    overflow-y: scroll;   
     .py-8 {
         padding: 6rem 0;
+    }
+    .mb-8 {
+        margin-bottom: 6rem;
     }
     [data-aos^=zoom] {
         opacity: 0.5;
@@ -179,10 +180,12 @@ $core-color: #ff5252;
             position: absolute;
         }
     }
-    
-    //Responsive
-    @media (min-width:992px) {
-        .navbar {
+}
+
+//Responsive
+@media (min-width:992px) {
+    .homepage {
+         .navbar {
             .navbar-nav {
                 .nav-item {
                     &:hover {
@@ -252,19 +255,13 @@ $core-color: #ff5252;
             img {
                 transform: rotateY(35deg) rotateX(15deg) translateZ(0);
             }
-        }
+        }   
     }
-    @media (min-width:0px) {
-        .img-skewed {
-            img {
-                transform: none;
-            }
-        }
+}
+@media (max-width: 992px) {
+    .homepage {
         .py-8 {
             padding: 4rem 0;
-        }
-        .mb-8 {
-            margin-bottom: 6rem;
         }
         .navbar {
             .navbar-nav {

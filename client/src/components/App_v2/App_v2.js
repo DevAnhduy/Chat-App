@@ -11,7 +11,7 @@ import { Video_Call_Accepted, Video_Call_Request } from './Video_Call_Modal';
 import  { Settings_Modal,Setting_Right } from './Setting';
 import Add_Friend_Modal from './Add_Friend_Modal';
 import New_Group_Modal from './New_Group_Modal';
-import { CIRCLE_LOADING } from '../Utils/circle_loading';
+import { CIRCLE_LOADING_WITH_LOGO } from '../Utils/circle_loading';
 import socket_handle_factory from '../../utils/socket_handle_factory';
 import check_auth from '../../utils/check-auth';
 import call_api from '../../utils/call_api';
@@ -29,6 +29,7 @@ const App_v2 = props => {
     const [list_chats,set_list_chats] = useState();  // State contain array element html of list chat
     const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
     const [messages,set_messages] = useState([]);
+    const [finding_messages,set_finding_messages] = useState(false);
     //Load user
     useEffect(() => {
         //Call function check auth
@@ -48,19 +49,20 @@ const App_v2 = props => {
         })
     },[]);
     //Render
-    console.log(messages)
     if(!is_auth)
-        return <CIRCLE_LOADING />
+        return <CIRCLE_LOADING_WITH_LOGO />
     else
         return (
             <div className="chat-app dark">
                 <div className="layout">
                     <Navigation avatar={user.avatar} />
-                    <Chat_Sidebar user={user} socket={socket} set_messages={(messages) => set_messages(messages) } />
+                    <Chat_Sidebar user={user} socket={socket} 
+                                  set_messages={(messages) => set_messages(messages) }
+                                  set_finding_messages={(status) => set_finding_messages(status)} />
                     <Friend_Main />
                     <Favorite_Main />
                     <Archived_Main />
-                    <Chat_Main messages={messages} /> 
+                    <Chat_Main messages={messages} finding_messages={finding_messages} /> 
                 </div>
                 <Notification />
                 <User_Profile />

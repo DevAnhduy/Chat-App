@@ -45,14 +45,13 @@ const Navigation = props => {
             title : "Cài đặt",
             icon : <Setting_Icon />,
             href : "settings",
-            class_list : "nav_item d-none d-log-block"
+            class_list : "d-log-block"
         }
     ]
     const render_navigations = () => {
         const navigation_selected = (selected,index) => {
             $(".left-sidebar").removeClass("open");
             $(`#${selected}`).addClass("open");
-            console.log($("#navigation .nav-item"))
             $("#navigation .nav-item").a.removeClass("active");          
             $("#navigation .nav-item")[index].a.addClass("active");
         }

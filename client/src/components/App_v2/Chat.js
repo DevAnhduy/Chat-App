@@ -5,6 +5,8 @@ import Slider from 'react-slick';
 import $ from 'jquery';
 import socket_handle_factory from '../../utils/socket_handle_factory';
 import call_api from '../../utils/call_api';
+import no_message_image from '../../assets/images/chat/chat_empty.svg';
+import { CIRCLE_LOADING } from '../Utils/circle_loading';
 const { __server } = require('config/constant.json')
 
 const Chat_Block = props => {
@@ -43,7 +45,7 @@ const Chat_Block = props => {
     )
 }
 const Chat_Sidebar = props => {
-    const [list_chats,set_list_chats] = useState();  // State contain array element html of list chat
+    const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
     const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
     const [messages,set_messages] = useState({}); 
     //Load list chats && connect socket io
@@ -127,7 +129,7 @@ const Chat_Sidebar = props => {
            *    2. Loop array list chats of user. Init variable api_get_user,api_get_room. 
            *    Check if receiver type is room then assignment api_get_room to api_get_receiver else ...
            *    3. Push axios request to array request (1)
-           *    4. Check if loop is last then call Promisse.all with array request(1) to get receiver data
+           *    4. Check if loop is last then call Promise.all with array request(1) to get receiver data
            *      4.1. Map response data from api. With each loop then add data detail to state user. Set state object receivers 
            *      4.2. Set state list chats with map list chats of state user
            * * Result : State list_chats contain list elements to render, state obj_receiver contain user data 
@@ -171,11 +173,12 @@ const Chat_Sidebar = props => {
                         <Link key={index}
                               id={receiver._id}
                               to={`/chat/${receiver.type}/${receiver._id}`}
-                              onClick={() => { start_chat(receiver) }}
+                              onClick={() => { start_chat(receiver); props.set_finding_messages(true)}}
                         >
                           <Chat_Block key={index}
                                       name={receiver.detail ? receiver.detail.name : ''}
                                       avatar={receiver.detail.avatar ? receiver.detail.avatar : ''}
+                                      last_message="Test something like this"
                             />
                         </Link>
                       )
@@ -215,7 +218,8 @@ const Chat_Sidebar = props => {
         //#region //*FUNCTION HANDLE
         console.log('Get messages');
         // Step 1 
-        const main_message = document.getElementById('main-message');;
+        const main_message = document.getElementById('main-message');
+        console.log(main_message)
         // Step 2
         call_api({
           url : `${process.env.REACT_APP_API_URL}/chat/${receiver.type}/${receiver._id}/messages?page=1`
@@ -224,8 +228,7 @@ const Chat_Sidebar = props => {
             // Step 3
             let messages = [];
             let same_senders = [];
-            main_message.innerHTML = '';
-            console.log(response.data.messages)
+            //main_message.innerHTML = '';
             // Step 5
             response.data.messages.map((message,index) => {
                 if(!same_senders.length) {
@@ -287,11 +290,12 @@ const Chat_Sidebar = props => {
             //set_messages
             // Step 6
             main_message.scrollTop = main_message.scrollHeight;
-            props.set_messages(messages)
+            props.set_messages([...messages])
+            props.set_finding_messages(false);
           })
           .catch(error => {
             console.log(error)
-            main_message.innerHTML = '';
+            //main_message.innerHTML = '';
           })
         //#endregion
     }
@@ -357,36 +361,31 @@ const Chat_Sidebar = props => {
                 </form>
             </div>
             <PerfectScroll className="left-sidebar-content">
-                {list_chats}
-                {/* <Chat_Block avatar="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" name="Javascript" last_message="Test"  />
-                <Chat_Block avatar="https://www.iconfinder.com/data/icons/logos-3/454/nodejs-new-pantone-white-512.png" name="NodeJS" last_message="ZXCZXC" />
-                <Chat_Block avatar="https://www.iconfinder.com/data/icons/black-white-social-media/64/social_media_logo_github-512.png" name="Github" last_message="Test123" />
-                <Chat_Block avatar="https://images.viblo.asia/1d4ce923-d919-4ccf-af8a-9e444ab8d793.jpg" name="DenoJS" last_message="Test123" />
-                <Chat_Block avatar="https://www.seekpng.com/png/detail/377-3772047_sass-logo.png" name="SASS" last_message="Test123" />
-                <Chat_Block avatar="https://kalvanaveen.github.io/WebDevelopmentResources.github.io/Images/Express-JS-min.png" name="ExpressJS" last_message="Test123" />
-                <Chat_Block avatar="https://www.iconninja.com/files/129/242/428/mobile-development-design-facebook-react-apps-framework-icon.png" name="ReactJS" last_message="123123" />
-                <Chat_Block avatar="https://d29fhpw069ctt2.cloudfront.net/icon/image/38568/preview.svg" name="GraphQL" last_message="123123" />
-                <Chat_Block avatar="https://eitguide.net/wp-content/uploads/2018/06/Electron.jpg" name="Electron" last_message="123123" /> */}
+                {list_chats.length ? list_chats : <CIRCLE_LOADING width="100%" height="100%" />}
             </PerfectScroll>
         </div>
     )
 }
 const Chat_Main = props => {
+    const check_exist_message = ()  => {
+        if (props.finding_messages) 
+            return <CIRCLE_LOADING width="100%" height="100%" />;
+        else if (props.messages.length)
+            return props.messages;
+        else 
+            return (
+                <div className="no-message-content">
+                    <div className="row mb-5">
+                        <div className="col-md-4 offset-4">
+                            <img src={no_message_image} className="img-fluid" alt="No message" />
+                        </div>
+                    </div>
+                    <p className="lead">Không tìm thấy tin nhắn nào. Chọn 1 cuộc trò chuyện để bắt đầu trò chuyện</p>
+                </div>
+            )
+    }
     return (
         <div className="chat">
-            <div className="chat-preloader d-none">
-                <div className="spinner-border" role="status">
-                    <span className="sr-only">Loading....</span>
-                </div>
-            </div>
-            <div className="no-message-content">
-                <div className="row mb-5">
-                    <div className="col-md-4 offset-4">
-                        <img src='#' className="img-fluid" alt="image" />
-                    </div>
-                </div>
-                <p className="lead">Chọn 1 cuộc trò chuyện để bắt đầu trò chuyện</p>
-            </div>
             <div className="chat-header">
                 <div className="chat-header-user">
                     <figure className="avatar avatar-state-success">
@@ -432,7 +431,7 @@ const Chat_Main = props => {
             </div>
             <PerfectScroll className="chat-body">
                 <div className="messages" id="main-message">
-                    {props.messages}
+                    {check_exist_message()}
                 </div>
             </PerfectScroll>
             <div className="chat-footer">
@@ -523,34 +522,5 @@ const Message = props => {
         </div>
     )
 }
-// const Message = props => {
-//     return (
-//         <div className={`message-item ${props.sender ? 'in' : 'out'}`}>
-//             <div className="message-avatar">
-//                 <figure className="avatar avatar-sm">
-//                     {props.avatar ? <img src={props.avatar} className="rounded-circle" alt="avatar" /> : ""}
-//                 </figure>
-//                 <div>
-//                     {props.name ? <h5>{props.name}</h5> : ""}
-//                     {props.time ? <div className="time">10:12</div> : ""}
-//                 </div>
-//             </div>
-//             <div className="message-content">
-//                 <div className="message-text">{props.content}</div>
-//                 <div className="dropdown">
-//                     <a data-toggle="dropdown">
-//                         <i className="mdi mdi-dots-horizontal"></i>
-//                     </a>
-//                     <div className="dropdown-menu">
-//                         <a className="dropdown-item">Trả lời</a>
-//                         <a className="dropdown-item">Chuyển tiếp</a>
-//                         <a className="dropdown-item">Sao chép</a>
-//                         <a className="dropdown-item example-delete-message">Xóa</a>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
 
 export { Chat_Main, Chat_Block, Chat_Sidebar }
