@@ -1,87 +1,106 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
-import { ReactComponent as Bell_Icon } from '../../assets/svgs/bell.svg'
+import { ReactComponent as Bell_Icon } from '../../assets/svgs/bell.svg';
+import { ReactComponent as Archived_Icon } from '../../assets/svgs/archived.svg';
+import { ReactComponent as Setting_Icon } from '../../assets/svgs/setting.svg';
+import { ReactComponent as Chat_Icon } from '../../assets/svgs/chat.svg';
+import { ReactComponent as Friend_Icon } from '../../assets/svgs/friend.svg';
+import { ReactComponent as Star_Icon } from '../../assets/svgs/star.svg';
 const logo = require('../../assets/logo.png');
-//const bell_icon = require('../../assets/svgs/bell.svg');
 
 const Navigation = props => {
+    const navigations = [
+        {
+            title : "Chats",
+            icon : <Chat_Icon />,
+            href : "chats",
+            class_list : "nav_item"
+        },
+        {
+            title : "Bạn bè",
+            icon : <Friend_Icon />,
+            href : "friends",
+            class_list : "nav_item"
+        },
+        {
+            title : "Yêu thích",
+            icon : <Star_Icon />,
+            href : "favorites",
+            class_list : "nav_item"
+        },
+        {
+            title : "Thông báo",
+            icon : <Bell_Icon />,
+            href : "notifications",
+            class_list : "nav_item"
+        },
+        {
+            title : "Lưu trữ",
+            icon : <Archived_Icon />,
+            href : "archived",
+            class_list : "nav_item brackets"
+        },
+        {
+            title : "Cài đặt",
+            icon : <Setting_Icon />,
+            href : "settings",
+            class_list : "nav_item d-none d-log-block"
+        }
+    ]
+    const render_navigations = () => {
+        const navigation_selected = (selected,index) => {
+            $(".left-sidebar").removeClass("open");
+            $(`#${selected}`).addClass("open");
+            console.log($("#navigation .nav-item"))
+            $("#navigation .nav-item").a.removeClass("active");          
+            $("#navigation .nav-item")[index].a.addClass("active");
+        }
+        return navigations.map((navigation,index) => {
+            return (
+                <li className={navigation.class_list} onClick={() => navigation_selected(navigation.href,index)} >
+                    <a className={navigation.href === "chats" ? "active" : "" } data-toggle="tooltip" title={navigation.title} data-placement="right">
+                        {navigation.icon}
+                    </a> 
+                </li>
+            )
+        })
+    }   
     return(
-        <nav className="navigation">
+        <nav className="navigation" id="navigation">
             <div className="nav-group">
                 <ul>
                     <li className="logo">
                         <Link to="/" ><img src={logo} alt="FSNET logo" /></Link>
                     </li>
                     <li className="navigation-action-button dropright" title="Thêm" data-placement="right">
-                        <a href="#" data-toggle="dropdown">
+                        <a data-toggle="dropdown">
                             <i className="mdi mdi-plus"></i>
                         </a>
                         <div className="dropdown-menu dropdown-menu-right">
-                            <a href="#" className="dropdown-item" data-left-sidebar="friends">Bắt đầu chat</a>
-                            <a href="#" className="dropdown-item" data-toggle="modal" data-target="#new_room">Tạo nhóm chat</a>
+                            <a className="dropdown-item" data-left-sidebar="friends">Bắt đầu chat</a>
+                            <a className="dropdown-item" data-toggle="modal" data-target="#new_room">Tạo nhóm chat</a>
                             <a className="dropdown-item" data-toggle="modal" data-target="#add_friend">Thêm bạn bè</a>
                         </div>
                     </li>
-                    <li onClick={() => { $(".left-sidebar").removeClass("open"); $("#chats").addClass("open") }}>
-                        <a className="active" data-left-sidebar="chats" data-toggle="tooltip" title="Chats" data-placement="right"  data-original-title="Chats">
-                            <span className="badge badge-warning"></span> 
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-message-circle">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                            </svg>
-                        </a> 
-                    </li>
-                    <li onClick={() => { $(".left-sidebar").removeClass("open"); $("#friends").addClass("open")}}>
-                        <a data-left-sidebar="friends" data-toggle="tooltip" title="Bạn bè" data-placement="right" data-original-title="Friends">
-                            <span className="badge badge-danger"></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx={12} cy={7} r={4} />
-                            </svg>
-                        </a>
-                    </li>
-                    <li onClick={() => { $(".left-sidebar").removeClass("open"); $("#favorites").addClass("open") }}>
-                        <a data-left-sidebar="favorites" data-toggle="tooltip" title="Yêu thích" data-placement="right" >
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-star">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                            </svg>
-                        </a>
-                    </li>
-                    <li onClick={() => $("#notifications").addClass("open")}  >
-                        <a data-toggle="tooltip" title="Thông báo" data-placement="right">
-                            <Bell_Icon />
-                        </a>
-                    </li>
-                    <li className="brackets" onClick={() => { $(".left-sidebar").removeClass("open"); $("#archived").addClass("open") }}>
-                        <a href="#" data-left-sidebar="archived" title="Lưu trữ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-archive"><polyline points="21 8 21 21 3 21 3 8" /><rect x={1} y={3} width={22} height={5} />
-                                <line x1={10} y1={12} x2={14} y2={12} />
-                            </svg>
-                        </a>
-                    </li>
-                    <li className="d-none d-lg-block" data-toggle="tooltip" title="Cài đặt" onClick={() => $("#settings").addClass("open")}>
-                        <a href="#" data-toggle="modal" data-right-sidebar="settings">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="feather feather-settings">
-                                <circle cx={12} cy={12} r={3} /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-                            </svg>
-                        </a>
-                    </li>
+                    {render_navigations()}
                     <li data-toggle="tooltip" title="" data-placement="right" data-original-title="User menu">
-                        <a href="#" data-toggle="dropdown">
+                        <a data-toggle="dropdown">
                             <figure className="avatar avatar-sm">
-                                <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar user" />
+                                <img src={props.avatar} className="rounded-circle" alt="avatar user" />
                             </figure>
                         </a>
                         <div className="dropdown-menu">
-                            <a href="#" className="dropdown-item" data-toggle="modal" data-target="#edit_profile">
+                            <a className="dropdown-item" data-toggle="modal" data-target="#edit_profile">
                                 Chỉnh sửa thông tin 
                             </a>
-                            <a href="#" className="dropdown-item" data-right-sidebar="user-profile">
+                            <a className="dropdown-item" data-right-sidebar="user-profile">
                                 Thông tin cá nhân
                             </a>
-                            <a href="#" className="dropdown-item" data-toggle="modal" data-target="#setting_modal">
+                            <a className="dropdown-item" data-toggle="modal" data-target="#setting_modal">
                                 Cài đặt
                             </a>
-                            <a href="#" className="dropdown-item d-none d-md-block example-app-tour-start">
+                            <a lassName="dropdown-item d-none d-md-block example-app-tour-start">
                                 Hướng dẫn sử dụng
                             </a>
                             <div className="dropdown-divider"></div>

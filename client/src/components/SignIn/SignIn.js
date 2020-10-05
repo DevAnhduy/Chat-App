@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {Link} from 'react-router-dom';
+import Axios from 'axios';
 
 const SignIn = props => {
+    const mobile = useRef("");
+    const password = useRef("")
+    const submit_signin = () => {
+        if(mobile.current.value && password.current.value){
+            Axios.post(`${process.env.REACT_APP_API_URL}/users/login`, {
+                mobile: mobile.current.value,
+                password: password.current.value,
+            })
+            .then((response) => {
+                if(response.data){
+                    localStorage.setItem('token',`Bearer ${response.data.token}`)
+                    window.location = '/chat/v2'
+                }
+                else
+                    alert('Sai tên tài khoản hoặc mật khẩu !')
+            })
+            .catch((error) => {
+                alert('Sai tên tài khoản hoặc mật khẩu !')
+            })
+        }
+        else {
+            alert('Username và Password không được để trống !')
+        }
+    }
     return(
-        <div className="layout">
-            <div className="main order-md-2">
-                <div className="start">
+        <div className="layout-signup">
+            <div className="main-signup order-md-2">
+                <div className="wrapper-signup">
                     <div className="container">
                         <div className="col-md-12">
                             <div className="content text-center">
@@ -23,14 +48,14 @@ const SignIn = props => {
                                 </div>
                                 <form className="sign-in">
                                     <div className="form-group">
-                                        <input type="text" id="mobile" className="form-control" placeholder="Số điện thoại" required></input>
+                                        <input type="text" name="mobile" ref={mobile} className="form-control" placeholder="Số điện thoại" required></input>
                                         <button className="btn icon"><i className="mdi mdi-cellphone-sound"></i></button>
                                     </div>
                                     <div className="form-group">
-                                        <input type="password" id="password" className="form-control" placeholder="Password" required></input>
+                                        <input type="password" name="password" ref={password} className="form-control" placeholder="Password" required></input>
                                         <button className="btn icon"><i className="mdi mdi-lock"></i></button>
                                     </div>
-                                    <button type="submit" className="btn button mt-4">Đăng nhập</button>
+                                    <button type="button" onClick={submit_signin} className="btn button mt-4">Đăng nhập</button>
                                     <div className="callout">
                                         <span>Chưa có tài khoản ? <Link to="/sign-up">Đăng ký</Link></span>
                                     </div>

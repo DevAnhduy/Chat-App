@@ -7,7 +7,6 @@ import Popup from 'reactjs-popup';
 import call_api from '../../utils/call_api';
 //import './App.scss';
 import socket_handle_factory from './socket_handle_factory';
-import async from 'async';
 
 const { __server } = require('config/constant.json')
 const io = require('socket.io-client');
@@ -16,8 +15,7 @@ let socket;
 
 const App = props => {
   //#region State
-  const [is_auth,set_is_auth] = useState(false);
-  const [re_render,set_re_render] = useState(false); //Variable to re render browser, default false
+  const [is_auth,set_is_auth] = useState(false); //Check user is auth
   const [user,set_user] = useState({}); // State contain object data of user
   const [list_chats,set_list_chats] = useState();  // State contain array element html of list chat
   const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import fsnet_logo from '../../assets/fsnet-logo.png';
-import './Navbar.scss';
 
 const Navbar =  props => {
     return (

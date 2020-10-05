@@ -1,7 +1,7 @@
 import React from 'react';
-import Friend_Block from './Friend_Block';
+import { Friend_Block } from './Friend';
 
-const Archived_Left_Sidebar = props => {
+const Archived_Main = props => {
     return(
         <div id="archived" className="left-sidebar">
             <div className="left-sidebar-header">
@@ -28,4 +28,4 @@ const Archived_Left_Sidebar = props => {
     )
 }
 
-export default Archived_Left_Sidebar
+export { Archived_Main }

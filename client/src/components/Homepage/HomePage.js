@@ -19,7 +19,7 @@ const HomePage = props => {
         return () => window.removeEventListener("scroll", onScroll);
     }, [scroll_bot]);
     return (
-        <div style={{paddingTop:100}}>
+        <div className="homepage" style={{paddingTop:100}}>
             <Navbar />
             <Hero scroll_bot={scroll_bot} />
             <Features scroll_bot={scroll_bot} />

@@ -1,8 +1,37 @@
 import React from 'react';
-import Friend_Block from './Friend_Block';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
-const Friend_Left_Sidebar = props => {
+const Friend_Block = props => {
+    return(
+        <li className="list-group-item">
+            <div>
+                <figure className="avatar mr-3">
+                    <img src={props.avatar} className="rounded-circle" alt="Friend avatar" />
+                </figure>
+            </div>
+            <div className="users-list-body">
+                <div>
+                    <h5>{props.name}</h5>
+                    <p>{props.address}</p>
+                </div>
+                <div className="users-list-action">
+                    <div className="action-toggle">
+                        <div className="dropdown">
+                            <a data-toggle="dropdown"><i className="mdi mdi-dots-horizontal"></i></a>
+                        </div>
+                        <div className="dropdown-menu dropdown-menu-right">
+                            <a className="dropdown-item">Trò chuyện</a>
+                            <a className="dropdown-item">Thông tin cá nhân</a>
+                            <a className="dropdown-item">Chặn</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    )
+}
+
+const Friend_Main = props => {
     return(
         <div id="friends" className="left-sidebar">
             <div className="left-sidebar-header">
@@ -35,4 +64,4 @@ const Friend_Left_Sidebar = props => {
     )
 }
 
-export default Friend_Left_Sidebar;
+export { Friend_Block, Friend_Main };

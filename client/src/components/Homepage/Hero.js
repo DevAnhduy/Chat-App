@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import hero_image from '../../assets/images/homepage/hero-image.jpg';
-import './Hero.scss';
 
 const Hero = props => {
     useEffect(() => { 
