@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useRef,useState} from 'react';
 import { Link } from 'react-router-dom';
 import PerfectScroll from 'react-perfect-scrollbar';
 import Slider from 'react-slick';
@@ -47,13 +47,15 @@ const Chat_Block = props => {
 const Chat_Sidebar = props => {
     const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
     const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
-    const [messages,set_messages] = useState({}); 
     //Load list chats && connect socket io
     useEffect(() => {
         if(props.user.list_chats){
-        //Generate event socket io
-        socket_handle_factory.receiver_from_server.message({socket: props.socket,user : props.user,obj_receivers});
-        load_list_chats();
+            //Generate event socket io
+            socket_handle_factory.receiver_from_server.message({ socket: props.socket,user : props.user,obj_receivers},(new_message) => {
+                console.log(props.messages)
+                props.set_messages([...props.messages,new_message])
+            });
+            load_list_chats();
         };
     },[props.user])
     const story_slide_settings = {
@@ -68,6 +70,7 @@ const Chat_Sidebar = props => {
         // Load obj receivers information
         load_obj_receiver_information(receiver);
         // Active chat block DOM
+        props.set_receiver(receiver)
         //set_active_chat_block(receiver);
     }
     const load_obj_receiver_information = (receiver) => {
@@ -77,7 +80,7 @@ const Chat_Sidebar = props => {
            * * Function process :
            *    1. Check type of receiver
            *      1.1. Receiver type is users
-           *        1.1.1. Set state obj_receivers
+           *        1.1.1. Set state props.obj_receivers
            *        1.1.2. Call function get_all_message 
            *      1.2. Receiver type is rooms
            *        1.2.1. Init str query users
@@ -89,8 +92,10 @@ const Chat_Sidebar = props => {
         //#endregion
         //#region //* FUNCTION HANDLE
           //Step 1.1
+          let obj_receivers = {};
           if(receiver.type === 'users'){
-            set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
+            obj_receivers[receiver._id] = receiver.detail; 
+            //set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
             get_all_message(receiver);
           }
           else { //Step 1.2
@@ -107,9 +112,11 @@ const Chat_Sidebar = props => {
                   .then(members => {
                     //Step 1.2.4
                     members.data.data.map((member,index) => {
-                      set_obj_receiver(obj_receivers[member._id] = member);
+                        obj_receivers[receiver._id] = receiver.detail;
+                      //set_obj_receiver(obj_receivers[member._id] = member);
                       if(index === members.data.data.length - 1){
                         get_all_message(receiver);
+                        props.set_obj_receiver(...obj_receivers)
                       }
                     })
                   })
@@ -120,7 +127,7 @@ const Chat_Sidebar = props => {
             })
           }
         //#endregion
-      }
+    }
     const load_list_chats = () => {
         //#region //* READ ME. DOCUMENTATION
           /**
@@ -219,7 +226,6 @@ const Chat_Sidebar = props => {
         console.log('Get messages');
         // Step 1 
         const main_message = document.getElementById('main-message');
-        console.log(main_message)
         // Step 2
         call_api({
           url : `${process.env.REACT_APP_API_URL}/chat/${receiver.type}/${receiver._id}/messages?page=1`
@@ -367,6 +373,7 @@ const Chat_Sidebar = props => {
     )
 }
 const Chat_Main = props => {
+    const input_message = useRef("");
     const check_exist_message = ()  => {
         if (props.finding_messages) 
             return <CIRCLE_LOADING width="100%" height="100%" />;
@@ -383,6 +390,31 @@ const Chat_Main = props => {
                     <p className="lead">Không tìm thấy tin nhắn nào. Chọn 1 cuộc trò chuyện để bắt đầu trò chuyện</p>
                 </div>
             )
+    }
+    const send_message = (e,receiver) => {
+        e.preventDefault();
+        //Check input message exists
+        if (input_message.current.value) {
+            //Send message to server
+            socket_handle_factory.send_to_server.message({
+                socket : props.socket,
+                user : props.user,
+                receiver,
+                message : input_message.current.value
+            })
+            //Clear text input message
+            document.getElementById('message').value = '';
+            //Make receiver chat block up to top
+            // list_chats.some((chat_block,index) => {
+            //     if(chat_block.props.id === receiver._id){
+            //     const chat_block_selected = list_chats.splice(index,1)[0];
+            //     set_list_chats([chat_block_selected,...list_chats]);
+            //     return true;
+            //     }
+            // })      
+        }
+        else
+        alert('Tin nhắn không được để trống !');
     }
     return (
         <div className="chat">
@@ -435,7 +467,7 @@ const Chat_Main = props => {
                 </div>
             </PerfectScroll>
             <div className="chat-footer">
-                <form className="d-flex">
+                <form className="d-flex" onSubmit={(e) => send_message(e,props.receiver) } method="POST">
                     <div className="dropdown">
                         <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
                             <i className="mdi mdi-face"></i>
@@ -493,7 +525,7 @@ const Chat_Main = props => {
                             <a className="dropdown-item">Video</a>
                         </div>
                     </div>
-                    <input type="text" className="form-control form-control-main" placeholder="Nhập tin nhắn...." />
+                    <input ref={input_message} type="text" name="message" id="message" className="form-control form-control-main" autoComplete={false} placeholder="Nhập tin nhắn...." />
                     <div>
                         <button className="btn btn-primary ml-2 btn-floating" type="submit">
                             <i className="mdi mdi-send"></i>
@@ -523,4 +555,4 @@ const Message = props => {
     )
 }
 
-export { Chat_Main, Chat_Block, Chat_Sidebar }
+export { Chat_Main, Chat_Block, Chat_Sidebar, Message }

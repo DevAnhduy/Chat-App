@@ -30,11 +30,11 @@ const App_v2 = props => {
     const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
     const [messages,set_messages] = useState([]);
     const [finding_messages,set_finding_messages] = useState(false);
+    const [receiver,set_receiver] = useState({});
     //Load user
     useEffect(() => {
         //Call function check auth
         check_auth(is_auth => {
-            console.log(is_auth)
             if (is_auth) {
                 console.log('Authentication success')
                 //Connect socket io
@@ -56,13 +56,18 @@ const App_v2 = props => {
             <div className="chat-app dark">
                 <div className="layout">
                     <Navigation avatar={user.avatar} />
-                    <Chat_Sidebar user={user} socket={socket} 
+                    <Chat_Sidebar user={user} socket={socket} messages={messages} obj_receivers={obj_receivers}
                                   set_messages={(messages) => set_messages(messages) }
-                                  set_finding_messages={(status) => set_finding_messages(status)} />
+                                  set_finding_messages={(status) => set_finding_messages(status)} 
+                                  set_receiver={(receiver) => {set_receiver(receiver)}}
+                                  set_obj_receiver={(obj_receivers) => set_obj_receiver(obj_receivers)}
+                                  />
                     <Friend_Main />
                     <Favorite_Main />
                     <Archived_Main />
-                    <Chat_Main messages={messages} finding_messages={finding_messages} /> 
+                    <Chat_Main messages={messages} socket={socket}
+                               finding_messages={finding_messages}
+                               receiver={receiver} user={user}  /> 
                 </div>
                 <Notification />
                 <User_Profile />
