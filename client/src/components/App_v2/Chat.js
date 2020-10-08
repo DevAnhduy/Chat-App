@@ -236,71 +236,121 @@ const Chat_Sidebar = props => {
             let same_senders = [];
             //main_message.innerHTML = '';
             // Step 5
-            response.data.messages.map((message,index) => {
-                if(!same_senders.length) {
-                    same_senders.push(
-                        <Message content={message.content} 
-                                 sender_id={message.sender_id}
+            console.log(response.data.messages)
+            response.data.messages.map((message) => {
+                // if(!messages.length) {
+                //     messages.push(<Message content={message.content}
+                //         sender_id={message.sender_id}
+                //         avatar={obj_receivers[message.sender_id].avatar}
+                //         name={obj_receivers[message.sender_id].name}
+                //     />)
+                // } 
+                if(!messages.length) {
+                    messages.push(
+                        <Message content={message.content}
+                            sender_id={message.sender_id}
+                            avatar={obj_receivers[message.sender_id].avatar}
+                            name={obj_receivers[message.sender_id].name}
+                            sender={props.user._id === message.sender_id ? true : false}
                         />
                     )
                 }
                 else {
-                    if(same_senders[same_senders.length - 1].props.sender_id === message.sender_id) {
-                        same_senders.push(
-                            <Message content={message.content} 
-                                    sender_id={message.sender_id}
-                            />
-                        )
-                    } 
-                    else {
-                        messages.push(
-                            <div className={`message-item ${same_senders[same_senders.length - 1].props.sender_id === props.user._id ? 'out' : 'in'}`}>
-                                <div className="message-avatar">
-                                    <figure className="avatar avatar-sm">
-                                        <img src={obj_receivers[same_senders[same_senders.length - 1].props.sender_id].avatar} className="rounded-circle" alt="avatar" />
-                                    </figure>
-                                    <div>
-                                        <h5>{obj_receivers[same_senders[same_senders.length - 1].props.sender_id].name}</h5>
-                                        <div className="time">10:12</div>
-                                    </div>
-                                </div>
-                                {same_senders}
-                            </div>
-                        )
-                        same_senders = [];
-                        same_senders.push(
-                            <Message content={message.content} 
-                                    sender_id={message.sender_id}
-                            />
-                        )
-                    }
-                }
-
-                if(index === response.data.messages.length - 1) {
+                    const last_message = messages[messages.length - 1];
                     messages.push(
-                        <div className={`message-item ${message.sender_id === props.user._id ? 'out' : 'in'}`}>
-                            <div className="message-avatar">
-                                <figure className="avatar avatar-sm">
-                                    <img src={obj_receivers[message.sender_id].avatar} className="rounded-circle" alt="avatar" />
-                                </figure>
-                                <div>
-                                    <h5>{obj_receivers[message.sender_id].name}</h5>
-                                    <div className="time">10:12</div>
-                                </div>
-                            </div>
-                            {same_senders}
-                        </div>
+                        <Message content={message.content}
+                            sender_id={message.sender_id}
+                            avatar={last_message.props.sender_id !== message.sender_id ? obj_receivers[message.sender_id].avatar : ""}
+                            name={last_message.props.sender_id !== message.sender_id ? obj_receivers[message.sender_id].name : ""}
+                            sender={props.user._id === message.sender_id ? true : false}
+                        />
                     )
+                    // if (last_messages.props.sender_id === message.sender_id) {
+                    //     messages.push(
+                    //         <Message content={message.content}
+                    //                  sender_id={message.sender_id} 
+                    //                  sender={props.user._id === message.sender_id ? true : false}
+                    //             />
+                    //     )
+                    // }
+                    // else {
+                    //     messages.push(
+                    //         <Message content={message.content}
+                    //             sender_id={message.sender_id}
+                    //             avatar={obj_receivers[message.sender_id].avatar}
+                    //             name={obj_receivers[message.sender_id].name}
+                    //             sender={props.user._id === message.sender_id ? true : false}
+                    //         />
+                    //     )
+                    // }
                 }
             })
+            // response.data.messages.map((message,index) => {
+            //     if(!same_senders.length) {
+            //         same_senders.push(
+            //             <Message content={message.content} 
+            //                      sender_id={message.sender_id}
+            //             />
+            //         )
+            //     }
+            //     else {
+            //         if(same_senders[same_senders.length - 1].props.sender_id === message.sender_id) {
+            //             same_senders.push(
+            //                 <Message content={message.content} 
+            //                         sender_id={message.sender_id}
+            //                 />
+            //             )
+            //         } 
+            //         else {
+            //             messages.push(
+            //                 <div className={`message-item ${same_senders[same_senders.length - 1].props.sender_id === props.user._id ? 'out' : 'in'}`}>
+            //                     <div className="message-avatar">
+            //                         <figure className="avatar avatar-sm">
+            //                             <img src={obj_receivers[same_senders[same_senders.length - 1].props.sender_id].avatar} className="rounded-circle" alt="avatar" />
+            //                         </figure>
+            //                         <div>
+            //                             <h5>{obj_receivers[same_senders[same_senders.length - 1].props.sender_id].name}</h5>
+            //                             <div className="time">10:12</div>
+            //                         </div>
+            //                     </div>
+            //                     {same_senders}
+            //                 </div>
+            //             )
+            //             same_senders = [];
+            //             same_senders.push(
+            //                 <Message content={message.content} 
+            //                         sender_id={message.sender_id}
+            //                 />
+            //             )
+            //         }
+            //     }
+
+            //     if(index === response.data.messages.length - 1) {
+            //         messages.push(
+            //             <div className={`message-item ${message.sender_id === props.user._id ? 'out' : 'in'}`}>
+            //                 <div className="message-avatar">
+            //                     <figure className="avatar avatar-sm">
+            //                         <img src={obj_receivers[message.sender_id].avatar} className="rounded-circle" alt="avatar" />
+            //                     </figure>
+            //                     <div>
+            //                         <h5>{obj_receivers[message.sender_id].name}</h5>
+            //                         <div className="time">10:12</div>
+            //                     </div>
+            //                 </div>
+            //                 {same_senders}
+            //             </div>
+            //         )
+            //     }
+            // })
             //set_messages
             // Step 6
-            main_message.scrollTop = main_message.scrollHeight;
             props.set_messages([...messages])
             props.set_finding_messages(false);
+            main_message.scrollTop = main_message.scrollHeight;
           })
           .catch(error => {
-            console.log(error)
+            console.log(error);
+            props.set_messages([]);
             //main_message.innerHTML = '';
           })
         //#endregion
@@ -537,18 +587,39 @@ const Chat_Main = props => {
     )
 }
 const Message = props => {
+    const check_same_sender = () => {
+        if(props.avatar) { 
+            return (
+                <div className="message-avatar">
+                    <figure className="avatar avatar-sm">
+                        <img src={props.avatar} className="rounded-circle" alt="avatar" />
+                    </figure>
+                    <div>
+                        <h5>{props.name}</h5>
+                        <div className="time">10:12</div>
+                    </div>
+                </div>
+            )
+        }
+        else 
+            return;
+    }
+    console.log(props.sender)
     return (
-        <div className="message-content">
-            <div className="message-text">{props.content}</div>
-            <div className="dropdown">
-                <a data-toggle="dropdown">
-                    <i className="mdi mdi-dots-horizontal"></i>
-                </a>
-                <div className="dropdown-menu">
-                    <a className="dropdown-item">Trả lời</a>
-                    <a className="dropdown-item">Chuyển tiếp</a>
-                    <a className="dropdown-item">Sao chép</a>
-                    <a className="dropdown-item example-delete-message">Xóa</a>
+        <div className={`message-item ${props.sender ? 'out' : 'in'}`}>
+            {check_same_sender()}
+            <div className="message-content">
+                <div className="message-text">{props.content}</div>
+                <div className="dropdown">
+                    <a data-toggle="dropdown">
+                        <i className="mdi mdi-dots-horizontal"></i>
+                    </a>
+                    <div className="dropdown-menu">
+                        <a className="dropdown-item">Trả lời</a>
+                        <a className="dropdown-item">Chuyển tiếp</a>
+                        <a className="dropdown-item">Sao chép</a>
+                        <a className="dropdown-item example-delete-message">Xóa</a>
+                    </div>
                 </div>
             </div>
         </div>
