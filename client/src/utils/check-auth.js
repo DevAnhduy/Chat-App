@@ -6,6 +6,7 @@ const check_auth = async (callback) => {
     try {
         if(localStorage.token){
           const decoded = jwt_decoded(localStorage.token);
+          console.log(decoded)
           Axios.get(`${process.env.REACT_APP_API_URL}/users/${decoded.user_id}`,{
             headers : {
               authorization : localStorage.token

@@ -12,11 +12,14 @@ import { Settings_Modal, Setting_Right } from '../components/App_v2/Setting';
 import Add_Friend_Modal from '../components/App_v2/Add_Friend_Modal';
 import New_Group_Modal from '../components/App_v2/New_Group_Modal';
 import { CIRCLE_LOADING_WITH_LOGO } from '../components/Utils/circle_loading';
-import socket_handle_factory from '../../utils/socket_handle_factory';
-import check_auth from '../../utils/check-auth';
-import call_api from '../../utils/call_api';
+//import socket_handle_factory from '../../utils/socket_handle_factory';
+import check_auth from '../utils/check-auth';
+//import call_api from '../../utils/call_api';
 import { Link } from 'react-router-dom';
+import { connect, useDispatch, useSelector } from 'react-redux'
 import './App_v2.scss';
+import { set_user } from '../actions/user_action';
+import { set_messages } from '../actions/message_actions';
 
 
 const { __server } = require('config/constant.json')
@@ -24,25 +27,28 @@ const io = require('socket.io-client');
 // Init global variable
 let socket;
 
-const App_v2 = props => {
+const App = props => {
     const [is_auth,set_is_auth] = useState(false); //Check user is auth
-    const [user,set_user] = useState({}); // State contain object data of user
+    //const [user,set_user] = useState({}); // State contain object data of user
     const [list_chats,set_list_chats] = useState();  // State contain array element html of list chat
     const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
+    const [receiver,set_receiver] = useState({});
     const [messages,set_messages] = useState([]);
     const [finding_messages,set_finding_messages] = useState(false);
+    const user = useSelector((state) => state.user);
+    const dispatch = useDispatch();
     //Load user
     useEffect(() => {
         //Call function check auth
         check_auth(is_auth => {
-            console.log(is_auth)
             if (is_auth) {
                 console.log('Authentication success')
                 //Connect socket io
                 socket = io(__server, { // Connect socket io
                     query: "authorization=" + window.localStorage.token
                 });
-                set_user({...is_auth}); // Set variable user
+                //set_user({...is_auth}); // Set variable user
+                dispatch(set_user(is_auth))
                 set_is_auth(true);
             }
             else
@@ -59,11 +65,14 @@ const App_v2 = props => {
                     <Navigation avatar={user.avatar} />
                     <Chat_Sidebar user={user} socket={socket} 
                                   set_messages={(messages) => set_messages(messages) }
-                                  set_finding_messages={(status) => set_finding_messages(status)} />
+                                  set_finding_messages={(status) => set_finding_messages(status)} 
+                                  set_receiver={(receiver) => set_receiver(receiver)}
+                                  />
                     <Friend_Main />
                     <Favorite_Main />
                     <Archived_Main />
-                    <Chat_Main messages={messages} finding_messages={finding_messages} /> 
+                    <Chat_Main messages={messages} finding_messages={finding_messages} socket={socket}
+                                receiver={receiver} /> 
                 </div>
                 <Notification />
                 <User_Profile />
@@ -80,4 +89,4 @@ const App_v2 = props => {
         )
 }
 
-export default App_v2;
+export default App;

@@ -20,13 +20,13 @@ module.exports = (server) => {
         socket.on('/start-chat',(receiver) => {
             message_factory.start_chat({ io, socket,receiver,users_connected,token,user })
         })
-        socket.on("disconnect",() => {
-            request({
-                method: 'put',
-                url: `${__host}:${__port}/users/${user._id}`,
-                headers : { authorization : token },
-                json : {list_chats : user.list_chats}
-            })
-        })
+        // socket.on("disconnect",() => {
+        //     request({
+        //         method: 'put',
+        //         url: `${__host}:${__port}/users/${user._id}`,
+        //         headers : { authorization : token },
+        //         json : {list_chats : user.list_chats}
+        //     })
+        // })
     })
 }

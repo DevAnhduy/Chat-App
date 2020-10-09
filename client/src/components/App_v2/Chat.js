@@ -7,6 +7,8 @@ import socket_handle_factory from '../../utils/socket_handle_factory';
 import call_api from '../../utils/call_api';
 import no_message_image from '../../assets/images/chat/chat_empty.svg';
 import { CIRCLE_LOADING } from '../Utils/circle_loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { add_message, set_messages } from '../../actions/message_actions';
 const { __server } = require('config/constant.json')
 
 const Chat_Block = props => {
@@ -47,13 +49,15 @@ const Chat_Block = props => {
 const Chat_Sidebar = props => {
     const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
     const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
+    const messages = useSelector((state) => state.messages);
+    const dispatch = useDispatch();
     //Load list chats && connect socket io
     useEffect(() => {
         if(props.user.list_chats){
             //Generate event socket io
             socket_handle_factory.receiver_from_server.message({ socket: props.socket,user : props.user,obj_receivers},(new_message) => {
-                console.log(props.messages)
-                props.set_messages([...props.messages,new_message])
+                //props.set_messages([...props.messages,new_message])
+                dispatch(add_message(new_message))
             });
             load_list_chats();
         };
@@ -69,8 +73,9 @@ const Chat_Sidebar = props => {
         socket_handle_factory.send_to_server.start_chat(props.socket,receiver);
         // Load obj receivers information
         load_obj_receiver_information(receiver);
+        props.set_receiver(receiver);
         // Active chat block DOM
-        props.set_receiver(receiver)
+        //props.set_receiver(receiver)
         //set_active_chat_block(receiver);
     }
     const load_obj_receiver_information = (receiver) => {
@@ -94,8 +99,8 @@ const Chat_Sidebar = props => {
           //Step 1.1
           let obj_receivers = {};
           if(receiver.type === 'users'){
-            obj_receivers[receiver._id] = receiver.detail; 
-            //set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
+            //obj_receivers[receiver._id] = receiver.detail; 
+            set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
             get_all_message(receiver);
           }
           else { //Step 1.2
@@ -104,19 +109,21 @@ const Chat_Sidebar = props => {
             //Step 1.2.2
             receiver.detail.members.map((member,index) => {
               str_query_users += `_id=${member}&`;
+              console.log(str_query_users)
               //Step 1.2.3
               if(index === receiver.detail.members.length - 1) {
                 call_api({
                   url : `${process.env.REACT_APP_API_URL}/users?${str_query_users}`
                 })
                   .then(members => {
+                      console.log(members)
                     //Step 1.2.4
                     members.data.data.map((member,index) => {
-                        obj_receivers[receiver._id] = receiver.detail;
-                      //set_obj_receiver(obj_receivers[member._id] = member);
+                        //set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
+                        obj_receivers[member._id] = member
                       if(index === members.data.data.length - 1){
                         get_all_message(receiver);
-                        props.set_obj_receiver(...obj_receivers)
+                        set_obj_receiver({...obj_receivers})
                       }
                     })
                   })
@@ -167,7 +174,7 @@ const Chat_Sidebar = props => {
                 Promise.all(arr_request)
                   .then((receivers) => {
                     arr_room.forEach(room => {
-                      //socket_handle_factory.send_to_server.start_chat(socket, room);
+                      //socket_handle_factory.send_to_server.start_chat(props.socket, room);
                     })
                     //Add detail to list chats
                     receivers.forEach(receiver => {
@@ -344,7 +351,8 @@ const Chat_Sidebar = props => {
             // })
             //set_messages
             // Step 6
-            props.set_messages([...messages])
+            //props.set_messages([...messages])
+            dispatch(set_messages(messages))
             props.set_finding_messages(false);
             main_message.scrollTop = main_message.scrollHeight;
           })
@@ -355,6 +363,7 @@ const Chat_Sidebar = props => {
           })
         //#endregion
     }
+    console.log(obj_receivers)
     return (
         <div id="chats" className="left-sidebar open" >
             <div className="left-sidebar-header">
@@ -423,12 +432,14 @@ const Chat_Sidebar = props => {
     )
 }
 const Chat_Main = props => {
+    console.log(props)
+    const messages = useSelector((state) => state.messages);
     const input_message = useRef("");
     const check_exist_message = ()  => {
         if (props.finding_messages) 
             return <CIRCLE_LOADING width="100%" height="100%" />;
-        else if (props.messages.length)
-            return props.messages;
+        else if (messages.length)
+            return messages;
         else 
             return (
                 <div className="no-message-content">

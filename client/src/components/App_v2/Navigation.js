@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
+import { useSelector } from 'react-redux';
 import { ReactComponent as Bell_Icon } from '../../assets/svgs/bell.svg';
 import { ReactComponent as Archived_Icon } from '../../assets/svgs/archived.svg';
 import { ReactComponent as Setting_Icon } from '../../assets/svgs/setting.svg';
@@ -10,6 +11,7 @@ import { ReactComponent as Star_Icon } from '../../assets/svgs/star.svg';
 const logo = require('../../assets/logo.png');
 
 const Navigation = props => {
+    const user = useSelector((state) => state.user)
     const navigations = [
         {
             title : "Chats",
@@ -48,6 +50,7 @@ const Navigation = props => {
             class_list : "d-log-block"
         }
     ]
+
     const render_navigations = () => {
         const navigation_selected = (selected,index) => {
             $(".left-sidebar").removeClass("open");

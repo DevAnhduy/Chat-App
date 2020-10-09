@@ -1,13 +1,17 @@
-export default message_reducer = ( state, action ) => {
+const INIT_STATE = [];
+const message_reducer = ( state = INIT_STATE, action ) => {
     switch (action.type) {
+        case "SET" : 
+            return state = [...action.payload];
         case "ADD" :
-            state = [...state,action.payload];
-            break;
-        case "LOAD" :
-            break;
+            console.log("Send message")
+            return state = [...state,action.payload];
         case "EDIT" :
             break;
         case "DELETE" :
             break;
     }
+    return state;
 }
+
+export default message_reducer;

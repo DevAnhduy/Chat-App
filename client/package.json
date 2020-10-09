@@ -27,6 +27,7 @@
     "react-slick": "^0.27.11",
     "reactjs-popup": "^1.5.0",
     "redux": "^4.0.5",
+    "redux-logger": "^3.0.6",
     "slick-carousel": "^1.8.1",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",

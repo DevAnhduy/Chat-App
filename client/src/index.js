@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -12,7 +13,12 @@ import './index.scss';
 import * as serviceWorker from './serviceWorker';
 import { Routes } from '../src/routes/index';
 import './config';
+import store from './store';
 
-ReactDOM.render( < Routes / > , document.getElementById('root'));
+ReactDOM.render( 
+    <Provider store={store}>
+        <Routes />
+    </Provider>
+    , document.getElementById('root'));
 
 serviceWorker.unregister();
