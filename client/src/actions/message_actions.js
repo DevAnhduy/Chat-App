@@ -1,27 +1,27 @@
 const set_messages = (messages) => {
     return {
-        type : "SET",
+        type: "SET_MESSAGES",
         payload : messages
     }
 }
 
 const add_message = (message) => {
     return {
-        type : "ADD",
+        type: "ADD_MESSAGE",
         payload: message
     }
 }
 
 const edit_message = (message) => {
     return {
-        type : "EDIT",
+        type: "EDIT_MESSAGE",
         payload: message
     }
 }
 
 const delete_message = (message) => {
     return {
-        type : "DELETE",
+        type: "DELETE_MESSAGE",
         payload: message
     }
 }

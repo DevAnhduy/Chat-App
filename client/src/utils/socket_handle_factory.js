@@ -19,10 +19,10 @@ const socket_handle_factory = {
         }
     },
     receiver_from_server : {
-        message : ({socket,user,obj_receivers},callback) => {
+        message : ({socket,user,list_receivers},callback) => {
             socket.on('/receiver-message', (msg) => {
-                console.log(obj_receivers)
                 console.log("Receiver message")
+                console.log(msg)
                 //const dispatch = useDispatch();
                 const isChatPage = window.location.href.includes("http://localhost:3000/chat");
                 // if (isChatPage) {
@@ -47,10 +47,10 @@ const socket_handle_factory = {
                         const new_message = (<div className={`message-item out`}>
                                 <div className="message-avatar">
                                     <figure className="avatar avatar-sm">
-                                        //<img src={obj_receivers[msg.sender_id].avatar} className="rounded-circle" alt="avatar" />
+                                        <img src={list_receivers[msg.sender_id].avatar} className="rounded-circle" alt="avatar" />
                                     </figure>
                                     <div>
-                                        <h5>{obj_receivers[msg.sender_id].avatar.name}</h5>
+                                        <h5>{list_receivers[msg.sender_id].avatar.name}</h5>
                                         <div className="time">10:12</div>
                                     </div>
                                 </div>
@@ -80,10 +80,10 @@ const socket_handle_factory = {
                         const new_message = (<div className={`message-item out`}>
                                 <div className="message-avatar">
                                     <figure className="avatar avatar-sm">
-                                        //<img src={obj_receivers[msg.sender_id].avatar} className="rounded-circle" alt="avatar" />
+                                        <img src={list_receivers[msg.sender_id].avatar} className="rounded-circle" alt="avatar" />
                                     </figure>
                                     <div>
-                                        <h5>{obj_receivers[msg.sender_id].avatar.name}</h5>
+                                        <h5>{list_receivers[msg.sender_id].avatar.name}</h5>
                                         <div className="time">10:12</div>
                                     </div>
                                 </div>

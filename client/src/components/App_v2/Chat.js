@@ -9,6 +9,8 @@ import no_message_image from '../../assets/images/chat/chat_empty.svg';
 import { CIRCLE_LOADING } from '../Utils/circle_loading';
 import { useDispatch, useSelector } from 'react-redux';
 import { add_message, set_messages } from '../../actions/message_actions';
+import { set_list_receivers } from '../../actions/list_receivers_actions';
+import { set_receiver } from '../../actions/receiver_actions';
 const { __server } = require('config/constant.json')
 
 const Chat_Block = props => {
@@ -48,14 +50,14 @@ const Chat_Block = props => {
 }
 const Chat_Sidebar = props => {
     const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
-    const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
-    const messages = useSelector((state) => state.messages);
+    //const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
+    const list_receivers = useSelector((state) => state.list_receivers);
     const dispatch = useDispatch();
     //Load list chats && connect socket io
     useEffect(() => {
         if(props.user.list_chats){
             //Generate event socket io
-            socket_handle_factory.receiver_from_server.message({ socket: props.socket,user : props.user,obj_receivers},(new_message) => {
+            socket_handle_factory.receiver_from_server.message({ socket: props.socket, user: props.user, list_receivers},(new_message) => {
                 //props.set_messages([...props.messages,new_message])
                 dispatch(add_message(new_message))
             });
@@ -73,7 +75,8 @@ const Chat_Sidebar = props => {
         socket_handle_factory.send_to_server.start_chat(props.socket,receiver);
         // Load obj receivers information
         load_obj_receiver_information(receiver);
-        props.set_receiver(receiver);
+        dispatch(set_receiver(receiver))
+        //props.set_receiver(receiver);
         // Active chat block DOM
         //props.set_receiver(receiver)
         //set_active_chat_block(receiver);
@@ -100,7 +103,8 @@ const Chat_Sidebar = props => {
           let obj_receivers = {};
           if(receiver.type === 'users'){
             //obj_receivers[receiver._id] = receiver.detail; 
-            set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
+            //set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
+            dispatch(set_list_receivers(list_receivers[receiver._id] = receiver.detail))
             get_all_message(receiver);
           }
           else { //Step 1.2
@@ -109,21 +113,22 @@ const Chat_Sidebar = props => {
             //Step 1.2.2
             receiver.detail.members.map((member,index) => {
               str_query_users += `_id=${member}&`;
-              console.log(str_query_users)
               //Step 1.2.3
               if(index === receiver.detail.members.length - 1) {
                 call_api({
                   url : `${process.env.REACT_APP_API_URL}/users?${str_query_users}`
                 })
                   .then(members => {
-                      console.log(members)
                     //Step 1.2.4
                     members.data.data.map((member,index) => {
                         //set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
                         obj_receivers[member._id] = member
                       if(index === members.data.data.length - 1){
+                          console.log(obj_receivers)
                         get_all_message(receiver);
-                        set_obj_receiver({...obj_receivers})
+                        dispatch(set_list_receivers({ ...obj_receivers }))
+                        
+                        //set_obj_receiver({...obj_receivers})
                       }
                     })
                   })
@@ -200,7 +205,9 @@ const Chat_Sidebar = props => {
                   })
               }
           })
-            set_obj_receiver(obj_receivers[props.user._id] = props.user)
+            //set_obj_receiver(obj_receivers[props.user._id] = props.user)
+            dispatch(set_list_receivers(list_receivers[props.user._id] = props.user))
+           
           }
           else {
             set_list_chats([]);
@@ -243,21 +250,13 @@ const Chat_Sidebar = props => {
             let same_senders = [];
             //main_message.innerHTML = '';
             // Step 5
-            console.log(response.data.messages)
             response.data.messages.map((message) => {
-                // if(!messages.length) {
-                //     messages.push(<Message content={message.content}
-                //         sender_id={message.sender_id}
-                //         avatar={obj_receivers[message.sender_id].avatar}
-                //         name={obj_receivers[message.sender_id].name}
-                //     />)
-                // } 
                 if(!messages.length) {
                     messages.push(
                         <Message content={message.content}
                             sender_id={message.sender_id}
-                            avatar={obj_receivers[message.sender_id].avatar}
-                            name={obj_receivers[message.sender_id].name}
+                            avatar={list_receivers[message.sender_id].avatar}
+                            name={list_receivers[message.sender_id].name}
                             sender={props.user._id === message.sender_id ? true : false}
                         />
                     )
@@ -267,88 +266,13 @@ const Chat_Sidebar = props => {
                     messages.push(
                         <Message content={message.content}
                             sender_id={message.sender_id}
-                            avatar={last_message.props.sender_id !== message.sender_id ? obj_receivers[message.sender_id].avatar : ""}
-                            name={last_message.props.sender_id !== message.sender_id ? obj_receivers[message.sender_id].name : ""}
+                            avatar={last_message.props.sender_id !== message.sender_id ? list_receivers[message.sender_id].avatar : ""}
+                            name={last_message.props.sender_id !== message.sender_id ? list_receivers[message.sender_id].name : ""}
                             sender={props.user._id === message.sender_id ? true : false}
                         />
                     )
-                    // if (last_messages.props.sender_id === message.sender_id) {
-                    //     messages.push(
-                    //         <Message content={message.content}
-                    //                  sender_id={message.sender_id} 
-                    //                  sender={props.user._id === message.sender_id ? true : false}
-                    //             />
-                    //     )
-                    // }
-                    // else {
-                    //     messages.push(
-                    //         <Message content={message.content}
-                    //             sender_id={message.sender_id}
-                    //             avatar={obj_receivers[message.sender_id].avatar}
-                    //             name={obj_receivers[message.sender_id].name}
-                    //             sender={props.user._id === message.sender_id ? true : false}
-                    //         />
-                    //     )
-                    // }
                 }
             })
-            // response.data.messages.map((message,index) => {
-            //     if(!same_senders.length) {
-            //         same_senders.push(
-            //             <Message content={message.content} 
-            //                      sender_id={message.sender_id}
-            //             />
-            //         )
-            //     }
-            //     else {
-            //         if(same_senders[same_senders.length - 1].props.sender_id === message.sender_id) {
-            //             same_senders.push(
-            //                 <Message content={message.content} 
-            //                         sender_id={message.sender_id}
-            //                 />
-            //             )
-            //         } 
-            //         else {
-            //             messages.push(
-            //                 <div className={`message-item ${same_senders[same_senders.length - 1].props.sender_id === props.user._id ? 'out' : 'in'}`}>
-            //                     <div className="message-avatar">
-            //                         <figure className="avatar avatar-sm">
-            //                             <img src={obj_receivers[same_senders[same_senders.length - 1].props.sender_id].avatar} className="rounded-circle" alt="avatar" />
-            //                         </figure>
-            //                         <div>
-            //                             <h5>{obj_receivers[same_senders[same_senders.length - 1].props.sender_id].name}</h5>
-            //                             <div className="time">10:12</div>
-            //                         </div>
-            //                     </div>
-            //                     {same_senders}
-            //                 </div>
-            //             )
-            //             same_senders = [];
-            //             same_senders.push(
-            //                 <Message content={message.content} 
-            //                         sender_id={message.sender_id}
-            //                 />
-            //             )
-            //         }
-            //     }
-
-            //     if(index === response.data.messages.length - 1) {
-            //         messages.push(
-            //             <div className={`message-item ${message.sender_id === props.user._id ? 'out' : 'in'}`}>
-            //                 <div className="message-avatar">
-            //                     <figure className="avatar avatar-sm">
-            //                         <img src={obj_receivers[message.sender_id].avatar} className="rounded-circle" alt="avatar" />
-            //                     </figure>
-            //                     <div>
-            //                         <h5>{obj_receivers[message.sender_id].name}</h5>
-            //                         <div className="time">10:12</div>
-            //                     </div>
-            //                 </div>
-            //                 {same_senders}
-            //             </div>
-            //         )
-            //     }
-            // })
             //set_messages
             // Step 6
             //props.set_messages([...messages])
@@ -363,7 +287,6 @@ const Chat_Sidebar = props => {
           })
         //#endregion
     }
-    console.log(obj_receivers)
     return (
         <div id="chats" className="left-sidebar open" >
             <div className="left-sidebar-header">
@@ -432,8 +355,9 @@ const Chat_Sidebar = props => {
     )
 }
 const Chat_Main = props => {
-    console.log(props)
     const messages = useSelector((state) => state.messages);
+    const user = useSelector((state) => state.user);
+    const receiver = useSelector((state) => state.receiver);
     const input_message = useRef("");
     const check_exist_message = ()  => {
         if (props.finding_messages) 
@@ -459,7 +383,7 @@ const Chat_Main = props => {
             //Send message to server
             socket_handle_factory.send_to_server.message({
                 socket : props.socket,
-                user : props.user,
+                user : user,
                 receiver,
                 message : input_message.current.value
             })
@@ -528,7 +452,7 @@ const Chat_Main = props => {
                 </div>
             </PerfectScroll>
             <div className="chat-footer">
-                <form className="d-flex" onSubmit={(e) => send_message(e,props.receiver) } method="POST">
+                <form className="d-flex" onSubmit={(e) => send_message(e,receiver) } method="POST">
                     <div className="dropdown">
                         <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
                             <i className="mdi mdi-face"></i>
@@ -615,7 +539,6 @@ const Message = props => {
         else 
             return;
     }
-    console.log(props.sender)
     return (
         <div className={`message-item ${props.sender ? 'out' : 'in'}`}>
             {check_same_sender()}

@@ -20,6 +20,7 @@ const SignIn = props => {
                     alert('Sai tên tài khoản hoặc mật khẩu !')
             })
             .catch((error) => {
+                console.log(error)
                 alert('Sai tên tài khoản hoặc mật khẩu !')
             })
         }
