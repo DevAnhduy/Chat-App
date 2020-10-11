@@ -50,20 +50,20 @@ const Chat_Block = props => {
 }
 const Chat_Sidebar = props => {
     const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
-    //const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
     const list_receivers = useSelector((state) => state.list_receivers);
+    const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     //Load list chats && connect socket io
     useEffect(() => {
-        if(props.user.list_chats){
+        if(user.list_chats){
             //Generate event socket io
-            socket_handle_factory.receiver_from_server.message({ socket: props.socket, user: props.user, list_receivers},(new_message) => {
-                //props.set_messages([...props.messages,new_message])
-                dispatch(add_message(new_message))
+            socket_handle_factory.receiver_from_server.message({ socket: props.socket, user: user, list_receivers},(new_message) => {
+                console.log(new_message)
+                //dispatch(add_message(new_message))
             });
             load_list_chats();
         };
-    },[props.user])
+    },[user])
     const story_slide_settings = {
         slidesToShow: 4,
         slidesToScroll: 1,
@@ -76,7 +76,6 @@ const Chat_Sidebar = props => {
         // Load obj receivers information
         load_obj_receiver_information(receiver);
         dispatch(set_receiver(receiver))
-        //props.set_receiver(receiver);
         // Active chat block DOM
         //props.set_receiver(receiver)
         //set_active_chat_block(receiver);
@@ -102,8 +101,6 @@ const Chat_Sidebar = props => {
           //Step 1.1
           let obj_receivers = {};
           if(receiver.type === 'users'){
-            //obj_receivers[receiver._id] = receiver.detail; 
-            //set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
             dispatch(set_list_receivers(list_receivers[receiver._id] = receiver.detail))
             get_all_message(receiver);
           }
@@ -121,14 +118,10 @@ const Chat_Sidebar = props => {
                   .then(members => {
                     //Step 1.2.4
                     members.data.data.map((member,index) => {
-                        //set_obj_receiver(obj_receivers[receiver._id] = receiver.detail);
                         obj_receivers[member._id] = member
                       if(index === members.data.data.length - 1){
-                          console.log(obj_receivers)
                         get_all_message(receiver);
                         dispatch(set_list_receivers({ ...obj_receivers }))
-                        
-                        //set_obj_receiver({...obj_receivers})
                       }
                     })
                   })
@@ -155,10 +148,10 @@ const Chat_Sidebar = props => {
            */
         //#endregion
         //#region //* FUNCTION HANDLE
-          if(props.user.list_chats.length){
+          if(user.list_chats.length){
             let arr_request = []; // Array contain all axios request
             let arr_room = [];
-            props.user.list_chats.forEach((receiver,index) => {
+            user.list_chats.forEach((receiver,index) => {
               const api_get_user = `${process.env.REACT_APP_API_URL}/users/${receiver._id}`;
               const api_get_rooms = `${process.env.REACT_APP_API_URL}/chat/rooms/${receiver._id}`;
               let api_get_receiver = '';
@@ -175,7 +168,7 @@ const Chat_Sidebar = props => {
                     })
                 )
               //Check last element then call promise all
-              if(index === props.user.list_chats.length - 1) {
+              if(index === user.list_chats.length - 1) {
                 Promise.all(arr_request)
                   .then((receivers) => {
                     arr_room.forEach(room => {
@@ -183,11 +176,11 @@ const Chat_Sidebar = props => {
                     })
                     //Add detail to list chats
                     receivers.forEach(receiver => {
-                      const receiver_index = props.user.list_chats.findIndex(user_in_list_chat => user_in_list_chat._id === receiver.data.data._id);
-                      props.user.list_chats[receiver_index].detail = receiver.data.data;
+                      const receiver_index = user.list_chats.findIndex(user_in_list_chat => user_in_list_chat._id === receiver.data.data._id);
+                      user.list_chats[receiver_index].detail = receiver.data.data;
                     })
                     //Set list chats
-                    set_list_chats(props.user.list_chats.map((receiver,index) => {
+                    set_list_chats(user.list_chats.map((receiver,index) => {
                       return (
                         <Link key={index}
                               id={receiver._id}
@@ -205,9 +198,7 @@ const Chat_Sidebar = props => {
                   })
               }
           })
-            //set_obj_receiver(obj_receivers[props.user._id] = props.user)
-            dispatch(set_list_receivers(list_receivers[props.user._id] = props.user))
-           
+            dispatch(set_list_receivers(list_receivers[user._id] = user))     
           }
           else {
             set_list_chats([]);
@@ -257,7 +248,7 @@ const Chat_Sidebar = props => {
                             sender_id={message.sender_id}
                             avatar={list_receivers[message.sender_id].avatar}
                             name={list_receivers[message.sender_id].name}
-                            sender={props.user._id === message.sender_id ? true : false}
+                            sender={user._id === message.sender_id ? true : false}
                         />
                     )
                 }
@@ -268,21 +259,20 @@ const Chat_Sidebar = props => {
                             sender_id={message.sender_id}
                             avatar={last_message.props.sender_id !== message.sender_id ? list_receivers[message.sender_id].avatar : ""}
                             name={last_message.props.sender_id !== message.sender_id ? list_receivers[message.sender_id].name : ""}
-                            sender={props.user._id === message.sender_id ? true : false}
+                            sender={user._id === message.sender_id ? true : false}
                         />
                     )
                 }
             })
-            //set_messages
             // Step 6
-            //props.set_messages([...messages])
             dispatch(set_messages(messages))
             props.set_finding_messages(false);
             main_message.scrollTop = main_message.scrollHeight;
           })
           .catch(error => {
             console.log(error);
-            props.set_messages([]);
+            dispatch(set_messages([]));
+            //props.set_messages([]);
             //main_message.innerHTML = '';
           })
         //#endregion
