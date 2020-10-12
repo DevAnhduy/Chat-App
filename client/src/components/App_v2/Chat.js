@@ -49,6 +49,7 @@ const Chat_Block = props => {
 }
 const Chat_Sidebar = props => {
     const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
+    const [story_active,set_story_active] = useState(true);
     const list_receivers = useSelector((state) => state.list_receivers);
     const receiver = useSelector((state) => state.receiver);
     const user = useSelector((state) => state.user);
@@ -73,6 +74,59 @@ const Chat_Sidebar = props => {
         slidesToShow: 4,
         slidesToScroll: 1,
         arrows: false,
+    }
+    const check_story_active = () => {
+        if (story_active) {
+            return (
+                <Slider {...story_slide_settings} className="story-items" >
+                    <div className="story-item">
+                        <a href="/chat" className="avatar avatar-border-primary">
+                            <img src="https://www.iconfinder.com/data/icons/logos-3/454/nodejs-new-pantone-white-512.png" className="rounded-circle" alt="image" />
+                            <span className="story-content">NodeJS</span>
+                        </a>
+                    </div>
+                    <div className="story-item">
+                        <a href="/chat" className="avatar avatar-border-primary">
+                            <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="image" />
+                            <span className="story-content">Javascript</span>
+                        </a>
+                    </div>
+                    <div className="story-item">
+                        <a href="/chat" className="avatar avatar-border-primary">
+                            <img src="https://www.iconfinder.com/data/icons/black-white-social-media/64/social_media_logo_github-512.png" className="rounded-circle" alt="image" />
+                            <span className="story-content">Github</span>
+                        </a>
+                    </div>
+                    <div className="story-item">
+                        <a href="/chat" className="avatar">
+                            <img src="https://images.viblo.asia/1d4ce923-d919-4ccf-af8a-9e444ab8d793.jpg" className="rounded-circle" alt="image" />
+                            <span className="story-content">DenoJS</span>
+                        </a>
+                    </div>
+                    <div className="story-item">
+                        <a href="/chat" className="avatar avatar-border-primary">
+                            <span className="avatar-title bg-info rounded-circle">A</span>
+                            <span className="story-content">Atom</span>
+                        </a>
+                    </div>
+                    <div className="story-item">
+                        <a href="/chat" className="avatar avatar-border-success">
+                            <img src="https://www.seekpng.com/png/detail/377-3772047_sass-logo.png" className="rounded-circle" alt="image" />
+                            <span className="story-content">SASS</span>
+                        </a>
+                    </div>
+                    <div className="story-item">
+                        <a href="/chat" className="avatar">
+                            <img src="https://kalvanaveen.github.io/WebDevelopmentResources.github.io/Images/Express-JS-min.png" className="rounded-circle" alt="image" />
+                            <span className="story-content">ExpressJS</span>
+                        </a>
+                    </div>
+                </Slider>
+            )
+        }
+        else {
+            return "";
+        }
     }
     const start_chat = (receiver) => {
         console.log('Start chat')
@@ -289,50 +343,7 @@ const Chat_Sidebar = props => {
             <div className="left-sidebar-header">
                 <div className="story-block">
                     <h4 className="mb-4">Stories</h4>
-                    <Slider {...story_slide_settings} className="story-items" >
-                        <div className="story-item">
-                            <a href="/chat" className="avatar avatar-border-primary">
-                                <img src="https://www.iconfinder.com/data/icons/logos-3/454/nodejs-new-pantone-white-512.png" className="rounded-circle" alt="image" />
-                                <span className="story-content">NodeJS</span>
-                            </a>
-                        </div>
-                        <div className="story-item">
-                            <a href="/chat" className="avatar avatar-border-primary">
-                                <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="image" />
-                                <span className="story-content">Javascript</span>
-                            </a>
-                        </div>
-                        <div className="story-item">
-                            <a href="/chat" className="avatar avatar-border-primary">
-                                <img src="https://www.iconfinder.com/data/icons/black-white-social-media/64/social_media_logo_github-512.png" className="rounded-circle" alt="image" />
-                                <span className="story-content">Github</span>
-                            </a>
-                        </div>
-                        <div className="story-item">
-                            <a href="/chat" className="avatar">
-                                <img src="https://images.viblo.asia/1d4ce923-d919-4ccf-af8a-9e444ab8d793.jpg" className="rounded-circle" alt="image" />
-                                <span className="story-content">DenoJS</span>
-                            </a>
-                        </div>
-                        <div className="story-item">
-                            <a href="/chat" className="avatar avatar-border-primary">
-                                <span className="avatar-title bg-info rounded-circle">A</span>
-                                <span className="story-content">Atom</span>
-                            </a>
-                        </div>
-                        <div className="story-item">
-                            <a href="/chat" className="avatar avatar-border-success">
-                                <img src="https://www.seekpng.com/png/detail/377-3772047_sass-logo.png" className="rounded-circle" alt="image" />
-                                <span className="story-content">SASS</span>
-                            </a>
-                        </div>
-                        <div className="story-item">
-                            <a href="/chat" className="avatar">
-                                <img src="https://kalvanaveen.github.io/WebDevelopmentResources.github.io/Images/Express-JS-min.png" className="rounded-circle" alt="image" />
-                                <span className="story-content">ExpressJS</span>
-                            </a>
-                        </div> 
-                    </Slider>
+                    {check_story_active()}
                 </div>
                 <form>
                     <div className="input-group">
