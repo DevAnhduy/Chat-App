@@ -16,10 +16,9 @@ import { CIRCLE_LOADING_WITH_LOGO } from '../components/Utils/circle_loading';
 import check_auth from '../utils/check-auth';
 //import call_api from '../../utils/call_api';
 import { Link } from 'react-router-dom';
-import { connect, useDispatch, useSelector } from 'react-redux'
+import {  useDispatch, useSelector } from 'react-redux'
 import './App_v2.scss';
 import { set_user } from '../actions/user_action';
-import { set_messages } from '../actions/message_actions';
 
 
 const { __server } = require('config/constant.json')
@@ -30,8 +29,6 @@ let socket;
 const App = props => {
     const [is_auth,set_is_auth] = useState(false); //Check user is auth
     //const [user,set_user] = useState({}); // State contain object data of user
-    const [list_chats,set_list_chats] = useState();  // State contain array element html of list chat
-    const [obj_receivers,set_obj_receiver] = useState({}); //Object data information of receivers
     const [receiver,set_receiver] = useState({});
     const [messages,set_messages] = useState([]);
     const [finding_messages,set_finding_messages] = useState(false);

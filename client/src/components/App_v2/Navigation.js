@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import { useSelector } from 'react-redux';
@@ -50,13 +50,17 @@ const Navigation = props => {
             class_list : "d-log-block"
         }
     ]
-
     const render_navigations = () => {
         const navigation_selected = (selected,index) => {
-            $(".left-sidebar").removeClass("open");
-            $(`#${selected}`).addClass("open");
-            $("#navigation .nav-item").a.removeClass("active");          
-            $("#navigation .nav-item")[index].a.addClass("active");
+            if(selected !== 'notifications') {
+                $(".left-sidebar").removeClass("open");
+                $(`#${selected}`).addClass("open");
+            } 
+            else {
+                
+            }
+            //$("#navigation .nav-item").a.removeClass("active");          
+            //$("#navigation .nav-item")[index].a.addClass("active");
         }
         return navigations.map((navigation,index) => {
             return (
@@ -67,7 +71,7 @@ const Navigation = props => {
                 </li>
             )
         })
-    }   
+    }  
     return(
         <nav className="navigation" id="navigation">
             <div className="nav-group">

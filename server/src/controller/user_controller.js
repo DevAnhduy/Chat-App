@@ -16,10 +16,61 @@ exports.create_user = factory.create_one(User_Model);
 
 exports.update_user = factory.update_one(User_Model);
 
-exports.join_chat = catch_async(async(req,res,next) => {
-    if(req.body.receiver_type === 'user'){
-        User_Model.findByIdAndUpdate(req.params.id,{ $push: {'list_chat.users': req.body.receiver_id }})
-    } else if (req.body.receiver_type === 'room') {
-        User_Model.findByIdAndUpdate(req.params.id,{ $push: {'list_chat.rooms': req.body.receiver_id } })
-    } else return next(new AppError('Missing field receiver type',500))
-})
+exports.find_user = factory.find_all(User_Model,"","_id avatar name mobile");
+
+exports.request_friend = (req,res,next) => {
+    if(req.params.id && req.body.user_requested) {
+        User_Model.findByIdAndUpdate(req.params.id,{
+            $push : {
+                friends_request : req.body.user_requested
+            }
+        })
+            .then(response => {
+                res.status(201).json({
+                    status : "success",
+                    data : response
+                })
+            })
+            .catch(error => {
+                res.status(500).json({
+                    status: "fail",
+                    data : null
+                })
+            })
+    } 
+    else {
+        return next(new AppError('Missing field user requested or user id'));
+    }
+}
+
+exports.accept_request_friend = (req,res,next) => {
+    if(req.params.id && req.body.user_requested) {
+        User_Model.findByIdAndUpdate(req.params.id,{
+            $pull : {
+                friends_request : req.body.user_requested
+            }
+        })
+            .then(response => {
+                res.status(201).json({
+                    status : "success",
+                })
+            })
+            .catch(error => {
+                res.status(500).json({
+                    status : "fail",
+                    message : error
+                })
+            })
+    }
+    else {
+        return next(new AppError('Missing field user requested or user id'));
+    }
+}
+
+// exports.join_chat = catch_async(async(req,res,next) => {
+//     if(req.body.receiver_type === 'user'){
+//         User_Model.findByIdAndUpdate(req.params.id,{ $push: {'list_chat.users': req.body.receiver_id }})
+//     } else if (req.body.receiver_type === 'room') {
+//         User_Model.findByIdAndUpdate(req.params.id,{ $push: {'list_chat.rooms': req.body.receiver_id } })
+//     } else return next(new AppError('Missing field receiver type',500))
+// })

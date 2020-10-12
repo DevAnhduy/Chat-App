@@ -28,7 +28,20 @@ const user_schema = new mongoose.Schema({
     },
     friends : [
         {
-            type: mongoose.Schema.Types.ObjectId
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
+    friends_request : [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ],
+    friends_block : [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
         }
     ],
     list_chats : [

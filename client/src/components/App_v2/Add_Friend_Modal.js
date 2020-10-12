@@ -1,6 +1,51 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import call_api from '../../utils/call_api';
 
 const Add_Friend_Modal = props => {
+    const [count_user_selected,set_count_user_selected] = useState(0);
+    const [list_user_selected,set_list_user_selected] = useState([]);
+    const user = useSelector((state) => state.user);
+
+    const input_mobile_friend = useRef("");
+    const add_invite_friend = () => {
+        if(input_mobile_friend.current.value) {
+            call_api({
+                url : `${process.env.REACT_APP_API_URL}/users/search?mobile=${input_mobile_friend.current.value}`
+            })
+                .then(response => {
+                    const user_find = response.data.data[0];
+                    if(user_find && !list_user_selected.some(user_selected => user_selected.props.id === user_find._id )) {
+                        const new_user_selected = (
+                            <Add_Friend_Selected name={user_find.name} avatar={user_find.avatar} 
+                                                 mobile={user_find.mobile} id={user_find._id} />
+                        )
+                        set_list_user_selected([...list_user_selected,new_user_selected])
+                        set_count_user_selected(list_user_selected.length + 1)
+                    }
+                    else {
+                        console.log("Not found")
+                    }
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+    }
+    const submit_invite_friend = () => {
+        if(list_user_selected.length) {
+            console.log("Submit add friend")
+            list_user_selected.map((user_selected) => {
+                call_api({
+                    url : `${process.env.REACT_APP_API_URL}/users/request-friend/${user_selected.props.id}`,
+                    method: 'patch',
+                    data: {
+                        user_requested: user._id
+                    }
+                })
+            })
+        }
+    }
     return (
         <div className="modal fade" id="add_friend" tabIndex="-1" role="dialog">
             <div className="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
@@ -18,9 +63,9 @@ const Add_Friend_Modal = props => {
                             <div className="form-group">
                                 <label for="add_with_mobile" className="col-form-label">Số điện thoại</label>
                                 <div className="input-group mb-3">
-                                    <input type="text" className="form-control" id="add_with_mobile" placeholder="Số điện thoại" />
+                                    <input ref={input_mobile_friend} type="text" className="form-control" id="add_with_mobile" placeholder="Số điện thoại" />
                                     <div className="input-group-append">
-                                        <button type="button" className="btn btn-success">
+                                        <button onClick={add_invite_friend} type="button" className="btn btn-success">
                                             <i className="mdi mdi-plus"></i>
                                         </button>
                                     </div>
@@ -29,32 +74,37 @@ const Add_Friend_Modal = props => {
                         </form>
                         <div className="d-flex justify-content-between">
                             <span>Người dùng</span>
-                            <span className="text-muted small">Có 1 người được chọn</span>
+                            <span className="text-muted small">Có {count_user_selected} người được chọn</span>
                         </div>
                         <hr />
                         <div>
-                            <ul className="list-group list-group-unlined">
-                                <li className="list-group-item px-0 d-flex">
-                                    <figure className="avatar mr-3">
-                                        <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="image" />
-                                    </figure>
-                                    <div>
-                                        <div>Javascript</div>
-                                        <div className="small text-muted">0366901840</div>
-                                    </div>
-                                    <a className="text-danger ml-auto" data-toggle="tooltip" title="Xoá">
-                                        <i className="mdi mdi-delete-outline"></i>
-                                    </a>
-                                </li>
+                            <ul className="list-group list-group-unlined" id="list-user-selected">
+                                {list_user_selected}
                             </ul>
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-primary">Gửi lời mời</button>
+                        <button onClick={submit_invite_friend} type="button" className="btn btn-primary">Gửi lời mời</button>
                     </div>
                 </div>
             </div>
         </div>
+    )
+}
+const Add_Friend_Selected = props => {
+    return (
+        <li className="list-group-item px-0 d-flex">
+            <figure className="avatar mr-3">
+                <img src={props.avatar} className="rounded-circle" alt="image" />
+            </figure>
+            <div>
+                <div>{props.name}</div>
+                <div className="small text-muted">{props.mobile}</div>
+            </div>
+            <a className="text-danger ml-auto" data-toggle="tooltip" title="Xoá">
+                <i className="mdi mdi-delete-outline"></i>
+            </a>
+        </li>
     )
 }
 

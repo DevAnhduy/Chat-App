@@ -3,6 +3,8 @@ const AppError = require('src/utils/app_error');
 const jwt = require('jsonwebtoken');
 const Mongodb_Query = require('src/utils/mongodb_query');
 const User_Model = require('src/models/user');
+const { default: MongoDB_Query } = require('src/utils/mongodb_query');
+const { default: e } = require('express');
 
 //Create one handle factory
 exports.create_one = Model => catch_async(async (req, res, next) => {
@@ -30,7 +32,7 @@ exports.get_one = (Model,pop_options) => catch_async(async (req,res,next) => {
 exports.get_all = (Model, pop_options) => catch_async(async (req,res,next) => {
     let query = Model.find();
     if(pop_options) query = query.populate(pop_options);
-    const mongodb_query = new Mongodb_Query(query,req.query).paginate().filter();
+    const mongodb_query = new Mongodb_Query(query,req.query).paginate().filter().limit_fields();
     const docs = await mongodb_query.query;
     if(!docs.length) return next(new AppError('No document found',404))
     
@@ -79,3 +81,24 @@ exports.protect = Model => catch_async(async (req,res,next) => {
     req.user = current_user;
     next();
 });
+//Find all
+exports.find_all = (Model, pop_options, limit_fields) => catch_async(async (req,res,next) => {
+    if (req.query !== {}) {
+        let query = Model.find(req.query);
+        if(pop_options) query = query.populate(pop_options);
+        if(limit_fields) query = query.select(limit_fields);
+        const docs = await query;
+        if(!docs.length) return next(new AppError('No document found',404))
+    
+        res.status(200).json({
+            status: 'success',
+            data: docs
+        });
+    }
+    else {
+        res.status(500).json({
+            status: 'fail',
+            data: null
+        });
+    }    
+})

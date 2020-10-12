@@ -51,19 +51,25 @@ const Chat_Block = props => {
 const Chat_Sidebar = props => {
     const [list_chats,set_list_chats] = useState([]);  // State contain array element html of list chat
     const list_receivers = useSelector((state) => state.list_receivers);
+    const receiver = useSelector((state) => state.receiver);
     const user = useSelector((state) => state.user);
+    const messages = useSelector((state) => state.messages);
     const dispatch = useDispatch();
     //Load list chats && connect socket io
     useEffect(() => {
         if(user.list_chats){
             //Generate event socket io
-            socket_handle_factory.receiver_from_server.message({ socket: props.socket, user: user, list_receivers},(new_message) => {
-                console.log(new_message)
-                //dispatch(add_message(new_message))
-            });
             load_list_chats();
         };
     },[user])
+    useEffect(() => {
+        if(list_receivers !== {} && receiver !== {}){
+            get_all_message(receiver)
+            socket_handle_factory.receiver_from_server.message({ socket: props.socket, user: user, list_receivers },(new_message) => {
+                dispatch(add_message(new_message))
+            });
+        }
+    },[list_receivers])
     const story_slide_settings = {
         slidesToShow: 4,
         slidesToScroll: 1,
@@ -101,7 +107,8 @@ const Chat_Sidebar = props => {
           //Step 1.1
           let obj_receivers = {};
           if(receiver.type === 'users'){
-            dispatch(set_list_receivers(list_receivers[receiver._id] = receiver.detail))
+            obj_receivers[receiver._id] = receiver.detail;
+            dispatch(set_list_receivers(obj_receivers))
             get_all_message(receiver);
           }
           else { //Step 1.2
@@ -117,11 +124,10 @@ const Chat_Sidebar = props => {
                 })
                   .then(members => {
                     //Step 1.2.4
-                    members.data.data.map((member,index) => {
-                        obj_receivers[member._id] = member
+                    members.data.data.map( async (member,index) => {
+                      obj_receivers[member._id] = member
                       if(index === members.data.data.length - 1){
-                        get_all_message(receiver);
-                        dispatch(set_list_receivers({ ...obj_receivers }))
+                        dispatch(set_list_receivers(obj_receivers));
                       }
                     })
                   })
@@ -198,7 +204,10 @@ const Chat_Sidebar = props => {
                   })
               }
           })
-            dispatch(set_list_receivers(list_receivers[user._id] = user))     
+            let obj_receiver = {
+                [user._id] : user
+            };
+            dispatch(set_list_receivers(obj_receiver))     
           }
           else {
             set_list_chats([]);
@@ -238,7 +247,6 @@ const Chat_Sidebar = props => {
           .then(response => {
             // Step 3
             let messages = [];
-            let same_senders = [];
             //main_message.innerHTML = '';
             // Step 5
             response.data.messages.map((message) => {
@@ -271,7 +279,7 @@ const Chat_Sidebar = props => {
           })
           .catch(error => {
             console.log(error);
-            dispatch(set_messages([]));
+            //dispatch(set_messages([]));
             //props.set_messages([]);
             //main_message.innerHTML = '';
           })
@@ -375,7 +383,7 @@ const Chat_Main = props => {
                 socket : props.socket,
                 user : user,
                 receiver,
-                message : input_message.current.value
+                message : input_message.current.value,
             })
             //Clear text input message
             document.getElementById('message').value = '';
@@ -436,8 +444,8 @@ const Chat_Main = props => {
                     </ul>
                 </div>
             </div>
-            <PerfectScroll className="chat-body">
-                <div className="messages" id="main-message">
+            <PerfectScroll className="chat-body" id="main-message">
+                <div className="messages" >
                     {check_exist_message()}
                 </div>
             </PerfectScroll>
@@ -514,6 +522,7 @@ const Chat_Main = props => {
 const Message = props => {
     const check_same_sender = () => {
         if(props.avatar) { 
+            console.log(props.avatar)
             return (
                 <div className="message-avatar">
                     <figure className="avatar avatar-sm">
@@ -530,7 +539,7 @@ const Message = props => {
             return;
     }
     return (
-        <div className={`message-item ${props.sender ? 'out' : 'in'}`}>
+        <div className={`message-item ${props.sender ? 'out' : 'in'}`} sender={props.sender_id}>
             {check_same_sender()}
             <div className="message-content">
                 <div className="message-text">{props.content}</div>
