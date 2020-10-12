@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { add_message, set_messages } from '../../actions/message_actions';
 import { set_list_receivers } from '../../actions/list_receivers_actions';
 import { set_receiver } from '../../actions/receiver_actions';
-const { __server } = require('config/constant.json')
 
 const Chat_Block = props => {
     return(
@@ -169,8 +168,8 @@ const Chat_Sidebar = props => {
                 api_get_receiver = api_get_user;
                 arr_request.push(
                     call_api({
-                    url: api_get_receiver,
-                    method: 'get'
+                        url: api_get_receiver,
+                        method: 'get'
                     })
                 )
               //Check last element then call promise all
