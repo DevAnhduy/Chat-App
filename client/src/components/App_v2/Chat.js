@@ -7,10 +7,13 @@ import socket_handle_factory from '../../utils/socket_handle_factory';
 import call_api from '../../utils/call_api';
 import no_message_image from '../../assets/images/chat/chat_empty.svg';
 import { CIRCLE_LOADING } from '../Utils/circle_loading';
+import { Friend_Main } from './Friend';
 import { useDispatch, useSelector } from 'react-redux';
 import { add_message, set_messages } from '../../actions/message_actions';
 import { set_list_receivers } from '../../actions/list_receivers_actions';
 import { set_receiver } from '../../actions/receiver_actions';
+import { Favorite_Main } from './Favorite';
+import { Archived_Main } from './Archived';
 
 const Chat_Block = props => {
     return(
@@ -41,6 +44,212 @@ const Chat_Block = props => {
                                 <a className="dropdown-item text-danger">Xóa</a>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+const Chat_Main = props => {
+    const messages = useSelector((state) => state.messages);
+    const user = useSelector((state) => state.user);
+    const receiver = useSelector((state) => state.receiver);
+    const input_message = useRef("");
+    const check_exist_message = ()  => {
+        if (props.finding_messages) 
+            return <CIRCLE_LOADING width="100%" height="100%" />;
+        else if (messages.length)
+            return messages;
+        else 
+            return (
+                <div className="no-message-content">
+                    <div className="row mb-5">
+                        <div className="col-md-4 offset-4">
+                            <img src={no_message_image} className="img-fluid" alt="No message" />
+                        </div>
+                    </div>
+                    <p className="lead">Không tìm thấy tin nhắn nào. Chọn 1 cuộc trò chuyện để bắt đầu trò chuyện</p>
+                </div>
+            )
+    }
+    const send_message = (e,receiver) => {
+        e.preventDefault();
+        //Check input message exists
+        if (input_message.current.value) {
+            //Send message to server
+            socket_handle_factory.send_to_server.message({
+                socket : props.socket,
+                user : user,
+                receiver,
+                message : input_message.current.value,
+            })
+            //Clear text input message
+            document.getElementById('message').value = '';
+            //Make receiver chat block up to top
+            // list_chats.some((chat_block,index) => {
+            //     if(chat_block.props.id === receiver._id){
+            //     const chat_block_selected = list_chats.splice(index,1)[0];
+            //     set_list_chats([chat_block_selected,...list_chats]);
+            //     return true;
+            //     }
+            // })      
+        }
+        else
+        alert('Tin nhắn không được để trống !');
+    }
+    return (
+        <div className="chat">
+            <div className="chat-header">
+                <div className="chat-header-user">
+                    <figure className="avatar avatar-state-success">
+                        <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar user"/>
+                    </figure>
+                    <div>
+                        <h5>Javascript</h5>
+                        <small className="text-success">Online</small>
+                    </div>
+                </div>
+                <div className="chat-header-action" data-intro-js="7">
+                    <ul className="list-inline">
+                        <li className="list-inline-item d-inline d-lg-none">
+                            <a className="btn btn-danger btn-floating example-chat-close">
+                                <i className="mdi mdi-arrow-left"></i>
+                            </a>
+                        </li>
+                        <li className="list-inline-item" data-toggle="modal" title="Voice call" data-target="#voice_call_request" >
+                            <a className="btn btn-success btn-floating voice-call-request">
+                                <i className="mdi mdi-phone"></i>
+                            </a>
+                        </li>
+                        <li className="list-inline-item" data-toggle="modal" title="Video call" data-target="#video_call_request" >
+                            <a className="btn btn-warning btn-floating video-call-request">
+                                <i className="mdi mdi-video-outline"></i>
+                            </a>
+                        </li>
+                        <li className="list-inline-item">
+                            <a className="btn btn-dark btn-floating" data-toggle="dropdown">
+                                <i className="mdi mdi-dots-horizontal"></i>
+                            </a>
+                            <div className="dropdown-menu dropdown-menu-right">
+                                <a onClick={()=>$('#user-profile').addClass('open')} data-right-sidebar="user-profile" className="dropdown-item">Thông tin cá nhân</a>
+                                <a className="dropdown-item example-close-selected-chat">Đóng chat</a>
+                                <a className="dropdown-item">Thêm vào lưu trữ</a>
+                                <a className="dropdown-item example-delete-chat">Xóa chat</a>
+                                <div className="dropdown-divider"></div>
+                                <a className="dropdown-item text-danger example-block-user">Chặn</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <PerfectScroll className="chat-body" id="main-message">
+                <div className="messages" >
+                    {check_exist_message()}
+                </div>
+            </PerfectScroll>
+            <div className="chat-footer">
+                <form className="d-flex" onSubmit={(e) => send_message(e,receiver) } method="POST">
+                    <div className="dropdown">
+                        <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
+                            <i className="mdi mdi-face"></i>
+                        </button>
+                        <div className="dropdown-menu dropdown-menu-big p-0">
+                            <div className="dropdown-menu-search">
+                                <input type="text" className="form-control" placeholder="Tìm kiếm biểu cảm..."></input>
+                            </div>
+                            <div className="emojis chat-emojis">
+                                <ul>
+                                    <li>😁</li>
+                                    <li>😂</li>
+                                    <li>😃</li>
+                                    <li>😄</li>
+                                    <li>😅</li>
+                                    <li>😆</li>
+                                    <li>😉</li>
+                                    <li>😊</li>
+                                    <li>😋</li>
+                                    <li>😌</li>
+                                    <li>😍</li>
+                                    <li>😏</li>
+                                    <li>😒</li>
+                                    <li>😓</li>
+                                    <li>😔</li>
+                                    <li>😖</li>
+                                    <li>😘</li>
+                                    <li>😝</li>
+                                    <li>😠</li>
+                                    <li>😢</li>
+                                    <li>🙅</li>
+                                    <li>🙆</li>
+                                    <li>🙇</li>
+                                    <li>🙈</li>
+                                    <li>🙉</li>
+                                    <li>🙊</li>
+                                    <li>🙋</li>
+                                    <li>🙌</li>
+                                    <li>🙍</li>
+                                    <li>🙎</li>
+                                    <li>🙏</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="dropdown">
+                        <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
+                            <i className="mdi mdi-plus"></i>
+                        </button>
+                        <div className="dropdown-menu">
+                            <a className="dropdown-item">Vị trí</a>
+                            <a className="dropdown-item">Tệp</a>
+                            <a className="dropdown-item">Tài liệu</a>
+                            <a className="dropdown-item">File</a>
+                            <a className="dropdown-item">Video</a>
+                        </div>
+                    </div>
+                    <input ref={input_message} type="text" name="message" id="message" className="form-control form-control-main" autoComplete={false} placeholder="Nhập tin nhắn...." />
+                    <div>
+                        <button className="btn btn-primary ml-2 btn-floating" type="submit">
+                            <i className="mdi mdi-send"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}
+const Message = props => {
+    const check_same_sender = () => {
+        if(props.avatar) { 
+            console.log(props.avatar)
+            return (
+                <div className="message-avatar">
+                    <figure className="avatar avatar-sm">
+                        <img src={props.avatar} className="rounded-circle" alt="avatar" />
+                    </figure>
+                    <div>
+                        <h5>{props.name}</h5>
+                        <div className="time">10:12</div>
+                    </div>
+                </div>
+            )
+        }
+        else 
+            return;
+    }
+    return (
+        <div className={`message-item ${props.sender ? 'out' : 'in'}`} sender={props.sender_id}>
+            {check_same_sender()}
+            <div className="message-content">
+                <div className="message-text">{props.content}</div>
+                <div className="dropdown">
+                    <a data-toggle="dropdown">
+                        <i className="mdi mdi-dots-horizontal"></i>
+                    </a>
+                    <div className="dropdown-menu">
+                        <a className="dropdown-item">Trả lời</a>
+                        <a className="dropdown-item">Chuyển tiếp</a>
+                        <a className="dropdown-item">Sao chép</a>
+                        <a className="dropdown-item example-delete-message">Xóa</a>
                     </div>
                 </div>
             </div>
@@ -284,6 +493,18 @@ const Chat_Sidebar = props => {
           })
         //#endregion
     }
+    const sidebar_content_render = () => {
+        switch(props.sidebar_content) {
+            case "friends" :
+                return <Friend_Main />
+            case "favorites" :
+                return <Favorite_Main />
+            case "archived" : 
+                return <Archived_Main />
+            default :
+                return list_chats.length ? list_chats : <CIRCLE_LOADING width="100%" height="100%" />
+        }
+    }
     return (
         <div id="chats" className="left-sidebar open" >
             <div className="left-sidebar-header">
@@ -346,214 +567,9 @@ const Chat_Sidebar = props => {
                 </form>
             </div>
             <PerfectScroll className="left-sidebar-content">
-                {list_chats.length ? list_chats : <CIRCLE_LOADING width="100%" height="100%" />}
+                {/* {list_chats.length ? list_chats : <CIRCLE_LOADING width="100%" height="100%" />} */}
+                {sidebar_content_render()}
             </PerfectScroll>
-        </div>
-    )
-}
-const Chat_Main = props => {
-    const messages = useSelector((state) => state.messages);
-    const user = useSelector((state) => state.user);
-    const receiver = useSelector((state) => state.receiver);
-    const input_message = useRef("");
-    const check_exist_message = ()  => {
-        if (props.finding_messages) 
-            return <CIRCLE_LOADING width="100%" height="100%" />;
-        else if (messages.length)
-            return messages;
-        else 
-            return (
-                <div className="no-message-content">
-                    <div className="row mb-5">
-                        <div className="col-md-4 offset-4">
-                            <img src={no_message_image} className="img-fluid" alt="No message" />
-                        </div>
-                    </div>
-                    <p className="lead">Không tìm thấy tin nhắn nào. Chọn 1 cuộc trò chuyện để bắt đầu trò chuyện</p>
-                </div>
-            )
-    }
-    const send_message = (e,receiver) => {
-        e.preventDefault();
-        //Check input message exists
-        if (input_message.current.value) {
-            //Send message to server
-            socket_handle_factory.send_to_server.message({
-                socket : props.socket,
-                user : user,
-                receiver,
-                message : input_message.current.value,
-            })
-            //Clear text input message
-            document.getElementById('message').value = '';
-            //Make receiver chat block up to top
-            // list_chats.some((chat_block,index) => {
-            //     if(chat_block.props.id === receiver._id){
-            //     const chat_block_selected = list_chats.splice(index,1)[0];
-            //     set_list_chats([chat_block_selected,...list_chats]);
-            //     return true;
-            //     }
-            // })      
-        }
-        else
-        alert('Tin nhắn không được để trống !');
-    }
-    return (
-        <div className="chat">
-            <div className="chat-header">
-                <div className="chat-header-user">
-                    <figure className="avatar avatar-state-success">
-                        <img src="https://st.depositphotos.com/1796420/4113/v/950/depositphotos_41138921-stock-illustration-vector-icon-of-orange-javascript.jpg" className="rounded-circle" alt="avatar user"/>
-                    </figure>
-                    <div>
-                        <h5>Javascript</h5>
-                        <small className="text-success">Online</small>
-                    </div>
-                </div>
-                <div className="chat-header-action" data-intro-js="7">
-                    <ul className="list-inline">
-                        <li className="list-inline-item d-inline d-lg-none">
-                            <a className="btn btn-danger btn-floating example-chat-close">
-                                <i className="mdi mdi-arrow-left"></i>
-                            </a>
-                        </li>
-                        <li className="list-inline-item" data-toggle="modal" title="Voice call" data-target="#voice_call_request" >
-                            <a className="btn btn-success btn-floating voice-call-request">
-                                <i className="mdi mdi-phone"></i>
-                            </a>
-                        </li>
-                        <li className="list-inline-item" data-toggle="modal" title="Video call" data-target="#video_call_request" >
-                            <a className="btn btn-warning btn-floating video-call-request">
-                                <i className="mdi mdi-video-outline"></i>
-                            </a>
-                        </li>
-                        <li className="list-inline-item">
-                            <a className="btn btn-dark btn-floating" data-toggle="dropdown">
-                                <i className="mdi mdi-dots-horizontal"></i>
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-right">
-                                <a onClick={()=>$('#user-profile').addClass('open')} data-right-sidebar="user-profile" className="dropdown-item">Thông tin cá nhân</a>
-                                <a className="dropdown-item example-close-selected-chat">Đóng chat</a>
-                                <a className="dropdown-item">Thêm vào lưu trữ</a>
-                                <a className="dropdown-item example-delete-chat">Xóa chat</a>
-                                <div className="dropdown-divider"></div>
-                                <a className="dropdown-item text-danger example-block-user">Chặn</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <PerfectScroll className="chat-body" id="main-message">
-                <div className="messages" >
-                    {check_exist_message()}
-                </div>
-            </PerfectScroll>
-            <div className="chat-footer">
-                <form className="d-flex" onSubmit={(e) => send_message(e,receiver) } method="POST">
-                    <div className="dropdown">
-                        <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
-                            <i className="mdi mdi-face"></i>
-                        </button>
-                        <div className="dropdown-menu dropdown-menu-big p-0">
-                            <div className="dropdown-menu-search">
-                                <input type="text" className="form-control" placeholder="Tìm kiếm biểu cảm..."></input>
-                            </div>
-                            <div className="emojis chat-emojis">
-                                <ul>
-                                    <li>😁</li>
-                                    <li>😂</li>
-                                    <li>😃</li>
-                                    <li>😄</li>
-                                    <li>😅</li>
-                                    <li>😆</li>
-                                    <li>😉</li>
-                                    <li>😊</li>
-                                    <li>😋</li>
-                                    <li>😌</li>
-                                    <li>😍</li>
-                                    <li>😏</li>
-                                    <li>😒</li>
-                                    <li>😓</li>
-                                    <li>😔</li>
-                                    <li>😖</li>
-                                    <li>😘</li>
-                                    <li>😝</li>
-                                    <li>😠</li>
-                                    <li>😢</li>
-                                    <li>🙅</li>
-                                    <li>🙆</li>
-                                    <li>🙇</li>
-                                    <li>🙈</li>
-                                    <li>🙉</li>
-                                    <li>🙊</li>
-                                    <li>🙋</li>
-                                    <li>🙌</li>
-                                    <li>🙍</li>
-                                    <li>🙎</li>
-                                    <li>🙏</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="dropdown">
-                        <button className="btn btn-danger btn-floating mr-3" data-toggle="dropdown" title="Emoji" type="button">
-                            <i className="mdi mdi-plus"></i>
-                        </button>
-                        <div className="dropdown-menu">
-                            <a className="dropdown-item">Vị trí</a>
-                            <a className="dropdown-item">Tệp</a>
-                            <a className="dropdown-item">Tài liệu</a>
-                            <a className="dropdown-item">File</a>
-                            <a className="dropdown-item">Video</a>
-                        </div>
-                    </div>
-                    <input ref={input_message} type="text" name="message" id="message" className="form-control form-control-main" autoComplete={false} placeholder="Nhập tin nhắn...." />
-                    <div>
-                        <button className="btn btn-primary ml-2 btn-floating" type="submit">
-                            <i className="mdi mdi-send"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    )
-}
-const Message = props => {
-    const check_same_sender = () => {
-        if(props.avatar) { 
-            console.log(props.avatar)
-            return (
-                <div className="message-avatar">
-                    <figure className="avatar avatar-sm">
-                        <img src={props.avatar} className="rounded-circle" alt="avatar" />
-                    </figure>
-                    <div>
-                        <h5>{props.name}</h5>
-                        <div className="time">10:12</div>
-                    </div>
-                </div>
-            )
-        }
-        else 
-            return;
-    }
-    return (
-        <div className={`message-item ${props.sender ? 'out' : 'in'}`} sender={props.sender_id}>
-            {check_same_sender()}
-            <div className="message-content">
-                <div className="message-text">{props.content}</div>
-                <div className="dropdown">
-                    <a data-toggle="dropdown">
-                        <i className="mdi mdi-dots-horizontal"></i>
-                    </a>
-                    <div className="dropdown-menu">
-                        <a className="dropdown-item">Trả lời</a>
-                        <a className="dropdown-item">Chuyển tiếp</a>
-                        <a className="dropdown-item">Sao chép</a>
-                        <a className="dropdown-item example-delete-message">Xóa</a>
-                    </div>
-                </div>
-            </div>
         </div>
     )
 }

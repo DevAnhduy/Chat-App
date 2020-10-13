@@ -82,23 +82,22 @@ exports.protect = Model => catch_async(async (req,res,next) => {
     next();
 });
 //Find all
-exports.find_all = (Model, pop_options, limit_fields) => catch_async(async (req,res,next) => {
-    if (req.query !== {}) {
-        let query = Model.find(req.query);
-        if(pop_options) query = query.populate(pop_options);
-        if(limit_fields) query = query.select(limit_fields);
-        const docs = await query;
-        if(!docs.length) return next(new AppError('No document found',404))
-    
-        res.status(200).json({
-            status: 'success',
-            data: docs
-        });
+exports.find_one = (Model, options = { pop_options, pop_limit_fields, limit_fields }) => catch_async(async (req,res,next) => {
+    let query_string = Object.keys(req.query).length ? req.query : { _id : req.params.id };
+    let query = Model.findOne(query_string);
+    if(options.pop_options) {
+        let pop_limit_fields_obj = {};
+        if(options.pop_limit_fields) {
+            options.pop_limit_fields.split(' ').forEach(fields => pop_limit_fields_obj[fields] = 1);   
+        }
+        query = query.populate(options.pop_options,pop_limit_fields_obj);
     }
-    else {
-        res.status(500).json({
-            status: 'fail',
-            data: null
-        });
-    }    
+    if(options.limit_fields) query = query.select(options.limit_fields);
+    const docs = await query;
+    if(!docs) return next(new AppError('No document found',404))
+    
+    res.status(200).json({
+        status: 'success',
+        data: docs
+    });   
 })

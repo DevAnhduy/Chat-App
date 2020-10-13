@@ -1,9 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { Favorite_Main } from '../components/App_v2/Favorite';
-import { Friend_Main } from '../components/App_v2/Friend';
-import { Archived_Main } from '../components/App_v2/Archived';
 import { Chat_Main, Chat_Sidebar } from '../components/App_v2/Chat';
-import Notification from '../components/App_v2/Notification';
 import { User_Profile, Edit_Profile } from '../components/App_v2/User_Profile';
 import Navigation from '../components/App_v2/Navigation';
 import { Voice_Call_Request, Voice_Call_Accepted } from '../components/App_v2/Voice_Call_Modal';
@@ -19,6 +15,7 @@ import { Link } from 'react-router-dom';
 import {  useDispatch, useSelector } from 'react-redux'
 import './App_v2.scss';
 import { set_user } from '../actions/user_action';
+import Notification_Main from '../components/App_v2/Notification';
 
 
 const { __server } = require('config/constant.json')
@@ -28,9 +25,9 @@ let socket;
 
 const App = props => {
     const [is_auth,set_is_auth] = useState(false); //Check user is auth
-    //const [user,set_user] = useState({}); // State contain object data of user
     const [receiver,set_receiver] = useState({});
     const [messages,set_messages] = useState([]);
+    const [sidebar_content, set_sidebar_content] = useState("");
     const [finding_messages,set_finding_messages] = useState(false);
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
@@ -59,19 +56,14 @@ const App = props => {
         return (
             <div className="chat-app dark">
                 <div className="layout">
-                    <Navigation avatar={user.avatar} />
-                    <Chat_Sidebar user={user} socket={socket} 
-                                  set_messages={(messages) => set_messages(messages) }
-                                  set_finding_messages={(status) => set_finding_messages(status)} 
-                                  set_receiver={(receiver) => set_receiver(receiver)}
+                    <Navigation set_sidebar_content = {(content_selected) => set_sidebar_content(content_selected)}    />
+                    <Chat_Sidebar socket={socket} 
+                                  set_finding_messages={(status) => set_finding_messages(status)}
+                                  sidebar_content={sidebar_content}
                                   />
-                    <Friend_Main />
-                    <Favorite_Main />
-                    <Archived_Main />
-                    <Chat_Main messages={messages} finding_messages={finding_messages} socket={socket}
-                                receiver={receiver} /> 
+                    <Chat_Main finding_messages={finding_messages} socket={socket} /> 
                 </div>
-                <Notification />
+                <Notification_Main />
                 <User_Profile />
                 <Setting_Right />
                 <Settings_Modal />

@@ -12,7 +12,7 @@ const logo = require('../../assets/logo.png');
 
 const Navigation = props => {
     const user = useSelector((state) => state.user)
-    const navigations = [
+    const navigations_top = [
         {
             title : "Chats",
             icon : <Chat_Icon />,
@@ -32,37 +32,17 @@ const Navigation = props => {
             class_list : "nav_item"
         },
         {
-            title : "Thông báo",
-            icon : <Bell_Icon />,
-            href : "notifications",
-            class_list : "nav_item"
-        },
-        {
             title : "Lưu trữ",
             icon : <Archived_Icon />,
             href : "archived",
             class_list : "nav_item brackets"
-        },
-        {
-            title : "Cài đặt",
-            icon : <Setting_Icon />,
-            href : "settings",
-            class_list : "d-log-block"
         }
     ]
     const render_navigations = () => {
         const navigation_selected = (selected,index) => {
-            if(selected !== 'notifications') {
-                $(".left-sidebar").removeClass("open");
-                $(`#${selected}`).addClass("open");
-            } 
-            else {
-                
-            }
-            //$("#navigation .nav-item").a.removeClass("active");          
-            //$("#navigation .nav-item")[index].a.addClass("active");
+            props.set_sidebar_content(selected)
         }
-        return navigations.map((navigation,index) => {
+        return navigations_top.map((navigation,index) => {
             return (
                 <li className={navigation.class_list} onClick={() => navigation_selected(navigation.href,index)} >
                     <a className={navigation.href === "chats" ? "active" : "" } data-toggle="tooltip" title={navigation.title} data-placement="right">
@@ -90,10 +70,20 @@ const Navigation = props => {
                         </div>
                     </li>
                     {render_navigations()}
+                    <li className="nav_item" onClick={() => $("#notifications").addClass("open") } >
+                        <a data-toggle="tooltip" data-placement="right" title="Thông báo" data-placement="right" >
+                            <Bell_Icon />
+                        </a>
+                    </li>
+                    <li className="d-log-block">
+                        <a data-toggle="tooltip" data-placement="right" title="Cài đặt" data-placement="right">
+                            <Setting_Icon />
+                        </a>
+                    </li>
                     <li data-toggle="tooltip" title="" data-placement="right" data-original-title="User menu">
                         <a data-toggle="dropdown">
                             <figure className="avatar avatar-sm">
-                                <img src={props.avatar} className="rounded-circle" alt="avatar user" />
+                                <img src={user.avatar} className="rounded-circle" alt="avatar user" />
                             </figure>
                         </a>
                         <div className="dropdown-menu">

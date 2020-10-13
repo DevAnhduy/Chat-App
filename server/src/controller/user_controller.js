@@ -16,7 +16,15 @@ exports.create_user = factory.create_one(User_Model);
 
 exports.update_user = factory.update_one(User_Model);
 
-exports.find_user = factory.find_all(User_Model,"","_id avatar name mobile");
+exports.find_user = factory.find_one(User_Model,{
+    limit_fields : "_id avatar name mobile",
+})
+
+exports.get_request_friend = factory.find_one(User_Model,{
+    pop_options : "friends_request",
+    pop_limit_fields : "_id avatar mobile name",
+    limit_fields : "_id friends_request"
+})
 
 exports.request_friend = (req,res,next) => {
     if(req.params.id && req.body.user_requested) {
@@ -48,6 +56,9 @@ exports.accept_request_friend = (req,res,next) => {
         User_Model.findByIdAndUpdate(req.params.id,{
             $pull : {
                 friends_request : req.body.user_requested
+            },
+            $push : {
+                friends : req.body.user_requested
             }
         })
             .then(response => {

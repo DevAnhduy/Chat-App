@@ -180,6 +180,12 @@ $core-color: #ff5252;
             position: absolute;
         }
     }
+    &.dark {
+        background-color: #202124;
+        .navbar {
+            background-color: #383a3f !important;
+        }
+    }
 }
 
 //Responsive
