@@ -1,24 +1,21 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { set_list_receivers } from '../../actions/list_receivers_actions';
 import call_api from '../../utils/call_api';
 
 const Add_Friend_Modal = props => {
     const [count_user_selected,set_count_user_selected] = useState(0);
     const [list_user_selected,set_list_user_selected] = useState([]);
-    const user = useSelector((state) => state.user);
-    const delete_user_selected = (id) => {
-        console.log(list_user_selected)
-        const delete_user_index = list_user_selected.findIndex(user_selected => {
-            console.log(user_selected.props.id)
-            return user_selected.props.id === id;
-        });
-        console.log(list_user_selected.findIndex(user_selected => {
-            return user_selected.props.id === id;
-        }))
-        set_list_user_selected([...list_user_selected.splice(delete_user_index,1)])
-    }
-
+    const [user_find,set_user_find] = useState(null);
     const input_mobile_friend = useRef("");
+    const user = useSelector((state) => state.user);
+    
+    const delete_user_selected = (id) => {
+        const delete_user_index = list_user_selected.findIndex(user_selected => user_selected._id === id);
+        let list_user_selected_copy = [...list_user_selected];
+        list_user_selected_copy.splice(delete_user_index,1);
+        set_list_user_selected([...list_user_selected_copy])
+    }
     const add_invite_friend = () => {
         if(input_mobile_friend.current.value) {
             call_api({
@@ -26,17 +23,8 @@ const Add_Friend_Modal = props => {
             })
                 .then(response => {
                     const user_find = response.data.data;
-                    if(user_find && !list_user_selected.some(user_selected => user_selected.props.id === user_find._id )) {
-                        const new_user_selected = (
-                            <Add_Friend_Selected name={user_find.name} avatar={user_find.avatar} 
-                                                 mobile={user_find.mobile} id={user_find._id} 
-                                                 delete_user_selected={(id) => {
-                                                     delete_user_selected(id)
-                                                     set_count_user_selected(list_user_selected.length + 1)
-                                                 }}
-                                                 />
-                        )
-                        set_list_user_selected([...list_user_selected,new_user_selected])
+                    if(user_find && !list_user_selected.some(user_selected => user_selected._id === user_find._id )) {
+                        set_list_user_selected([...list_user_selected,user_find])
                         set_count_user_selected(list_user_selected.length + 1)
                     }
                     else {
@@ -47,6 +35,17 @@ const Add_Friend_Modal = props => {
                     console.log(error)
                 })
         }
+    }
+    const render_user_selected = () => {
+        return list_user_selected.map(user_selected => {
+            return <Add_Friend_Selected name={user_selected.name} avatar={user_selected.avatar}
+                  mobile={user_selected.mobile} id={user_selected._id}
+                                                 delete_user_selected={(id) => {
+                                                     delete_user_selected(id)
+                                                     set_count_user_selected(user_selected.length + 1)
+                                                 }}
+                                                 />
+        })
     }
     const submit_invite_friend = () => {
         if(list_user_selected.length) {
@@ -62,8 +61,6 @@ const Add_Friend_Modal = props => {
             })
         }
     }
-
-    console.log(list_user_selected)
     return (
         <div className="modal fade" id="add_friend" tabIndex="-1" role="dialog">
             <div className="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
@@ -97,7 +94,7 @@ const Add_Friend_Modal = props => {
                         <hr />
                         <div>
                             <ul className="list-group list-group-unlined" id="list-user-selected">
-                                {list_user_selected}
+                                {render_user_selected()}
                             </ul>
                         </div>
                     </div>
