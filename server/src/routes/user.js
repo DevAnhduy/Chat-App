@@ -26,6 +26,10 @@ router.route('/request-friend/:id')
     .post(controller_user.request_friend)
     .patch(controller_user.response_request_friend)
 
+router.route('/friends/:id')
+    .all(check_auth)
+    .get(controller_user.get_friends)
+
 
 
 module.exports = router;

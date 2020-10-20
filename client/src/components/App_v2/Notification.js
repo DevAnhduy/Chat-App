@@ -45,8 +45,15 @@ const Notification_Block = props => {
 }
 
 const Friend_Request_Block = props => {
-    const accept_request_friend = (requester_id) => {
-        
+    const response_request_friend = (requester_id,response_status) => {
+        call_api({
+            method : "patch",
+            url : `/users/request-friend/${props.user._id}`,
+            data : {
+                requester_id,
+                response_status
+            }
+        })
     }
     return (
         <li className="list-group-item py-3 px-0 d-flex justify-content-between">
@@ -60,8 +67,8 @@ const Friend_Request_Block = props => {
                         <i className="mdi mdi-clock-outline small mr-1"></i>{props.time}
                     </span>
                     <div className="mt-1">
-                        <button className="btn btn-secondary">Từ chối</button>
-                        <button className="ml-2 btn btn-danger">Xác nhận</button>
+                        <button className="btn btn-secondary" onClick={() => response_request_friend(props.requester_id,false)}>Từ chối</button>
+                        <button className="ml-2 btn btn-danger" onClick={() => response_request_friend(props.requester_id,true)}>Xác nhận</button>
                     </div>
                 </div>
             </div>
@@ -87,13 +94,21 @@ const Notification_Main = props => {
             url : `${process.env.REACT_APP_API_URL}/users/request-friend/${user._id}`
         })
             .then(response => {
-                let list_noti = [];
-                response.data.data.friends_request.map(friend_request => {
-                    list_noti.push(<Friend_Request_Block avatar={friend_request.avatar} name={friend_request.name} time="Hôm nay" />)
-                })
-                set_list_noti([...list_noti]);
+                set_list_noti([...response.data.data.friends_request]);
+            })
+            .catch(err => {
+                console.log(err)
             })
     },[])
+    const render_list_noti = () => {
+        return list_noti.map(friend_request => {
+            return <Friend_Request_Block user={user} 
+                                         avatar={friend_request.avatar} 
+                                         name={friend_request.name} 
+                                         requester_id={friend_request._id}
+                                         time="Hôm nay" />
+        })
+    }
     return(
         <div className="right-sidebar" id="notifications">
             <div className="right-sidebar-header">
@@ -108,7 +123,7 @@ const Notification_Main = props => {
             <PerfectScrollbar className="right-sidebar-content">
                 <ul className="list-group list-group-flush">
                     <Notification_Block content="Bạn nhận được lời mời kết bạn" notification_type="friend_request" time="Hôm nay"  />
-                    {list_noti}
+                    {render_list_noti()}
                 </ul>
             </PerfectScrollbar>
         </div>

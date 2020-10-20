@@ -262,7 +262,6 @@ const Chat_Sidebar = props => {
     const list_receivers = useSelector((state) => state.list_receivers);
     const receiver = useSelector((state) => state.receiver);
     const user = useSelector((state) => state.user);
-    const messages = useSelector((state) => state.messages);
     const dispatch = useDispatch();
     //Load list chats && connect socket io
     useEffect(() => {
@@ -500,6 +499,7 @@ const Chat_Sidebar = props => {
         //#endregion
         //#region //*FUNCTION HANDLE
         console.log('Get messages');
+        console.log(receiver)
         // Step 1 
         const main_message = document.getElementById('main-message');
         // Step 2
@@ -508,6 +508,7 @@ const Chat_Sidebar = props => {
         })
           .then(response => {
             // Step 3
+            console.log(response)
             let messages = [];
             //main_message.innerHTML = '';
             // Step 5
@@ -550,7 +551,7 @@ const Chat_Sidebar = props => {
     const sidebar_content_render = () => {
         switch(props.sidebar_content) {
             case "friends" :
-                return <Friend_Main />
+                return <Friend_Main get_all_message={(receiver) => get_all_message(receiver)} />
             case "favorites" :
                 return <Favorite_Main />
             case "archived" : 

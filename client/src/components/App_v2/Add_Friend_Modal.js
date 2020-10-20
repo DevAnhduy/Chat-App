@@ -6,7 +6,6 @@ import call_api from '../../utils/call_api';
 const Add_Friend_Modal = props => {
     const [count_user_selected,set_count_user_selected] = useState(0);
     const [list_user_selected,set_list_user_selected] = useState([]);
-    const [user_find,set_user_find] = useState(null);
     const input_mobile_friend = useRef("");
     const user = useSelector((state) => state.user);
     

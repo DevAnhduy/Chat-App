@@ -25,8 +25,6 @@ let socket;
 
 const App = props => {
     const [is_auth,set_is_auth] = useState(false); //Check user is auth
-    const [receiver,set_receiver] = useState({});
-    const [messages,set_messages] = useState([]);
     const [sidebar_content, set_sidebar_content] = useState("");
     const [finding_messages,set_finding_messages] = useState(false);
     const user = useSelector((state) => state.user);

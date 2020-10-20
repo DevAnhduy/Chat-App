@@ -26,7 +26,7 @@ exports.get_request_friend = factory.find_one(User_Model,{
     limit_fields : "_id friends_request"
 })
 
-exports.request_friend = (req,res,next) => {
+exports.request_friend = catch_async((req,res,next) => {
     if(req.params.id && req.body.user_requested) {
         User_Model.findByIdAndUpdate(req.params.id,{
             $push : {
@@ -49,12 +49,13 @@ exports.request_friend = (req,res,next) => {
     else {
         return next(new AppError('Missing field user requested or user id'));
     }
-}
+})
 
 exports.response_request_friend = catch_async((req,res,next) => {
     const user_id = req.params.id;
     const { requester_id,response_status } = req.body;
-    
+    console.log(req.body)
+
     if(user_id && requester_id) {
         if(response_status) { //Accepted
             User_Model.findByIdAndUpdate(requester_id,{
@@ -96,5 +97,12 @@ exports.response_request_friend = catch_async((req,res,next) => {
         }
         
     }
-    else return next(new AppError('Missing field user requested or user id'));
+    else 
+        return next(new AppError('Missing field user requested or user id'));
+})
+
+exports.get_friends = factory.find_one(User_Model,{
+    pop_options : "friends",
+    pop_limit_fields : "_id avatar mobile name",
+    limit_fields : "_id friends"
 })
