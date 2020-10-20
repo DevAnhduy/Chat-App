@@ -45,6 +45,9 @@ const Notification_Block = props => {
 }
 
 const Friend_Request_Block = props => {
+    const accept_request_friend = (requester_id) => {
+        
+    }
     return (
         <li className="list-group-item py-3 px-0 d-flex justify-content-between">
             <div className="d-flex">
