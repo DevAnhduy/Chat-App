@@ -51,37 +51,50 @@ exports.request_friend = (req,res,next) => {
     }
 }
 
-exports.accept_request_friend = (req,res,next) => {
-    if(req.params.id && req.body.user_requested) {
-        User_Model.findByIdAndUpdate(req.params.id,{
-            $pull : {
-                friends_request : req.body.user_requested
-            },
-            $push : {
-                friends : req.body.user_requested
-            }
-        })
-            .then(response => {
-                res.status(201).json({
-                    status : "success",
-                })
+exports.response_request_friend = catch_async((req,res,next) => {
+    const user_id = req.params.id;
+    const { requester_id,response_status } = req.body;
+    
+    if(user_id && requester_id) {
+        if(response_status) { //Accepted
+            User_Model.findByIdAndUpdate(requester_id,{
+                $push : {
+                    friends : user_id
+                }
             })
-            .catch(error => {
-                res.status(500).json({
-                    status : "fail",
-                    message : error
-                })
+            User_Model.findByIdAndUpdate(user_id,{
+                $pull : {
+                    friends_request : requester_id
+                },
+                $push : {
+                    friends : requester_id
+                }
             })
+                .then(response => {
+                    res.status(201).json({
+                        status : "success",
+                    })
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        status : "fail",
+                        message : error
+                    })
+                })
+        }
+        else { 
+            User_Model.findByIdAndUpdate(user_id,{
+                $pull : {
+                    friends_request : requester_id
+                }
+            })
+                .then(response => {
+                    res.status(201).json({
+                        status: "success"
+                    })
+                })
+        }
+        
     }
-    else {
-        return next(new AppError('Missing field user requested or user id'));
-    }
-}
-
-// exports.join_chat = catch_async(async(req,res,next) => {
-//     if(req.body.receiver_type === 'user'){
-//         User_Model.findByIdAndUpdate(req.params.id,{ $push: {'list_chat.users': req.body.receiver_id }})
-//     } else if (req.body.receiver_type === 'room') {
-//         User_Model.findByIdAndUpdate(req.params.id,{ $push: {'list_chat.rooms': req.body.receiver_id } })
-//     } else return next(new AppError('Missing field receiver type',500))
-// })
+    else return next(new AppError('Missing field user requested or user id'));
+})

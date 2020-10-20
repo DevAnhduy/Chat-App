@@ -24,6 +24,7 @@ router.route('/request-friend/:id')
     .all(check_auth)
     .get(controller_user.get_request_friend)
     .post(controller_user.request_friend)
+    .patch(controller_user.response_request_friend)
 
 
 
